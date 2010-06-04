@@ -71,11 +71,19 @@ int main(int argc,char *argv[]) {
     while(opt<argc) {
 	char *fname=argv[opt++];
 	openany=1;
+	add_buffer(buffer_from_file(fname));
     }
 
     if(!openany) {
 	/* create a blank buffer */
+	add_buffer(make_blank_buffer());
     }
+
+    /* make sure everything is displayed */
+    view_flush();
+
+    /* run the input loop */
+    input_loop();
 
     /* close up the editor */
     view_close();
@@ -84,6 +92,9 @@ int main(int argc,char *argv[]) {
 
 void prepare_signal_handler() {
     signal(SIGINT,signal_handler);
+    signal(SIGTERM,signal_handler);
+    signal(SIGABRT,signal_handler);
+    signal(SIGQUIT,signal_handler);
 }
 
 void signal_handler(int signal) {

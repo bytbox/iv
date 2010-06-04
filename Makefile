@@ -42,6 +42,6 @@ clean:
 install:
 	${INSTALL} iv ${PREFIX}/bin
 
-iv: main.o view.o
-	${CC} -o iv main.o view.o ${LFLAGS}
+iv: main.o view.o input.o
+	${CC} -o iv main.o view.o input.o ${LFLAGS}
 

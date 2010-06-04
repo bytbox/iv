@@ -47,6 +47,10 @@ typedef struct {
 
     /* the position (first visible line number, from 0) */
     int pos;
+
+    /* the position of the cursor, in characters from the start of the
+       buffer */
+    int cursor_pos;
 } buffer_t;
 
 /* (relatively) high-level view management abstractions */
@@ -64,8 +68,43 @@ void view_close();
 /* force the screen buffer to be flushed */
 void view_flush();
 
+/* message displaying
+
+   These control the text displayed on the bottom line of the
+screen. There is no buffer-specific message.
+*/
+
+/* displays a message */
+void display_message(char *);
+
+/* get the currently displayed message */
+char *get_displayed_message();
+
+
+/*
+  Buffer layout allows only two visible buffers, split horizontally
+  or vertically.
+*/
 
 /* buffer management */
+
+/* create a blank buffer */
+buffer_t *make_blank_buffer();
+
+/* create a buffer from a filename */
+buffer_t *buffer_from_file(char *);
+
+/* add the buffer to the buffer list, returning the buffer id */
+int add_buffer(buffer_t *);
+
+/* removes the buffer id */
+void remove_buffer(int);
+
+/* returns the id of the current buffer */
+int current_buffer();
+
+/* returns the buffer object for the given id */
+buffer_t *get_buffer(int);
 
 /* buffer editing */
 
