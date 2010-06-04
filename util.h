@@ -28,12 +28,38 @@
   SUCH DAMAGE.
 */
 
-#include <curses.h>
-#include <unistd.h>
+#ifndef UTIL_H
+#define UTIL_H
 
-#include "input.h"
+/* a node in a linked list */
+struct llnode;
+typedef struct llnode {
+    struct llnode *next; /* pointer to next node */
+    void *data; /* the data */
+} llnode_t;
 
-/* run the input loop */
-void input_loop() {
-    sleep(2);
-}
+/* a linked list */
+typedef struct {
+    llnode_t *head;
+} linked_list_t;
+
+/* creates an empty linked list */
+linked_list_t *make_linked_list();
+
+/* returns the nth element */
+void *ll_nth(linked_list_t *,int);
+
+/* removes the nth element (returning the value) */
+void *ll_del(linked_list_t *,int);
+
+/* append an element */
+void ll_append(linked_list_t *,void *);
+
+/* returns the length of the list */
+int ll_len(linked_list_t *);
+
+/* frees a linked list */
+void ll_free(linked_list_t *);
+
+#endif /* !UTIL_H */
+

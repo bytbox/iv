@@ -17,15 +17,15 @@
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
-  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
-  <COPYRIGHT HOLDER> BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+  CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
   USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
   ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
   OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
   OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
-  SUCH DAMAGE.  
+  SUCH DAMAGE.
 */
 
 #include <curses.h>
@@ -33,9 +33,26 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include "util.h"
 #include "view.h"
 
+/* buffer info structure */
+struct {
+    linked_list_t *buffers; /* list of all buffers */
+    char display_mode; /* the current split type */
+    int buff1; /* the first buffer (if there is one) */
+    int buff2; /* the second buffer (if there is one) */
+} binf;
+
+/* initialize the view */
 void view_init() {
+    /* allocate space for buffers */
+    binf.buffers=make_linked_list();
+    binf.display_mode=BUFFER_NONE;
+    binf.buff1=-1;
+    binf.buff2=-1;
+
+    /* init the actual view */
     initscr();
     cbreak();
     noecho();
@@ -53,6 +70,7 @@ void view_close() {
     endwin();
 
     /* clean up all buffer stuff */
+    ll_free(binf.buffers);
 }
 
 void view_flush() {
@@ -77,9 +95,6 @@ char *get_displayed_message() {
 
 
 /* buffer management */
-
-/* buffer storage */
-
 
 /* creating a blank buffer */
 buffer_t *make_blank_buffer() {
@@ -129,10 +144,10 @@ buffer_t *buffer_from_file(char *filename) {
 }
 
 int add_buffer(buffer_t *b) {
-    /* FIXME */
-    return 0;
+    ll_append(binf.buffers,b);
+    return ll_len(binf.buffers)-1;
 }
 
 void remove_buffer(int b) {
-    /* FIXME */
+    ll_del(binf.buffers,b);
 }

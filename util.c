@@ -28,12 +28,80 @@
   SUCH DAMAGE.
 */
 
-#include <curses.h>
-#include <unistd.h>
+#include <stdlib.h>
 
-#include "input.h"
+#include "util.h"
 
-/* run the input loop */
-void input_loop() {
-    sleep(2);
+linked_list_t *make_linked_list() {
+    linked_list_t *l=malloc(sizeof(linked_list_t));
+    l->head=0;
+    return l;
+}
+
+void *ll_nth(linked_list_t *l,int x) {
+    llnode_t *n=l->head;
+    int i=0;
+    for(i=0;i<x;i++)
+	if(!n) /* no such element */ 
+	    return 0;
+	else
+	    n=n->next; /* advance */
+    return n->data;
+}
+
+void *ll_del(linked_list_t *l,int x) {
+    if(x==0) {
+	/* special execution path for removing the head */
+	if(l->head) {
+	    void *d=l->head->data; /* save data */
+	    l->head=l->head->next;
+	    return d; /* d was removed */
+	}
+	return 0; /* nothing was removed */
+    }
+    llnode_t *n=l->head;
+    int i=0;
+    for(i=1;i<x;i++)
+	if(!n) /* no such element */ 
+	    return 0; /* nothing was removed */
+	else
+	    n=n->next; /* advance */
+    if(!n->next)
+	return 0; /* nothing to remove */
+    void *d=n->next->data;
+    n->next=n->next->next;
+    return d;
+}
+
+void ll_append(linked_list_t *l,void *d) {
+    llnode_t *newnode=malloc(sizeof(llnode_t));
+    newnode->next=0;
+    newnode->data=d;
+    llnode_t *n=l->head;
+    if(!n) {
+	l->head=newnode;
+	return;
+    }
+    while(n->next)
+        n=n->next;
+    n->next=newnode;
+}
+
+int ll_len(linked_list_t *l) {
+    llnode_t *n=l->head;
+    int len=0;
+    while(n)
+	len++,n=n->next;
+    return len;
+}
+
+void ll_free(linked_list_t *l) {
+    llnode_t *n=l->head,*tmp;
+    while(n) { /* free all nodes */
+	tmp=n->next;
+	free(n);
+	n=tmp;
+    }
+    /* free the list itself */
+    free(l);
 }
