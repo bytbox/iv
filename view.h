@@ -84,7 +84,7 @@ screen. There is no buffer-specific message.
 void display_message(char *);
 
 /* get the currently displayed message */
-char *get_displayed_message();
+const char *get_displayed_message();
 
 
 /*

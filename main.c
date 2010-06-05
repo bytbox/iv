@@ -66,6 +66,9 @@ int main(int argc,char *argv[]) {
     /* start up the editor */
     prepare_signal_handler();
     view_init();
+
+    /* display startup message */
+    display_message("iv - an editor - Copyright (C) Scott Lawrence 2010");
     
     /* look for list of files to open */
     opt=optind;

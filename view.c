@@ -44,6 +44,9 @@ struct {
     int buff2; /* the second buffer (if there is one) */
 } binf;
 
+/* the currently displayed message */
+char *bt_msg;
+
 /* initialize the view */
 void view_init() {
     /* allocate space for buffers */
@@ -53,12 +56,13 @@ void view_init() {
     binf.buff2=-1;
 
     /* init the actual view */
-    initscr();
+    initscr(); /* start ncurses */
     cbreak();
-    noecho();
+    noecho(); /* don't immediately echo characters */
     nonl();
     intrflush(stdscr,0);
-    keypad(stdscr,1);
+    keypad(stdscr,1); /* enable the keypad */
+    scrollok(stdscr,0); /* don't scroll off the bottom */
 }
 
 void view_hide() {
@@ -74,7 +78,15 @@ void view_close() {
 }
 
 void view_flush() {
+    /* fill the screen with blanks */
+    int x,y;
+    for(y=0;y<getmaxy(stdscr);y++)
+	for(x=0;x<getmaxx(stdscr);x++)
+	    mvaddch(y,x,' '); /* empty the screen */
+    for(y=0;y<getmaxy(stdscr)-1;y++)
+	mvaddch(y,0,'~'); /* display blank lines */
     /* display the message at the bottom of the screen */
+    mvaddstr(getmaxy(stdscr)-1,0,get_displayed_message());
     /* display the buffers */
     /* update and refresh the screen */
     doupdate();
@@ -84,13 +96,12 @@ void view_flush() {
 
 /* message display */
 void display_message(char *msg) {
-    /* fixme */
+    bt_msg=msg;
 }
 
 /* return the currently displayed message */
-char *get_displayed_message() {
-    /* fixme */
-    return 0;
+const char *get_displayed_message() {
+    return bt_msg;
 }
 
 
