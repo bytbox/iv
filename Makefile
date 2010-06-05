@@ -27,7 +27,7 @@
 ####################################################################################
 
 
-CFLAGS=-g -O0 -Wall -Wextra
+CFLAGS=-g -O0 -Wall -Wextra -ansi
 LFLAGS=-lncurses
 
 PREFIX=/usr/local

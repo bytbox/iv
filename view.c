@@ -42,10 +42,16 @@ struct {
     char display_mode; /* the current split type */
     int buff1; /* the first buffer (if there is one) */
     int buff2; /* the second buffer (if there is one) */
+    int buff1_size; /* the size of the first buffer (ignored if only
+		       one buffer is in use) */
+    char active; /* the position of the active buffer */
 } binf;
 
 /* the currently displayed message */
 char *bt_msg;
+
+/* low-level functions */
+void write_buffer(buffer_t *,int,int,int,int);/* (buffer,y,x,h,w) */
 
 /* initialize the view */
 void view_init() {
@@ -54,6 +60,7 @@ void view_init() {
     binf.display_mode=BUFFER_NONE;
     binf.buff1=-1;
     binf.buff2=-1;
+    binf.active=1;
 
     /* init the actual view */
     initscr(); /* start ncurses */
@@ -88,6 +95,39 @@ void view_flush() {
     /* display the message at the bottom of the screen */
     mvaddstr(getmaxy(stdscr)-1,0,get_displayed_message());
     /* display the buffers */
+    switch(binf.display_mode) {
+    case BUFFER_NONE:
+	/* display an intro screen */
+	break;
+    case BUFFER_FULLSCREEN:
+	write_buffer(get_buffer(current_buffer()),
+		     0,0,getmaxx(stdscr)-1,getmaxy(stdscr)-2);
+	break;
+    case BUFFER_VSPLIT: 
+	/* display a vertical split binf.buff1_size to the right */
+	attrset(A_REVERSE);
+	for(y=0;y<getmaxy(stdscr)-1;y++)
+	    mvaddch(y,binf.buff1_size,'|');
+	attrset(A_NORMAL);
+	/* display a bottom row with info */
+	
+	/* buffer 1 info */
+
+	/* buffer 2 info */
+	break;
+    case BUFFER_HSPLIT:
+	attrset(A_REVERSE);
+	/* display a row with buffer 1 info binf.buff1_size down */	
+
+	/* display a row with buffer 2 info at the bottom */
+	attrset(A_NORMAL);
+	break;
+    default:
+	/* error */
+	view_close();
+	fprintf(stderr,"error: invalid display mode (%s: %d)\n",__FILE__,__LINE__);
+	exit(2);
+    }
     /* update and refresh the screen */
     doupdate();
     refresh();
@@ -170,9 +210,52 @@ buffer_t *buffer_from_file(char *filename) {
 
 int add_buffer(buffer_t *b) {
     ll_append(binf.buffers,b);
+    if(binf.display_mode==BUFFER_NONE)
+	binf.display_mode=BUFFER_FULLSCREEN;
+    set_buffer(ll_len(binf.buffers)-1);
     return ll_len(binf.buffers)-1;
 }
 
 void remove_buffer(int b) {
     ll_del(binf.buffers,b);
+}
+
+char current_buffer_pos() {
+    return binf.active;
+}
+
+char buffer_layout() {
+    return binf.display_mode;
+}
+
+void set_buffer(int i) {
+    switch(current_buffer_pos()) {
+    case 1:
+	binf.buff1=i;
+	break;
+    case 2:
+	binf.buff2=i;
+	break;
+    default:
+	break;
+    }
+}
+
+int current_buffer() {
+    switch(current_buffer_pos()) {
+    case 1:
+	return binf.buff1;
+    case 2:
+	return binf.buff2;
+    default:
+	return -1;
+    }
+}
+
+buffer_t *get_buffer(int i) {
+    return ll_nth(binf.buffers,i);
+}
+
+void write_buffer(buffer_t *b,int y,int x,int h,int w) {
+    
 }

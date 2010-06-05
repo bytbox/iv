@@ -109,6 +109,29 @@ void remove_buffer(int);
 /* returns the id of the current buffer */
 int current_buffer();
 
+/* gets the position (1 or 2) of the current buffer */
+char current_buffer_pos();
+
+/* gets the current buffer layout */
+char buffer_layout();
+
+/* sets the current buffer */
+void set_buffer(int);
+
+/* switches to the other open buffer, if another is open */
+void switch_buffer();
+
+/* creates a vertical split, or transforms a horizontal split to a
+   vertical split */
+void create_vsplit();
+
+/* creates a horizontal split, or transforms a vertical split to a
+   horizontal split */
+void create_hsplit();
+
+/* eradicates any split present */
+void merge_split();
+
 /* returns the buffer object for the given id */
 buffer_t *get_buffer(int);
 
