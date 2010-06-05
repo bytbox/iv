@@ -119,7 +119,8 @@ buffer_t *buffer_from_file(char *filename) {
 	if(!f) {
 	    /* couldn't create the file - error out */
 	    return make_blank_buffer();
-	}
+	} else
+	    fclose(f); /* done creating file */
 	b=malloc(sizeof(buffer_t));
 	b->mode=BUFFER_MODE_ALL;
 	b->content=malloc(1);
@@ -135,10 +136,23 @@ buffer_t *buffer_from_file(char *filename) {
 	if(access(filename,W_OK))
 	    b->mode=BUFFER_MODE_READONLY;
 	else b->mode=BUFFER_MODE_ALL;
+	/* read the file */
+	f=fopen(filename,"r");
+	/* get the length of the file */
+	fseek(f,0,SEEK_END);
+	int len=ftell(f),i;
+	/* read the file */
+	fseek(f,0,SEEK_SET);
+	b->content=malloc(len+1);
+	for(i=0;i<len;i++)
+	    b->content[i]=fgetc(f);
+	b->content[len]=0; /* make sure there's a null byte */
+	fclose(f);
     }
-    
+
+    /* stuff that's always the same */
     b->filename=filename;
-    b->pos=0;
+    b->pos=0; /* start at the beginning */
     b->cursor_pos=0;    
     return b;
 }
