@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * The names of its contributors may be used to endorse or promote
+    * The names of its contributors may not be used to endorse or promote
       products derived from this software without specific prior
       written permission.
 
@@ -56,7 +56,12 @@ typedef struct {
 
     /* the position of the cursor, in characters from the start of the
        buffer */
-    int cursor_pos;
+    unsigned int cursor_pos;
+
+
+    /* stuff only used for nice/fast display */
+    /* the preferred x position */
+    unsigned pref_x;
 } buffer_t;
 
 /* (relatively) high-level view management abstractions */
@@ -134,6 +139,16 @@ void merge_split();
 
 /* returns the buffer object for the given id */
 buffer_t *get_buffer(int);
+
+/* cursor movement */
+/* move cursor down */
+void cursor_down(buffer_t *);
+/* move cursor up */
+void cursor_up(buffer_t *);
+/* move cursor left */
+void cursor_left(buffer_t *);
+/* move cursor right */
+void cursor_right(buffer_t *);
 
 /* buffer editing */
 

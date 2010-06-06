@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * The names of its contributors may be used to endorse or promote
+    * The names of its contributors may not be used to endorse or promote
       products derived from this software without specific prior
       written permission.
 
@@ -106,12 +106,13 @@ void prepare_signal_handler() {
 void signal_handler(int signal) {
     switch(signal) {
     case SIGINT:
-	/* don't actually exit, just print message */
+	pushchar(CTRL('C'));
 	break;
     default:
 	/* uncaught signal - don't fret */
 	break;
     }
+    prepare_signal_handler(); /* refresh signals */
 }
 
 void show_help() {

@@ -10,7 +10,7 @@
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
-    * The names of its contributors may be used to endorse or promote
+    * The names of its contributors may not be used to endorse or promote
       products derived from this software without specific prior
       written permission.
 
@@ -32,8 +32,42 @@
 #include <unistd.h>
 
 #include "input.h"
+#include "view.h"
+
+#define CTRL(x) (x-'A')
+
+void pushchar(char c) {
+    /* use ncurses */
+    ungetch(c);
+}
 
 /* run the input loop */
 void input_loop() {
-    sleep(2);
+    char c=getch();
+    while(c!='q') {
+	switch(c) {
+	case 'j':
+	    /* move down */
+	    cursor_down(get_buffer(current_buffer()));
+	    break;
+	case 'k':
+	    /* move up */
+	    cursor_up(get_buffer(current_buffer()));
+	    break;
+	case 'h':
+	    /* move left */
+	    cursor_left(get_buffer(current_buffer()));
+	    break;
+	case 'l':
+	    /* move right */
+	    cursor_right(get_buffer(current_buffer()));
+	    break;
+	default:
+	    /* unknown character */
+	    display_message("?");
+	}
+	/* respond */
+	view_flush();
+	c=getch();
+    }
 }
