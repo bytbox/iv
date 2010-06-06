@@ -51,6 +51,8 @@ struct {
 char *bt_msg;
 
 /* low-level functions */
+/* write the buffer to the screen, putting the cursor in the right
+   place */
 void write_buffer(buffer_t *,int,int,int,int);/* (buffer,y,x,h,w) */
 
 /* initialize the view */
@@ -101,7 +103,7 @@ void view_flush() {
 	break;
     case BUFFER_FULLSCREEN:
 	write_buffer(get_buffer(current_buffer()),
-		     0,0,getmaxx(stdscr)-1,getmaxy(stdscr)-2);
+		     0,0,getmaxy(stdscr)-1,getmaxx(stdscr));
 	break;
     case BUFFER_VSPLIT: 
 	/* display a vertical split binf.buff1_size to the right */
@@ -257,5 +259,39 @@ buffer_t *get_buffer(int i) {
 }
 
 void write_buffer(buffer_t *b,int y,int x,int h,int w) {
-    
+    /* locate the first character visible on screen */
+    /* note: wrapping is /not/ supported, and shouldn't be */
+    int i=0;
+    char *s=b->content; /* iterator */
+    while(i<b->pos) {
+	if(*s=='\n')
+	    i++;
+	s++;
+    }
+    char *lb=malloc(w+2); /* line buffer */
+    i=0; /* counter for how many lines we've displayed */
+    int j=0;
+    /* for each line */
+    fprintf(stderr,"%d\n",h);
+    while(i<h && *s) {
+	j=0;
+	/* copy the line */
+	while(*s!='\n' && j<w && *s) 
+	    lb[j++]=*(s++);
+	if(*s!='\n') {
+	    lb[j-1]='$'; /* indicate that there's more */
+	    /* skip */
+	    while(*(s++)!='\n' && *s);
+	} else
+	    s++; /* get past newline */
+	/* fill the rest with blanks */
+	for(;j<w;j++)
+	    lb[j]=' ';
+	lb[j]=0;
+	/* write the line */
+	mvaddstr(y+i,x,lb);
+	i++;
+    }
+    while(i<h)
+	mvaddch(y+(i++),x,'~');
 }
