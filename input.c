@@ -55,6 +55,12 @@ void input_loop() {
         case -1:
             /* ignore */
             break;
+        case KEY_BACKSPACE:
+        case '\b':
+        case 127: /* FIXME this is a hack */
+            /* delete a character */
+            deletec(current_view());
+            break;
         case 'a':
             /* add text */
             /* read characters until a stop character is
@@ -63,10 +69,23 @@ void input_loop() {
             view_flush();
             c=getch();
             while(c!=CTRL('C')) {
-                if(c==KEY_ENTER || c==KEY_IL || c=='\n' || c=='\r') {
+                switch(c) {
+                case KEY_ENTER:
+                case KEY_IL:
+                case '\n':
+                case '\r':
+                    /* new line */
                     insertlb(current_view());
-                } else
+                    break;
+                case KEY_BACKSPACE:
+                case '\b':
+                case 127: /* FIXME this is a hack */
+                    /* delete a character */
+                    deletec(current_view());
+                    break;
+                default:
                     insertc(current_view(),c);
+                }
                 view_flush();
                 c=getch();
             }

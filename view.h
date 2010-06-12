@@ -119,6 +119,9 @@ void insertc(view_t *,char);
 /* inserts a string at the cursor */
 void inserts(view_t *,char *);
 
+/* deletes a character before the cursor */
+void deletec(view_t *);
+
 /* inserts a line break at the cursor */
 void insertlb(view_t *);
 

@@ -284,3 +284,24 @@ void insertlb(view_t *view) {
     /* we've been modified */
     b->modified=1;
 }
+
+/* delete a character at the cursor */
+void deletec(view_t *view) {
+    /* exit if there's nothing else */
+    if(view->cursor_x==0) return;
+    /* get the line */
+    char *line=view->buffer->lines[view->cursor_line];
+        /* make a copy of the line */
+    char *ln=malloc(strlen(line)+2);
+    sprintf(ln,"%s",line);
+    /* copy the first part back */
+    line[0]='\0';
+    strncat(line,ln,view->cursor_x-1);
+    /* copy the second part back */
+    ln+=view->cursor_x;
+    strcat(line,ln);
+    /* retreat the cursor */
+    cursor_left(view);
+    /* we've been modified */
+    view->buffer->modified=1;
+}
