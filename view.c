@@ -237,7 +237,8 @@ void insertc(view_t *view,char c) {
     view->buffer->lines[view->cursor_line]=strexpand(line,strlen(line)+2);
     line=view->buffer->lines[view->cursor_line];
     /* make a copy of the line */
-    char *ln=malloc(strlen(line)+2);
+    char *tln=malloc(strlen(line)+2);
+    char *ln=tln;
     sprintf(ln,"%s",line);
     /* copy the first part back */
     line[0]='\0';
@@ -248,6 +249,7 @@ void insertc(view_t *view,char c) {
     /* copy the second part back */
     ln+=view->cursor_x;
     strcat(line,ln);
+    free(tln); /* free temporary buffer */
     /* advance the cursor */
     view->pref_x++;
     clean_cursor_x(view);
@@ -314,7 +316,8 @@ void deletec(view_t *view) {
     /* get the line */
     char *line=view->buffer->lines[view->cursor_line];
         /* make a copy of the line */
-    char *ln=malloc(strlen(line)+2);
+    char *tln=malloc(strlen(line)+2);
+    char *ln=tln;
     sprintf(ln,"%s",line);
     /* copy the first part back */
     line[0]='\0';
@@ -322,6 +325,7 @@ void deletec(view_t *view) {
     /* copy the second part back */
     ln+=view->cursor_x;
     strcat(line,ln);
+    free(tln); /* free temporary buffer */
     /* retreat the cursor */
     cursor_left(view);
     /* we've been modified */
