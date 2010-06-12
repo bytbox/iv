@@ -46,7 +46,7 @@ MODULES=main.o view.o input.o buffer.o util.o error.o subprocess.o conf.o regex.
 all: iv
 
 clean:
-	rm -f ${MODULES} iv
+	rm -f ${MODULES} iv MANIFEST ${DISTNAME}.tar.gz
 	rm -rf ${DISTNAME}
 
 install:
@@ -55,8 +55,14 @@ install:
 iv: ${MODULES}
 	${CC} -o iv ${MODULES} ${LFLAGS}
 
-sdist: clean
+sdist: ${DISTNAME}.tar.gz
+
+${DISTNAME}.tar.gz: clean
+	find . -type f | grep -v ".svn" | grep -v "MANIFEST" > MANIFEST
 	mkdir -p ${DISTNAME}
+	cp `cat MANIFEST` ${DISTNAME}
+	${TAR} czvf $@ ${DISTNAME}
+	rm -rf ${DISTNAME} MANIFEST
 
 test:
 
