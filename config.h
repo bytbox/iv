@@ -28,76 +28,9 @@
   SUCH DAMAGE.
 */
 
-#include <curses.h>
-#include <stdlib.h>
-#include <unistd.h>
+#ifndef CONFIG_H
+#define CONFIG_H
 
-#include "input.h"
-#include "view.h"
+#define DEBUG
 
-#define CTRL(x) (x-'A')
-
-void pushchar(char c) {
-    /* use ncurses */
-    ungetch(c);
-}
-
-/* run the input loop */
-void input_loop() {
-    char c=getch();
-    while(c!='q') {
-        display_message("");
-        view_flush();
-	switch(c) {
-            /* stuff to ignore, because it just happens */
-        case CTRL('c'):
-        case -1:
-            /* ignore */
-            break;
-        case 'a':
-            /* add text */
-            /* read characters until a stop character is
-               encountered */
-            c=getch();
-            while(c!=CTRL('C')) {
-                insertc(current_view(),c);
-                c=getch();
-            }
-            break;
-        case 'w':
-            /* write the file */
-            /* FIXME TODO */
-            break;
-	case 'h':
-	    /* move left */
-	    cursor_left(current_view());
-	    break;
-	case 'j':
-	    /* move down */
-	    cursor_down(current_view());
-	    break;
-	case 'k':
-	    /* move up */
-	    cursor_up(current_view());
-	    break;
-	case 'l':
-	    /* move right */
-	    cursor_right(current_view());
-	    break;
-	default:
-	    /* unknown character */
-            {
-#ifdef DEBUG
-                char *msg=malloc(10);
-                sprintf(msg,"? %d",c);
-                display_message(msg);
-#else
-                display_message("?");
 #endif
-            }
-	}
-	/* respond */
-	view_flush();
-	c=getch();
-    }
-}

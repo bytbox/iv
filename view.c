@@ -221,3 +221,9 @@ void cursor_right(view_t *view) {
     clean_cursor_x(view);
     view->pref_x=view->cursor_x;
 }
+
+/* inserts a character at the cursor */
+void insertc(view_t *view,char c) {
+    char *line=view->buffer->lines[view->cursor_line];
+    
+}

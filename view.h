@@ -113,4 +113,10 @@ void cursor_up(view_t *);
 /* move the cursor right */
 void cursor_right(view_t *);
 
+/* inserts a character at the cursor */
+void insertc(view_t *,char);
+
+/* inserts a string at the cursor */
+void inserts(view_t *,char *);
+
 #endif /* !VIEW_H */
