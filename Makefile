@@ -43,6 +43,6 @@ clean:
 install:
 	${INSTALL} iv ${PREFIX}/bin
 
-iv: main.o view.o input.o util.o
-	${CC} -o iv main.o view.o input.o util.o ${LFLAGS}
+iv: main.o view.o input.o util.o buffer.o
+	${CC} -o iv main.o view.o input.o buffer.o util.o ${LFLAGS}
 

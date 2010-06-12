@@ -31,125 +31,86 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-#define BUFFER_MODE_ALL       0
-#define BUFFER_MODE_READONLY  1
+#include "buffer.h"
 
-/* buffer display modes */
-#define BUFFER_NONE           0x00
-#define BUFFER_FULLSCREEN     0x01
-#define BUFFER_VSPLIT         0x02
-#define BUFFER_HSPLIT         0x04
-
-/* the definition of a buffer */
 typedef struct {
-    /* the content */
-    char *content;
+    /* the associated buffer */
+    buffer_t *buffer;
 
-    /* the filename of the buffer */
-    char *filename;
+    /* the topmost visible line */
+    int topline;
 
-    /* the mode of the buffer */
-    char mode;
+    /* the line the cursor is on */
+    int cursor_line;
 
-    /* the position (first visible line number, from 0) */
-    int pos;
+    /* the current x value of the cursor */
+    int cursor_x;
 
-    /* the position of the cursor, in characters from the start of the
-       buffer */
-    unsigned int cursor_pos;
+    /* the preferred x value of the cursor. This value is changed only
+       during deliberate horizontal motion. */
+    int pref_x;
 
+    /* the height of the view */
+    int height;
+    
+    /* the width of the view */
+    int width;
+} view_t;
 
-    /* stuff only used for nice/fast display */
-    /* the preferred x position */
-    unsigned pref_x;
-} buffer_t;
-
-/* (relatively) high-level view management abstractions */
-
-/* create the view */
-void view_init();
-
-/* save the view and stop displaying it 
-   (this passes control to normal i/o functions */
-void view_hide();
-
-/* close up the view */
-void view_close();
-
-/* force the screen buffer to be flushed */
-void view_flush();
-
-/* message displaying
-
-   These control the text displayed on the bottom line of the
-screen. There is no buffer-specific message.
+/*
+  high-level view management
 */
 
-/* displays a message */
-void display_message(char *);
+/* sets up the screen */
+void view_init();
 
-/* get the currently displayed message */
-const char *get_displayed_message();
+/* hide the screen and allow terminal operations */
+void view_hide();
+
+/* refreshed the screen */
+void view_flush();
+
+/* close up shop */
+void view_close();
 
 
 /*
-  Buffer layout allows only two visible buffers, split horizontally
-  or vertically.
+  doing stuff with actual views
 */
 
-/* buffer management */
+/* returns the currently open view */
+view_t *current_view();
 
-/* create a blank buffer */
-buffer_t *make_blank_buffer();
+/* creates a view for the given buffer */
+view_t *create_view(buffer_t *);
 
-/* create a buffer from a filename */
-buffer_t *buffer_from_file(char *);
+/* sets the given view to be the current view */
+void activate_view(view_t *);
 
-/* add the buffer to the buffer list, returning the buffer id */
-int add_buffer(buffer_t *);
+/*
+  displayed message management 
+*/
 
-/* removes the buffer id */
-void remove_buffer(int);
+/* set the displayed message */
+void display_message(char *);
 
-/* returns the id of the current buffer */
-int current_buffer();
+/* returns the displayed message */
+char *displayed_message();
 
-/* gets the position (1 or 2) of the current buffer */
-char current_buffer_pos();
+/*
+  cursor manipulation and scrolling
+*/
 
-/* gets the current buffer layout */
-char buffer_layout();
+/* move the cursor to the left */
+void cursor_left(view_t *);
 
-/* sets the current buffer */
-void set_buffer(int);
+/* move the cursor down */
+void cursor_down(view_t *);
 
-/* switches to the other open buffer, if another is open */
-void switch_buffer();
+/* move the cursor up */
+void cursor_up(view_t *);
 
-/* creates a vertical split, or transforms a horizontal split to a
-   vertical split */
-void create_vsplit();
-
-/* creates a horizontal split, or transforms a vertical split to a
-   horizontal split */
-void create_hsplit();
-
-/* eradicates any split present */
-void merge_split();
-
-/* returns the buffer object for the given id */
-buffer_t *get_buffer(int);
-
-/* cursor movement */
-/* move cursor down */
-void cursor_down(buffer_t *);
-/* move cursor up */
-void cursor_up(buffer_t *);
-/* move cursor left */
-void cursor_left(buffer_t *);
-/* move cursor right */
-void cursor_right(buffer_t *);
-
-/* buffer editing */
+/* move the cursor right */
+void cursor_right(view_t *);
 
 #endif /* !VIEW_H */

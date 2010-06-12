@@ -37,34 +37,24 @@
 #include "util.h"
 #include "view.h"
 
-/* buffer info structure */
+/* the message being displayed */
+char *message;
+
+/* the layout of the view */
 struct {
-    linked_list_t *buffers; /* list of all buffers */
-    char display_mode; /* the current split type */
-    int buff1; /* the first buffer (if there is one) */
-    int buff2; /* the second buffer (if there is one) */
-    int buff1_size; /* the size of the first buffer (ignored if only
-                       one buffer is in use) */
-    char active; /* the position of the active buffer */
-} binf;
+    char hsplit; /* is there a horizontal split? */
+    char vsplit; /* is there a vertical split? */
+    int v1size; /* the size of the first view */
+    view_t *view1; /* the first view */
+    view_t *view2; /* the second view */
+    view_t *active; /* the active view */
+} view_layout;
 
-/* the currently displayed message */
-char *bt_msg;
+/* draw a view to the specified position on the screen */
+void draw_view(view_t *,int,int,int,int);
 
-/* low-level functions */
-/* write the buffer to the screen, putting the cursor in the right
-   place */
-void write_buffer(buffer_t *,int,int,int,int);/* (buffer,y,x,h,w) */
-
-/* initialize the view */
 void view_init() {
-    /* allocate space for buffers */
-    binf.buffers=make_linked_list();
-    binf.display_mode=BUFFER_NONE;
-    binf.buff1=-1;
-    binf.buff2=-1;
-    binf.active=1;
-
+    buffer_init(); /* initialize the buffers */
     /* init the actual view */
     initscr(); /* start ncurses */
     cbreak();
@@ -73,18 +63,15 @@ void view_init() {
     intrflush(stdscr,0);
     keypad(stdscr,1); /* enable the keypad */
     scrollok(stdscr,0); /* don't scroll off the bottom */
+    view_layout.hsplit=0; /* no split */
+    view_layout.vsplit=0;
+    view_layout.view1=0;
+    view_layout.view2=0;
+    view_layout.active=0;
 }
 
 void view_hide() {
 
-}
-
-void view_close() {
-    /* end curses */
-    endwin();
-
-    /* clean up all buffer stuff */
-    ll_free(binf.buffers);
 }
 
 void view_flush() {
@@ -96,295 +83,141 @@ void view_flush() {
     for(y=0;y<getmaxy(stdscr)-1;y++)
         mvaddch(y,0,'~'); /* display blank lines */
     /* display the message at the bottom of the screen */
-    mvaddstr(getmaxy(stdscr)-1,0,get_displayed_message());
-    /* display the buffers */
-    switch(binf.display_mode) {
-    case BUFFER_NONE:
-        /* display an intro screen */
-        break;
-    case BUFFER_FULLSCREEN:
-        write_buffer(get_buffer(current_buffer()),
-                     0,0,getmaxy(stdscr)-1,getmaxx(stdscr));
-        break;
-    case BUFFER_VSPLIT: 
-        /* display a vertical split binf.buff1_size to the right */
+    mvaddstr(getmaxy(stdscr)-1,0,displayed_message());
+    if(view_layout.hsplit) {
+        /* paint a line down the center */
         attrset(A_REVERSE);
         for(y=0;y<getmaxy(stdscr)-1;y++)
-            mvaddch(y,binf.buff1_size,'|');
+            mvaddch(y,view_layout.v1size,'|');
         attrset(A_NORMAL);
         /* display a bottom row with info */
         
         /* buffer 1 info */
 
         /* buffer 2 info */
-        break;
-    case BUFFER_HSPLIT:
+    } else if(view_layout.vsplit) {
+        /* display a line through the middle */
         attrset(A_REVERSE);
-        /* display a row with buffer 1 info binf.buff1_size down */     
 
-        /* display a row with buffer 2 info at the bottom */
         attrset(A_NORMAL);
-        break;
-    default:
-        /* error */
-        view_close();
-        fprintf(stderr,"error: invalid display mode (%s: %d)\n",__FILE__,__LINE__);
-        exit(2);
+    } else {
+        /* just draaw the view */
+        draw_view(view_layout.active,0,0,getmaxy(stdscr)-1,getmaxx(stdscr));
     }
-    /* update and refresh the screen */
+    /* update and refresh the screen (curses stuff) */
     doupdate();
     refresh();
 }
 
-
-/* message display */
-void display_message(char *msg) {
-    bt_msg=msg;
-}
-
-/* return the currently displayed message */
-const char *get_displayed_message() {
-    return bt_msg;
-}
-
-
-/* buffer management */
-
-/* creating a blank buffer */
-buffer_t *make_blank_buffer() {
-    buffer_t *b=malloc(sizeof(buffer_t));
-    char *content=malloc(2);
-    content[0]='\n';
-    content[1]=0;
-    b->content=content;
-    b->filename="";
-    b->mode=BUFFER_MODE_ALL;
-    b->pos=0;
-    b->cursor_pos=0;
-    b->pref_x=1;
-    return b;
-}
-
-buffer_t *buffer_from_file(char *filename) {
-    /* check mode information */
-    FILE *f;
-    buffer_t *b;
-    if(access(filename,F_OK)) { /* exists? */
-        /* attempt to create the file */
-        f=fopen(filename,"w");
-        if(!f) {
-            /* couldn't create the file - error out */
-            return make_blank_buffer();
-        } else
-            fclose(f); /* done creating file */
-        b=malloc(sizeof(buffer_t));
-        b->mode=BUFFER_MODE_ALL;
-        b->content=malloc(1);
-        b->content[0]=0;
-    } else {
-        /* check that we have read permissions */
-        if(access(filename,R_OK)) {
-            /* couldn't read the file - error out */
-            return make_blank_buffer();
+void draw_view(view_t *view,int y,int x,int h,int w) {
+    /* is this a valid view? */
+    if(!view)
+        return; /* don't draw anything */
+    /* make sure the view's size is right */
+    view->height=h;
+    view->width=w;
+    /* adjust the cursor if necessary FIXME TODO */
+    buffer_t *b=view->buffer;
+    /* for each line on the screen */
+    int i;
+    for(i=view->topline;i<b->line_count && i<h+view->topline;i++) {
+        /* for each character we can display */
+        int j,len=strlen(b->lines[i]);
+        for(j=0;j<len && j<w;j++) {
+            /* display the character */
+            mvaddch(y+i-view->topline,x+j,b->lines[i][j]);
         }
-        /* can we write? */
-        b=malloc(sizeof(buffer_t));
-        if(access(filename,W_OK))
-            b->mode=BUFFER_MODE_READONLY;
-        else b->mode=BUFFER_MODE_ALL;
-        /* read the file */
-        f=fopen(filename,"r");
-        /* get the length of the file */
-        fseek(f,0,SEEK_END);
-        int len=ftell(f),i;
-        /* read the file */
-        fseek(f,0,SEEK_SET);
-        b->content=malloc(len+1);
-        for(i=0;i<len;i++)
-            b->content[i]=fgetc(f);
-        b->content[len]=0; /* make sure there's a null byte */
-        fclose(f);
-    }
-
-    /* stuff that's always the same */
-    b->filename=filename;
-    b->pos=0; /* start at the beginning */
-    b->cursor_pos=0;
-    b->pref_x=1;
-    return b;
-}
-
-int add_buffer(buffer_t *b) {
-    ll_append(binf.buffers,b);
-    if(binf.display_mode==BUFFER_NONE)
-        binf.display_mode=BUFFER_FULLSCREEN;
-    set_buffer(ll_len(binf.buffers)-1);
-    return ll_len(binf.buffers)-1;
-}
-
-void remove_buffer(int b) {
-    ll_del(binf.buffers,b);
-}
-
-char current_buffer_pos() {
-    return binf.active;
-}
-
-char buffer_layout() {
-    return binf.display_mode;
-}
-
-void set_buffer(int i) {
-    switch(current_buffer_pos()) {
-    case 1:
-        binf.buff1=i;
-        break;
-    case 2:
-        binf.buff2=i;
-        break;
-    default:
-        break;
-    }
-}
-
-int current_buffer() {
-    switch(current_buffer_pos()) {
-    case 1:
-        return binf.buff1;
-    case 2:
-        return binf.buff2;
-    default:
-        return -1;
-    }
-}
-
-buffer_t *get_buffer(int i) {
-    return ll_nth(binf.buffers,i);
-}
-
-void write_buffer(buffer_t *b,int y,int x,int h,int w) {
-    /* locate the first character visible on screen */
-    /* note: wrapping is /not/ supported, and shouldn't be */
-    int i=0;
-    int curx,cury; /* where the cursor will go */
-    char *s=b->content; /* iterator */
-    while(i<b->pos) {
-        if(*s=='\n')
-            i++;
-        s++;
-    }
-    char *lb=malloc(w+2); /* line buffer */
-    i=0; /* counter for how many lines we've displayed */
-    int j=0;
-    unsigned k=0; /* to find where to put the cursor */
-    /* for each line */
-    while(i<h && *s) {
-        j=0;
-        /* check the cursor */
-        if(k==b->cursor_pos) cury=i,curx=j;
-        /* copy the line */
-        while(*s!='\n' && j<w && *s) {
-            lb[j++]=*(s++),k++;
-            /* check the cursor */
-            if(k==b->cursor_pos) cury=i,curx=j;
-        }
-        if(*s!='\n' && *s) {
-            lb[j-1]='$'; /* indicate that there's more */
-            /* skip */
-            while(*(s++)!='\n' && *s) {
-                k++;
-                /* check the cursor */
-                /* FIXME implement horizontal scroll */
-                if(k==b->cursor_pos) cury=i,curx=j;
-            }
-        } else
-            s++,k++; /* get past newline */
-        /* fill the rest with blanks */
+        /* fill the rest of the line with blanks */
         for(;j<w;j++)
-            lb[j]=' ';
-        lb[j]=0;
-        /* write the line */
-        mvaddstr(y+i,x,lb);
-        i++;
+            mvaddch(y+(i-view->topline),x+j,' ');
     }
-    /* check the cursor */
-    if(k==b->cursor_pos) cury=i,curx=j;
-    while(i<h) /* fill the rest of the lines with ~ */
-        mvaddch(y+(i++),x,'~');
-    move(cury,curx); /* position the cursor */
+    move(view->cursor_line-view->topline,view->cursor_x);
 }
 
-/* move cursor down */
-void cursor_down(buffer_t *b) {
-    char *s=b->content+b->cursor_pos;
-    int x=b->pref_x-1;
-    /* advance to next newline */
-    while(*s && *s!='\n')
-        s++;
-    /* and skip the newline */
-    if(*s=='\n') s++;
-    /* advance by x, bit by bit - don't skip \n */
-    while(x>0 && *s!='\n') {
-        s++,x--;
-    }
-    if(s>(b->content+strlen(b->content)-1))
-        s=b->content+strlen(b->content)-1;
-    b->cursor_pos=s-b->content;
-    /* we do not update pref_x - we move vertically */
+void view_close() {
+    endwin();
+    buffer_cleanup(); /* cleanup buffers */
 }
 
-/* move cursor up */
-void cursor_up(buffer_t *b) {
-    char *s=b->content+b->cursor_pos;
-    int x=b->pref_x-1;
-    if(*s=='\n') s--; /* skip newline, if any */
-    /* retreat to last newline */
-    while(s>b->content && *s!='\n')
-        s--;
-    if(*s=='\n') s--; /* skip newline */
-    /* now do it again */
-    while(s>b->content && *s!='\n')
-        s--;
-    /* skip the newline */
-    if(*s=='\n') s++;
-    /* advance by x, bit by bit - don't skip \n */
-    while(x>0 && *s!='\n')
-        s++,x--;
-    if(s<b->content)
-        s=b->content; /* bounds check */
-    b->cursor_pos=s-b->content;
-    /* we do not update pref_x - we move vertically */
+view_t *current_view() {
+    return view_layout.active;
 }
 
-/* calculates the current x value and caches it. This method should
-   only be called when the user requests horizontal (or equivalent)
-   movement. The cached variable is used to determine the effect of
-   vertical movement. */
-void update_pref_x(buffer_t *b) {
-    char *s=b->content+b->cursor_pos;
-    int x=0;
-    if(*s=='\n') s--,x++;
-    /* count back to the previous newline */
-    while(s>=b->content && *s!='\n')
-        x++,s--;
-    b->pref_x=x?x:1;
+view_t *create_view(buffer_t *buffer) {
+    view_t *view=malloc(sizeof(view_t));
+    view->buffer=buffer;
+    /* start at the beginning of the buffer */
+    view->topline=0;
+    view->cursor_line=0;
+    view->cursor_x=0;
+    view->pref_x=0;
+    /* we don't know the height and width, so guess */
+    view->height=2;
+    view->width=2;
+    return view;
 }
 
-/* move cursor left */
-void cursor_left(buffer_t *b) {
-    if(b->cursor_pos>0)
-        b->cursor_pos--;
-    if(b->content[b->cursor_pos]=='\n')
-        b->cursor_pos++;
-    /* calculate pref_x */
-    update_pref_x(b);
+void activate_view(view_t *view) {
+    /* which space is being used? */
+    if(view_layout.active==view_layout.view1)
+        view_layout.active=view_layout.view1=view;
+    else
+        view_layout.active=view_layout.view2=view;
 }
 
-/* move cursor right */
-void cursor_right(buffer_t *b) {
-    if(b->cursor_pos<strlen(b->content)-1 && b->content[b->cursor_pos]!='\n')
-        b->cursor_pos++;
-    /* calculate pref_x */
-    update_pref_x(b);
+void display_message(char *msg) {
+    message=msg;
 }
 
+char *displayed_message() {
+    return message;
+}
+
+/*
+  cursor manipulation and scrolling
+*/
+
+/* clean the X cursor position by relocating the cursor */
+void clean_cursor_x(view_t *view) {
+    view->cursor_x=view->pref_x;
+    if(view->cursor_x<0)
+        view->cursor_x=0;
+    int len=strlen(view->buffer->lines[view->cursor_line]);
+    if(view->cursor_x>=len)
+        view->cursor_x=len;
+}
+
+/* move the cursor to the left */
+void cursor_left(view_t *view) {
+    view->pref_x--;
+    clean_cursor_x(view);
+    view->pref_x=view->cursor_x;
+}
+
+/* move the cursor down */
+void cursor_down(view_t *view) {
+    view->cursor_line++;
+    if(view->cursor_line>=view->buffer->line_count)
+        view->cursor_line--;
+    clean_cursor_x(view);
+    /* scroll down if necessary */
+    if((view->cursor_line-view->topline) >= view->height)
+        view->topline+=(view->height+1)/2;
+}
+
+/* move the cursor up */
+void cursor_up(view_t *view) {
+    if(view->cursor_line>0)
+        view->cursor_line--;
+    clean_cursor_x(view);
+    /* scroll up if necessary */
+    if((view->cursor_line-view->topline) <0)
+        view->topline-=(view->height+1)/2;
+}
+
+/* move the cursor right */
+void cursor_right(view_t *view) {
+    view->pref_x++;
+    clean_cursor_x(view);
+    view->pref_x=view->cursor_x;
+}

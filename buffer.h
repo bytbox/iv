@@ -28,46 +28,45 @@
   SUCH DAMAGE.
 */
 
-#include <curses.h>
-#include <unistd.h>
+#ifndef BUFFER_H
+#define BUFFER_H
 
-#include "input.h"
-#include "view.h"
+typedef struct {
+    /* the content of the buffer - an array of all lines */
+    char **lines;
+    
+    /* the number of lines in the buffer */
+    int line_count;
 
-#define CTRL(x) (x-'A')
+    /* the name of the associated file */
+    char *filename;
 
-void pushchar(char c) {
-    /* use ncurses */
-    ungetch(c);
-}
+    /* is the buffer readonly? */
+    char readonly;
 
-/* run the input loop */
-void input_loop() {
-    char c=getch();
-    while(c!='q') {
-	switch(c) {
-	case 'h':
-	    /* move left */
-	    cursor_left(current_view());
-	    break;
-	case 'j':
-	    /* move down */
-	    cursor_down(current_view());
-	    break;
-	case 'k':
-	    /* move up */
-	    cursor_up(current_view());
-	    break;
-	case 'l':
-	    /* move right */
-	    cursor_right(current_view());
-	    break;
-	default:
-	    /* unknown character */
-	    display_message("?");
-	}
-	/* respond */
-	view_flush();
-	c=getch();
-    }
-}
+    /* has the buffer been modified? */
+    char modified;
+
+    /* the default view for this buffer. This is kinda messy - the
+       default view isn't changed in any clearly intuitive way. */
+    void *default_view;
+} buffer_t;
+
+
+/* sets up the buffers */
+void buffer_init();
+
+/* cleans up the buffers */
+void buffer_cleanup();
+
+
+/* adds a buffer to the list */
+void add_buffer(buffer_t *);
+
+/* creates a blank buffer */
+buffer_t *make_blank_buffer();
+
+/* creates a buffer from a file */
+buffer_t *buffer_from_file(char *);
+
+#endif /* !BUFFER_H */
