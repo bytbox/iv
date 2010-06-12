@@ -1,6 +1,8 @@
 == Features
  - Syntax highlighting
  - Search, replace
+ - Copy, paste
+ - Horizontal scrolling
 
 == Modules
  - error
