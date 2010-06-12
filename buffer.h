@@ -34,7 +34,7 @@
 typedef struct {
     /* the content of the buffer - an array of all lines */
     char **lines;
-    
+
     /* the number of lines in the buffer */
     int line_count;
 
@@ -68,5 +68,8 @@ buffer_t *make_blank_buffer();
 
 /* creates a buffer from a file */
 buffer_t *buffer_from_file(char *);
+
+/* write a buffer to the file specified in its filename */
+void buffer_to_file(buffer_t *);
 
 #endif /* !BUFFER_H */

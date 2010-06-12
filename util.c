@@ -105,3 +105,50 @@ void ll_free(linked_list_t *l) {
     /* free the list itself */
     free(l);
 }
+
+/*
+  String management.
+
+  The rule is, when expanding a string, allocate the next highest
+  multiple of 2.
+*/
+
+/* returns the size that should be allocated for the given size
+   string */
+int sizetoalloc(int len) {
+    int size=1;
+    int i=0;
+    while(size<=len+1) {
+        i++;
+        if(i>=size)
+            i=0,size*=2;
+    }
+    return size;
+}
+
+/* returns the allocated size of the string, assuming it was allocated
+   with these functions. */
+int strsize(char *str) {
+    int size=1;
+    int i=0;
+    while(*str!='\0') {
+        i++;
+        if(i>=size)
+            i=0,size*=2;
+        str++;
+    }
+    return size;
+}
+
+/* expands the string to be able to fit the specified size */
+char *strexpand(char *str,int newsize) {
+    if(newsize+1>=strsize(str)) {
+        /* figure out what the new size will be */
+        int size=strsize(str);
+        while(newsize+1>=size)
+            size*=2; /* double size for each expansion */
+        /* reallocate memory */
+        return realloc(str,size);
+    } else return str;
+}
+

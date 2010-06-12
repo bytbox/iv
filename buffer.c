@@ -114,7 +114,7 @@ buffer_t *buffer_from_file(char *filename) {
             c=fgetc(f);
         }
         /* allocate lines */
-        b->lines=calloc(b->line_count+2,sizeof(char *));
+        b->lines=calloc(sizetoalloc(b->line_count),sizeof(char *));
         /* for each line */
         int pos=0,len,lno=0;
         rewind(f);
@@ -147,4 +147,17 @@ buffer_t *buffer_from_file(char *filename) {
     b->modified=0;
     b->default_view=create_view(b);
     return b;
+}
+
+/* writes the buffer to the appropriate file */
+void buffer_to_file(buffer_t *b) {
+    /* open the file */
+    FILE *f=fopen(b->filename,"w");
+    /* for each line */
+    int i;
+    for(i=0;i<b->line_count;i++) {
+        /* write the line to the file */
+        fprintf(f,"%s\n",b->lines[i]);
+    }
+    fclose(f);
 }

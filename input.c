@@ -32,6 +32,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include "config.h"
 #include "input.h"
 #include "view.h"
 
@@ -44,7 +45,7 @@ void pushchar(char c) {
 
 /* run the input loop */
 void input_loop() {
-    char c=getch();
+    int c=getch();
     while(c!='q') {
         display_message("");
         view_flush();
@@ -58,29 +59,40 @@ void input_loop() {
             /* add text */
             /* read characters until a stop character is
                encountered */
+            display_message("m:a");
+            view_flush();
             c=getch();
             while(c!=CTRL('C')) {
-                insertc(current_view(),c);
+                if(c==KEY_ENTER || c==KEY_IL || c=='\n' || c=='\r') {
+                    insertlb(current_view());
+                } else
+                    insertc(current_view(),c);
+                view_flush();
                 c=getch();
             }
             break;
         case 'w':
             /* write the file */
-            /* FIXME TODO */
+            /* FIXME TODO what if the filename is blank? */
+            buffer_to_file(current_view()->buffer);
             break;
 	case 'h':
+        case KEY_LEFT:
 	    /* move left */
 	    cursor_left(current_view());
 	    break;
 	case 'j':
+        case KEY_DOWN:
 	    /* move down */
 	    cursor_down(current_view());
 	    break;
 	case 'k':
+        case KEY_UP:
 	    /* move up */
 	    cursor_up(current_view());
 	    break;
 	case 'l':
+        case KEY_RIGHT:
 	    /* move right */
 	    cursor_right(current_view());
 	    break;

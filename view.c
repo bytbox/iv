@@ -224,6 +224,59 @@ void cursor_right(view_t *view) {
 
 /* inserts a character at the cursor */
 void insertc(view_t *view,char c) {
+    if(c<0) return;
+    if(c=='\t') {
+        /* FIXME TODO */
+        return;
+    }
     char *line=view->buffer->lines[view->cursor_line];
-    
+    /* make sure the line is long enough */
+    view->buffer->lines[view->cursor_line]=strexpand(line,strlen(line)+1);
+    line=view->buffer->lines[view->cursor_line];
+    /* make a copy of the line */
+    char *ln=malloc(strlen(line)+2);
+    sprintf(ln,"%s",line);
+    /* copy the first part back */
+    line[0]='\0';
+    strncat(line,ln,view->cursor_x);
+    /* copy the character */
+    line[strlen(line)+1]='\0';
+    line[strlen(line)]=c;
+    /* copy the second part back */
+    ln+=view->cursor_x;
+    strcat(line,ln);
+    /* advance the cursor */
+    view->pref_x++;
+    clean_cursor_x(view);
+    /* we've been modified */
+    view->buffer->modified=1;
+}
+
+/* inserts a line break at the cursor */
+void insertlb(view_t *view) {
+    buffer_t *b=view->buffer;
+    /* enlarge the line count */
+    b->line_count++;
+    /* allocate more space */
+    b->lines=realloc(b->lines,sizeof(char *)*b->line_count);
+    int nln=view->cursor_line; /* the number of the new line -1 */
+    /* copy lines down */
+    int l;
+    for(l=b->line_count-2;l>=nln;l--)
+        b->lines[l+1]=b->lines[l];
+    /* create the new line */
+    b->lines[nln]=malloc(view->cursor_x+2);
+    b->lines[nln][0]='\0';
+    /* copy the first part */
+    strncat(b->lines[nln],b->lines[nln+1],view->cursor_x);
+    /* copy the second part out */
+    char *sp=malloc(strsize(b->lines[nln+1]+view->cursor_x));
+    strcat(sp,b->lines[nln+1]+view->cursor_x);
+    /*free(b->lines[nln+1]);*/
+    /*b->lines[nln+1]=sp;*/
+    view->pref_x=0; /* we're at the beginning of the line */
+    /* move the cursor down */
+    cursor_down(view);
+    /* we've been modified */
+    b->modified=1;
 }

@@ -119,4 +119,7 @@ void insertc(view_t *,char);
 /* inserts a string at the cursor */
 void inserts(view_t *,char *);
 
+/* inserts a line break at the cursor */
+void insertlb(view_t *);
+
 #endif /* !VIEW_H */

@@ -31,6 +31,10 @@
 #ifndef UTIL_H
 #define UTIL_H
 
+/*
+  linked lists
+*/
+
 /* a node in a linked list */
 struct llnode;
 typedef struct llnode {
@@ -60,6 +64,26 @@ int ll_len(linked_list_t *);
 
 /* frees a linked list */
 void ll_free(linked_list_t *);
+
+
+/*
+  String management.
+
+  The rule is, when expanding a string, allocate the next highest
+  multiple of 2.
+*/
+
+/* returns the size that should be allocated for the given size
+   string */
+int sizetoalloc(int);
+
+/* returns the allocated size of the string, assuming it was allocated
+   with these functions. */
+int strsize(char *);
+
+/* expands the string to be able to fit the specified size */
+char *strexpand(char *,int);
+
 
 #endif /* !UTIL_H */
 
