@@ -27,7 +27,7 @@
 ####################################################################################
 
 PNAME=iv
-VERSION=0.0.1
+VERSION=0.0.2
 DISTNAME=${PNAME}-${VERSION}
 
 CFLAGS=-g -O0 -Wall -Wextra -ansi -DVERSION=\"${VERSION}\"
