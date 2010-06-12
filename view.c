@@ -287,8 +287,30 @@ void insertlb(view_t *view) {
 
 /* delete a character at the cursor */
 void deletec(view_t *view) {
-    /* exit if there's nothing else */
-    if(view->cursor_x==0) return;
+    /* exit if there's nothing to delete */
+    if(view->cursor_x==0 && view->cursor_line==0)
+        return;
+    /* should we merge lines? */
+    if(view->cursor_x==0) {
+        /* merge lines */
+        char *line=view->buffer->lines[view->cursor_line];
+        view->buffer->lines[view->cursor_line-1]=
+            strexpand(view->buffer->lines[view->cursor_line-1],
+                      strlen(view->buffer->lines[view->cursor_line-1])+
+                      strlen(line));
+        view->pref_x=strlen(view->buffer->lines[view->cursor_line-1]);
+        strcat(view->buffer->lines[view->cursor_line-1],line);
+        free(line);
+        /* reduce line count */
+        view->buffer->line_count--;
+        /* scroll all future lines up */
+        int i;
+        for(i=view->cursor_line;i<view->buffer->line_count;i++)
+            view->buffer->lines[i]=view->buffer->lines[i+1];
+        /* move the cursor */
+        cursor_up(view);
+        return;
+    }
     /* get the line */
     char *line=view->buffer->lines[view->cursor_line];
         /* make a copy of the line */

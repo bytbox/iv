@@ -83,6 +83,22 @@ void input_loop() {
                     /* delete a character */
                     deletec(current_view());
                     break;
+                case KEY_LEFT:
+                    /* move left */
+                    cursor_left(current_view());
+                    break;
+                case KEY_DOWN:
+                    /* move down */
+                    cursor_down(current_view());
+                    break;
+                case KEY_UP:
+                    /* move up */
+                    cursor_up(current_view());
+                    break;
+                case KEY_RIGHT:
+                    /* move right */
+                    cursor_right(current_view());
+                    break;
                 default:
                     insertc(current_view(),c);
                 }
