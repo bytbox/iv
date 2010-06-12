@@ -3,6 +3,7 @@
  - Search, replace
 
 == Modules
+ - error
  - regex
  - subprocess
  - conf

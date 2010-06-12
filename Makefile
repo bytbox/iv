@@ -35,14 +35,16 @@ PREFIX=/usr/local
 CC=cc
 INSTALL=/usr/bin/install -c
 
+MODULES=main.o view.o input.o buffer.o util.o error.o subprocess.o conf.o regex.o
+
 all: iv
 
 clean:
-	rm -f *.o iv
+	rm -f ${MODULES} iv
 
 install:
 	${INSTALL} iv ${PREFIX}/bin
 
-iv: main.o view.o input.o util.o buffer.o
-	${CC} -o iv main.o view.o input.o buffer.o util.o ${LFLAGS}
+iv: ${MODULES}
+	${CC} -o iv ${MODULES} ${LFLAGS}
 
