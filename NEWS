@@ -1,6 +1,13 @@
 IV Development History
 
 ================================
+Version 0.0.2 (June 13, 2010)
+
+ * Text addition mode now triggered by spacebar
+ * Eradicated (most) memory leaks
+
+
+================================
 
 Version 0.0.1 (June 12, 2010)
 

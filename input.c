@@ -60,6 +60,7 @@ void input_loop() {
             deletec(current_view());
             break;
         case 'a':
+        case ' ':
             /* add text */
             /* read characters until a stop character is
                encountered */

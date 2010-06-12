@@ -272,9 +272,9 @@ void insertlb(view_t *view) {
     /* create the new line */
     b->lines[nln]=malloc(view->cursor_x+2);
     b->lines[nln][0]='\0';
-    /* copy the first part */
+    /* copy the first part into the new line*/
     strncat(b->lines[nln],b->lines[nln+1],view->cursor_x);
-    /* copy the second part out */
+    /* copy the second part out of the next line */
     char *sp=malloc(strsize(b->lines[nln+1]+view->cursor_x));
     sp[0]='\0';
     strcat(sp,b->lines[nln+1]+view->cursor_x);
@@ -302,7 +302,7 @@ void deletec(view_t *view) {
                       strlen(line));
         view->pref_x=strlen(view->buffer->lines[view->cursor_line-1]);
         strcat(view->buffer->lines[view->cursor_line-1],line);
-        free(line);
+        free(line); /* free the line */
         /* reduce line count */
         view->buffer->line_count--;
         /* scroll all future lines up */
@@ -313,6 +313,7 @@ void deletec(view_t *view) {
         cursor_up(view);
         return;
     }
+    /* no line merging to be done */
     /* get the line */
     char *line=view->buffer->lines[view->cursor_line];
         /* make a copy of the line */
