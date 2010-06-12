@@ -29,6 +29,7 @@
 */
 
 #include <stdlib.h>
+#include <string.h>
 
 #include "util.h"
 
@@ -118,7 +119,7 @@ void ll_free(linked_list_t *l) {
 int sizetoalloc(int len) {
     int size=1;
     int i=0;
-    while(size<=len+1) {
+    while(size<=len+2) {
         i++;
         if(i>=size)
             i=0,size*=2;
@@ -129,15 +130,7 @@ int sizetoalloc(int len) {
 /* returns the allocated size of the string, assuming it was allocated
    with these functions. */
 int strsize(char *str) {
-    int size=1;
-    int i=0;
-    while(*str!='\0') {
-        i++;
-        if(i>=size)
-            i=0,size*=2;
-        str++;
-    }
-    return size;
+    return sizetoalloc(strlen(str));
 }
 
 /* expands the string to be able to fit the specified size */

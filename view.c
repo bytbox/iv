@@ -271,9 +271,10 @@ void insertlb(view_t *view) {
     strncat(b->lines[nln],b->lines[nln+1],view->cursor_x);
     /* copy the second part out */
     char *sp=malloc(strsize(b->lines[nln+1]+view->cursor_x));
+    sp[0]='\0';
     strcat(sp,b->lines[nln+1]+view->cursor_x);
-    /*free(b->lines[nln+1]);*/
-    /*b->lines[nln+1]=sp;*/
+    free(b->lines[nln+1]); /* free old stuff */
+    b->lines[nln+1]=sp; /* use new stuff */
     view->pref_x=0; /* we're at the beginning of the line */
     /* move the cursor down */
     cursor_down(view);
