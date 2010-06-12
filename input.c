@@ -110,6 +110,7 @@ void input_loop() {
             /* write the file */
             /* FIXME TODO what if the filename is blank? */
             buffer_to_file(current_view()->buffer);
+            display_message("wrote");
             break;
 	case 'h':
         case KEY_LEFT:

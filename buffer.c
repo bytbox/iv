@@ -92,6 +92,7 @@ buffer_t *buffer_from_file(char *filename) {
         b->lines=malloc(sizeof(char *));
         b->lines[0]=malloc(1);
         b->lines[0][0]='\0';
+        b->line_count=1; /* there is one line */
     } else {
         /* check that we have read permissions */
         if(access(filename,R_OK)) {
@@ -107,12 +108,16 @@ buffer_t *buffer_from_file(char *filename) {
         f=fopen(filename,"r");
         /* get the number of lines in the file */
         b->line_count=0;
-        char c=fgetc(f);
+        char c=fgetc(f),d='\0';
         while(!feof(f)) {
             if(c=='\n')
                 b->line_count++;
+            d=c;
             c=fgetc(f);
         }
+        /* enforce a closing newline */
+        if(d!='\n')
+            b->line_count++;
         /* allocate lines */
         b->lines=calloc(sizetoalloc(b->line_count),sizeof(char *));
         /* for each line */

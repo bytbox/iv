@@ -48,21 +48,20 @@ void signal_handler(int);
 int main(int argc,char *argv[]) {
     /* option parsing */
     int opt;
-    char openany=0;
+    short openany=0;
     while((opt=getopt(argc,argv,"hV"))!=-1)
-	switch(opt) {
-	case 'h':
-	    show_help();
-	    return 0;
-	case 'V':
-	    show_version();
-	    return 0;
-	case '?':
-	    exit(1);
-	default:
-	    puts("iv: strange error");
-	    exit(10);
-	}
+        switch(opt) {
+        case 'h':
+            show_help();
+            return 0;
+        case 'V':
+            show_version();
+            return 0;
+        case '?':
+            exit(EXIT_FAILURE);
+        default:
+            exit(EXIT_FAILURE);
+        }
 
     /* start up the editor */
     prepare_signal_handler();
@@ -74,14 +73,14 @@ int main(int argc,char *argv[]) {
     /* look for list of files to open */
     opt=optind;
     while(opt<argc) {
-	char *fname=argv[opt++];
-	openany=1;
-	add_buffer(buffer_from_file(fname));
+        char *fname=argv[opt++];
+        openany=1;
+        add_buffer(buffer_from_file(fname));
     }
 
     if(!openany) {
-	/* create a blank buffer */
-	add_buffer(make_blank_buffer());
+        /* create a blank buffer */
+        add_buffer(make_blank_buffer());
     }
 
     /* make sure everything is displayed */
@@ -107,11 +106,11 @@ void prepare_signal_handler() {
 void signal_handler(int signal) {
     switch(signal) {
     case SIGINT:
-	pushchar(CTRL('C'));
-	break;
+        pushchar(CTRL('C'));
+        break;
     default:
-	/* uncaught signal - don't fret */
-	break;
+        /* uncaught signal - don't fret */
+        break;
     }
     prepare_signal_handler(); /* refresh signals */
 }
