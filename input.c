@@ -36,8 +36,6 @@
 #include "input.h"
 #include "view.h"
 
-#define CTRL(x) (x-'A')
-
 void pushchar(char c) {
     /* use ncurses */
     ungetch(c);
@@ -51,7 +49,7 @@ void input_loop() {
         view_flush();
 	switch(c) {
             /* stuff to ignore, because it just happens */
-        case CTRL('c'):
+        case CTRL('C'):
         case -1:
             /* ignore */
             break;
@@ -68,7 +66,7 @@ void input_loop() {
             display_message("m:a");
             view_flush();
             c=getch();
-            while(c!=CTRL('C')) {
+            while(c!=CTRL('C') && c!=CTRL('D')) {
                 switch(c) {
                 case KEY_ENTER:
                 case KEY_IL:
@@ -105,6 +103,7 @@ void input_loop() {
                 view_flush();
                 c=getch();
             }
+            display_message("");
             break;
         case 'w':
             /* write the file */

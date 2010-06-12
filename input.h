@@ -31,7 +31,7 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-#define CTRL(x) (x-'A')
+#define CTRL(x) (x-'A'+1)
 
 /* push a character onto the queue */
 void pushchar(char);

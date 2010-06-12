@@ -11,4 +11,5 @@
 == Cleanliness
  - Memory leaks
  - Splint errors
+ - Test suite
 

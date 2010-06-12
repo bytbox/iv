@@ -26,13 +26,19 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                     #
 ####################################################################################
 
+PNAME=iv
+VERSION=0.0.1
+DISTNAME=${PNAME}-${VERSION}
 
-CFLAGS=-g -O0 -Wall -Wextra -ansi
+CFLAGS=-g -O0 -Wall -Wextra -ansi -DVERSION=\"${VERSION}\"
 LFLAGS=-lncurses
 
 PREFIX=/usr/local
 
 CC=cc
+AR=ar
+LD=ld
+TAR=tar
 INSTALL=/usr/bin/install -c
 
 MODULES=main.o view.o input.o buffer.o util.o error.o subprocess.o conf.o regex.o
@@ -41,10 +47,16 @@ all: iv
 
 clean:
 	rm -f ${MODULES} iv
+	rm -rf ${DISTNAME}
 
 install:
 	${INSTALL} iv ${PREFIX}/bin
 
 iv: ${MODULES}
 	${CC} -o iv ${MODULES} ${LFLAGS}
+
+sdist: clean
+	mkdir -p ${DISTNAME}
+
+test:
 
