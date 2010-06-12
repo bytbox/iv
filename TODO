@@ -1,8 +1,11 @@
 == Features
+ - Syntax highlighting
+ - Search, replace
 
 == Modules
  - regex
  - subprocess
+ - conf
 
 == Cleanliness
  - Memory leaks

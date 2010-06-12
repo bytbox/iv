@@ -234,7 +234,7 @@ void insertc(view_t *view,char c) {
     }
     char *line=view->buffer->lines[view->cursor_line];
     /* make sure the line is long enough */
-    view->buffer->lines[view->cursor_line]=strexpand(line,strlen(line)+1);
+    view->buffer->lines[view->cursor_line]=strexpand(line,strlen(line)+2);
     line=view->buffer->lines[view->cursor_line];
     /* make a copy of the line */
     char *ln=malloc(strlen(line)+2);
