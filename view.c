@@ -57,9 +57,10 @@ void view_init() {
     buffer_init(); /* initialize the buffers */
     /* init the actual view */
     initscr(); /* start ncurses */
-    cbreak();
+    start_color(); /* enable the use of color */
+    cbreak(); /* don't wait for RETURN or ENTER to get input */
     noecho(); /* don't immediately echo characters */
-    nonl();
+    nonl(); /* don't display newlines as newlines */
     intrflush(stdscr,0);
     keypad(stdscr,1); /* enable the keypad */
     scrollok(stdscr,0); /* don't scroll off the bottom */
@@ -80,8 +81,10 @@ void view_flush() {
     for(y=0;y<getmaxy(stdscr);y++)
         for(x=0;x<getmaxx(stdscr);x++)
             mvaddch(y,x,' '); /* empty the screen */
+    attron(A_BOLD);
     for(y=0;y<getmaxy(stdscr)-1;y++)
         mvaddch(y,0,'~'); /* display blank lines */
+    attroff(A_BOLD);
     /* display the message at the bottom of the screen */
     mvaddstr(getmaxy(stdscr)-1,0,displayed_message());
     if(view_layout.hsplit) {

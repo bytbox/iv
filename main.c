@@ -33,6 +33,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "config.h"
 #include "input.h"
 #include "view.h"
 
