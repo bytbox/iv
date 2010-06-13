@@ -59,12 +59,12 @@ buffer_t *make_blank_buffer() {
     buffer_t *buffer=malloc(sizeof(buffer_t));
     /* blank content */
     buffer->lines=malloc(sizeof(char *));
-    buffer->lines[0]=malloc(1);
+    buffer->lines[0]=malloc(2);
     buffer->lines[0][0]='\0';
     /* only one line */
     buffer->line_count=1;
     /* no filename */
-    buffer->filename=malloc(1);
+    buffer->filename=malloc(2);
     buffer->filename[0]='\0';
     buffer->readonly=0; /* we can write to this buffer */
     buffer->modified=0; /* even though we haven't been saved */
@@ -90,7 +90,7 @@ buffer_t *buffer_from_file(char *filename) {
         b->readonly=0;
         /* empty content */
         b->lines=malloc(sizeof(char *));
-        b->lines[0]=malloc(1);
+        b->lines[0]=malloc(2);
         b->lines[0][0]='\0';
         b->line_count=1; /* there is one line */
     } else {

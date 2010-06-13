@@ -118,12 +118,8 @@ void ll_free(linked_list_t *l) {
    string */
 int sizetoalloc(int len) {
     int size=1;
-    int i=0;
-    while(size<=len+2) {
-        i++;
-        if(i>=size)
-            i=0,size*=2;
-    }
+    while(size<=len+2)
+        size*=2;
     return size;
 }
 
