@@ -49,7 +49,7 @@ clean:
 	rm -f ${MODULES} iv MANIFEST ${DISTNAME}.tar.gz
 	rm -rf ${DISTNAME}
 
-install:
+install: all
 	${INSTALL} iv ${PREFIX}/bin
 
 iv: ${MODULES}
