@@ -41,7 +41,8 @@ LD=ld
 TAR=tar
 INSTALL=/usr/bin/install -c
 
-MODULES=main.o view.o input.o buffer.o util.o error.o subprocess.o conf.o regex.o
+MODULES=src/main.o src/view.o src/input.o src/buffer.o src/util.o src/error.o \
+	src/subprocess.o src/conf.o src/regex.o
 
 all: iv doc
 
