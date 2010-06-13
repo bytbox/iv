@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+                         "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+          <!ENTITY iv "<application>iv</application>">
+]>
+<refentry id="iv">
+<refentryinfo>
+<author><firstname>Scott</firstname><surname>Lawrence</surname>
+<contrib>Created iv and this manual.</contrib></author>
+<productname>iv</productname>
+<productnumber>0.0.2</productnumber>
+</refentryinfo>
+
+<!-- meta stuff -->
+<refmeta>
+<refentrytitle>iv</refentrytitle>
+<manvolnum>1</manvolnum>
+<refmiscinfo class="manual">
+
+</refmiscinfo>
+</refmeta>
+
+<refnamediv>
+<refname>iv</refname>
+<refpurpose>an editor</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis>
+<command>iv</command>
+<arg choice="opt">
+<option>options</option>
+</arg>
+<arg choice="opt" rep="repeat">FILE1</arg>
+</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1><title>Description</title>
+<para>A lightweight, easy-to-use editor.</para>
+</refsect1>
+
+<refsect1><title>Options</title>
+
+<variablelist>
+<varlistentry>
+  <term><option>-h</option></term>
+  <listitem>
+    <para>display help information and exit</para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+  <term><option>-V</option></term>
+  <listitem>
+    <para>print version information and exit</para>
+  </listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1>
+
+<refsect1><title>Files</title>
+<para>Describe the files needed, and reference the data model.</para>
+
+<variablelist>
+<varlistentry>
+  <term><filename>sample.dat</filename></term>
+  <listitem>
+    <para>sample data is used</para>
+  </listitem>
+</varlistentry>
+</variablelist>
+
+</refsect1> <!-- OPTIONS -->
+
+<refsect1><title>Environment</title>
+<para>Describe environmanet variables that do stuff.</para>
+
+<variablelist>
+
+<varlistentry>
+  <term>THING_DIR</term>
+  <listitem>
+    <para>sets where to look for thing</para>
+  </listitem>
+</varlistentry>
+
+<varlistentry>
+
+  <term>OUT_DIR</term>
+  <listitem>
+    <para>sets where to put output</para>
+  </listitem>
+</varlistentry>
+
+</variablelist>
+
+</refsect1> <!-- ENVIRONMENT -->
+
+<refsect1><title>Bugs</title>
+<para>What do you think? If you find any, report them to <email>bytbox@gmail.com</email></para>
+</refsect1> <!-- BUGS -->
+
+<refsect1><title>See also</title>
+<para><simplelist type="inline">
+<member>Something</member>
+</simplelist></para>
+</refsect1> <!-- SEE ALSO -->
+
+
+</refentry>
+
+

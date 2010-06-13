@@ -117,7 +117,11 @@ void signal_handler(int signal) {
 }
 
 void show_help() {
-    puts("usage: iv [OPTIONS]");
+    puts("usage: iv [OPTIONS] [file1 ...]");
+    puts("Run iv - the editor that Isn't Vi");
+    puts("");
+    puts(" -h             display this screen and exit");
+    puts(" -V             print version information and exit");
 }
 
 void show_version() {

@@ -43,21 +43,30 @@ INSTALL=/usr/bin/install -c
 
 MODULES=main.o view.o input.o buffer.o util.o error.o subprocess.o conf.o regex.o
 
-all: iv
+all: iv doc
 
-clean:
+doc: doc/iv.1
+
+doc/iv.1: doc/iv.xml
+	xmlto man -o doc doc/iv.xml
+
+mostlyclean:
 	rm -f ${MODULES} iv MANIFEST ${DISTNAME}.tar.gz
 	rm -rf ${DISTNAME}
 
+clean: mostlyclean
+	rm -f doc/iv.1
+
 install: all
 	${INSTALL} iv ${PREFIX}/bin
+	${INSTALL} -D doc/iv.1 ${PREFIX}/share/man/man1/iv.1
 
 iv: ${MODULES}
 	${CC} -o iv ${MODULES} ${LFLAGS}
 
 sdist: ${DISTNAME}.tar.gz
 
-${DISTNAME}.tar.gz: clean
+${DISTNAME}.tar.gz: mostlyclean doc
 	find . -type f | grep -v ".svn" | grep -v "MANIFEST" > MANIFEST
 	mkdir -p ${DISTNAME}
 	cp `cat MANIFEST` ${DISTNAME}
@@ -66,3 +75,4 @@ ${DISTNAME}.tar.gz: clean
 
 test:
 
+.PHONY: doc

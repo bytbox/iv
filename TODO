@@ -6,6 +6,7 @@
  - Better file saving
 
 == Modules
+ - mode
  - error
  - regex
  - subprocess
