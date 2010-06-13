@@ -36,6 +36,7 @@
 #include "input.h"
 #include "view.h"
 
+/* push a character onto the queue */
 void pushchar(char c) {
     /* use ncurses */
     ungetch(c);
@@ -134,18 +135,34 @@ void input_loop() {
 	    break;
 	default:
 	    /* unknown character */
-            {
-#ifdef DEBUG
-                char *msg=malloc(10);
-                sprintf(msg,"? %d",c);
-                display_message(msg);
-#else
-                display_message("?");
-#endif
-            }
+            unknown_action(c);
 	}
 	/* respond */
 	view_flush();
 	c=getch();
     }
+}
+
+
+/* map of actions */
+input_action_t actions[KEY_MAX];
+
+/* initialize the input module */
+void input_init() {
+    int i;
+    for(i=0;i<KEY_MAX;i++)
+        actions[i]=unknown_action;
+}
+
+/* do nothing */
+void unknown_action(char c) {
+#ifdef DEBUG
+    /* print out the unknown character */
+    char *msg=malloc(10);
+    sprintf(msg,"? %d",c);
+    display_message(msg);
+#else
+    /* just print the ? of doom */
+    display_message("?");
+#endif
 }

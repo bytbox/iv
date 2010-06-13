@@ -32,6 +32,7 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "config.h"
 #include "input.h"
@@ -66,7 +67,9 @@ int main(int argc,char *argv[]) {
     view_init();
 
     /* display startup message */
-    display_message("iv - an editor - Copyright (C) Scott Lawrence 2010");
+    char *msg=malloc(500);
+    sprintf(msg,"iv v%s - Copyright (C) Scott Lawrence 2010",VERSION);
+    display_message(msg);
     
     /* look for list of files to open */
     opt=optind;

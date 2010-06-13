@@ -131,7 +131,7 @@ buffer_t *buffer_from_file(char *filename) {
                 c=fgetc(f);
             len=ftell(f)-pos;
             /* allocate space for the line */
-            b->lines[lno]=calloc(len+2,sizeof(char *));
+            b->lines[lno]=calloc(sizetoalloc(len+2),sizeof(char *));
             /* copy stuff into the line */
             fseek(f,pos,SEEK_SET);
             pos=0;

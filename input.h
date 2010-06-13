@@ -33,11 +33,34 @@
 
 #define CTRL(x) (x-'A'+1)
 
+typedef void (* input_action_t) (char);
+
+/* initialize the input system */
+void input_init();
+
 /* push a character onto the queue */
 void pushchar(char);
 
 /* run the input loop */
 void input_loop();
+
+/*
+  managing actions
+*/
+
+/* set the action for a given key combination */
+void set_action(int,input_action_t);
+
+/* get the action for a given key combination */
+input_action_t get_action(int);
+
+
+/*
+  actions
+*/
+
+/* don't know what to do */
+void unknown_action(char);
 
 #endif /* !INPUT_H */
 
