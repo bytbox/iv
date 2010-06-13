@@ -205,7 +205,7 @@ void cursor_down(view_t *view) {
     clean_cursor_x(view);
     /* scroll down if necessary */
     if((view->cursor_line-view->topline) >= view->height)
-        view->topline+=(view->height+1)/2;
+        view->topline+=1;
 }
 
 /* move the cursor up */
@@ -215,7 +215,7 @@ void cursor_up(view_t *view) {
     clean_cursor_x(view);
     /* scroll up if necessary */
     if((view->cursor_line-view->topline) <0)
-        view->topline-=(view->height+1)/2;
+        view->topline-=1;
 }
 
 /* move the cursor right */

@@ -98,7 +98,8 @@
 </refsect1> <!-- ENVIRONMENT -->
 
 <refsect1><title>Bugs</title>
-<para>What do you think? If you find any, report them to <email>bytbox@gmail.com</email></para>
+<para>Lines longer than the width of the screen cannot be viewed in their entirety (to be fixed shortly).</para>
+<para>Report further bugs to <email>bytbox@gmail.com</email></para>
 </refsect1> <!-- BUGS -->
 
 <refsect1><title>See also</title>
