@@ -66,6 +66,9 @@ void *ll_del(linked_list_t *,int);
 /* append an element */
 void ll_append(linked_list_t *,void *);
 
+/* prepend an element */
+void ll_prepend(linked_list_t *,void *);
+
 /* returns the length of the list */
 int ll_len(linked_list_t *);
 

@@ -88,6 +88,13 @@ void ll_append(linked_list_t *l,void *d) {
     n->next=newnode;
 }
 
+void ll_prepend(linked_list_t *l,void *d) {
+   llnode_t *newnode=malloc(sizeof(llnode_t));
+    newnode->next=l->head;
+    newnode->data=d;
+    l->head=newnode;
+}
+
 int ll_len(linked_list_t *l) {
     llnode_t *n=l->head;
     int len=0;
