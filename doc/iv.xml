@@ -77,19 +77,10 @@
 <para>Describe environmanet variables that do stuff.</para>
 
 <variablelist>
-
 <varlistentry>
-  <term>THING_DIR</term>
+  <term>IV_CONFDIR</term>
   <listitem>
-    <para>sets where to look for thing</para>
-  </listitem>
-</varlistentry>
-
-<varlistentry>
-
-  <term>OUT_DIR</term>
-  <listitem>
-    <para>sets where to put output</para>
+    <para>Sets the directory from which to read the configuration.</para>
   </listitem>
 </varlistentry>
 
@@ -103,9 +94,8 @@
 </refsect1> <!-- BUGS -->
 
 <refsect1><title>See also</title>
-<para><simplelist type="inline">
-<member>Something</member>
-</simplelist></para>
+<para>More detailed documentation is available in the manuals.
+</para>
 </refsect1> <!-- SEE ALSO -->
 
 
