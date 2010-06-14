@@ -63,8 +63,9 @@ int main(int argc,char *argv[]) {
             exit(EXIT_FAILURE);
         }
 
+    /* figure out what the configuration directory should be */
     char *confdir=getenv("IV_CONFDIR");
-    if(!confdir)
+    if(!confdir) /* if it's not set, use default */
         confdir="~/.iv.d";
 
     /* start up the editor */
@@ -74,7 +75,8 @@ int main(int argc,char *argv[]) {
     /* get ready for input */
     input_init();
     /* now read the configuration */
-    read_configuration(confdir);
+    read_configuration("/etc/iv"); /* global configuration */
+    read_configuration(confdir); /* local configuration */
 
     /* display startup message */
     char *msg=malloc(500);
