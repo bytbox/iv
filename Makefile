@@ -65,6 +65,8 @@ clean: mostlyclean
 install: all
 	${INSTALL} iv ${PREFIX}/bin
 	${INSTALL} -D doc/iv.1 ${PREFIX}/share/man/man1/iv.1
+	find etc -type d | sed "s/^/\\//" | grep -v ".svn" \
+	  | xargs ${INSTALL} -d
 
 iv: ${MODULES}
 	${CC} -o iv ${MODULES} ${LFLAGS}
