@@ -4,6 +4,8 @@ IV Development History
 
 Version 0.0.2 (June 13, 2010)
 
+ * Improved error handling
+ * Added keymap configuration
  * Display splash screen on startup
  * Scroll the screen only one line at a time (rather than a screen)
  * Added src/ directory
