@@ -1,10 +1,11 @@
 IV Development History
 
 ================================
+
 Version 0.0.2 (June 13, 2010)
 
- * Scroll the text field only one line at a time (rather than a
-     screen).
+ * Display splash screen on startup
+ * Scroll the screen only one line at a time (rather than a screen)
  * Added src/ directory
  * Added manpage
  * Text addition mode now triggered by spacebar
