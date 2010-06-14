@@ -31,4 +31,32 @@
 #ifndef ERROR_H
 #define ERROR_H
 
+/* definitions describing errors. These are very carefully designed to be
+   completely (although not statistically) orthogonal. */
+/* no error - although in practice, if this error is ever thrown, there /is/
+   an error */
+#define ERR_NONE              0x00000000
+/* the user made a mistake */
+#define ERR_USER              0x00000001
+/* error reading configuration */
+#define ERR_CONFIG            0x00000010
+/* More information available in errno */
+#define ERR_IO                0x10000000
+/* internal error (buggy code? assert failed?) */
+#define ERR_INTERNAL          0x40000000
+/* fatal error */
+#define ERR_FATAL             0x80000000
+/* unknown error */
+#define ERR_UNKNOWN           0x88888888
+
+/* initialize the error handling module */
+void error_init();
+
+/* chaining function to catch certain types of errors. */
+int error_catch(int base,int mask,void (*next)(void));
+
+/* throws the error, and never returns (it jumps down several stack frames as
+   specified by calls to error_catch, or else exits completely */
+void error_throw(int error);
+
 #endif /* !ERROR_H */

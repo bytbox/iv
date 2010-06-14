@@ -28,4 +28,47 @@
   SUCH DAMAGE.
 */
 
+#include <setjmp.h>
+#include <stdlib.h>
+
 #include "error.h"
+#include "util.h"
+
+linked_list_t *error_catch_stack;
+
+/* a frame in the error_catch_stack */
+struct error_catch_frame {
+    /* the next function being called */
+    void (*next)(void);
+    
+    /* the base of requirements */
+    int base;
+
+    /* the mask (specifying which are actually required) */
+    int mask;
+
+    /* the place to jump */
+    jmp_buf dest;
+};
+
+void error_init() {
+    /* create the error catching stack */
+    error_catch_stack=make_linked_list();
+}
+
+int error_catch(int base,int mask,void (*next)(void)) {
+    int r;
+    /* create the new frame */
+    struct error_catch_frame *frame=
+        malloc(sizeof(struct error_catch_frame));
+    frame->base=base; /* copy information */
+    frame->mask=mask;
+    frame->next=next;
+    /* call setjmp */
+    if((r=setjmp(frame->dest)))
+        return r;
+    /* chain */
+    next();
+    /* there was no error if we reach this line */
+    return 0;
+}

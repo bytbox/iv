@@ -36,6 +36,7 @@
 
 #include "conf.h"
 #include "config.h"
+#include "error.h"
 #include "input.h"
 #include "view.h"
 
@@ -62,6 +63,9 @@ int main(int argc,char *argv[]) {
         default:
             exit(EXIT_FAILURE);
         }
+
+    /* prepare error handling */
+    error_init();
 
     /* figure out what the configuration directory should be */
     char *confdir=getenv("IV_CONFDIR");
