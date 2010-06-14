@@ -30,9 +30,11 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 #include "buffer.h"
+#include "splash.h"
 #include "util.h"
 #include "view.h"
 
@@ -57,16 +59,24 @@ void add_buffer(buffer_t *b) {
 /* create a blank buffer */
 buffer_t *make_blank_buffer() {
     buffer_t *buffer=malloc(sizeof(buffer_t));
-    /* blank content */
-    buffer->lines=malloc(sizeof(char *));
-    buffer->lines[0]=malloc(2);
-    buffer->lines[0][0]='\0';
+    /* "blank" content */
+    /* initialize with the contents of the splash screen */
+    buffer->lines=malloc(sizeof(char *)*SPLASH_LINE_MAX);
+    unsigned i,ln=0,x=0;
+    buffer->lines[0]=malloc(SPLASH_LONGEST_LINE);
+    for(i=0;i<strlen(splash);i++)
+        if(splash[i]=='\n')
+            /* start a new line */
+            buffer->lines[++ln]=malloc(SPLASH_LONGEST_LINE),x=0;
+        else 
+            /* copy the character */
+            buffer->lines[ln][x++]=splash[i];
     /* only one line */
-    buffer->line_count=1;
+    buffer->line_count=ln;
     /* no filename */
     buffer->filename=malloc(2);
     buffer->filename[0]='\0';
-    buffer->readonly=0; /* we can write to this buffer */
+    buffer->readonly=1; /* we can't write to this buffer */
     buffer->modified=0; /* even though we haven't been saved */
     /* create a view for our buffer */
     buffer->default_view=create_view(buffer);
