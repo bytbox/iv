@@ -29,3 +29,13 @@
 */
 
 #include "conf.h"
+
+/* get ready for configuration operations */
+void conf_init() {
+
+}
+
+void read_configuration() {
+    /* read the configuration in full. In places, this may involve contacting
+       other modules. */
+}

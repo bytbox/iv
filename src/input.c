@@ -34,115 +34,8 @@
 
 #include "config.h"
 #include "input.h"
+#include "util.h"
 #include "view.h"
-
-/* push a character onto the queue */
-void pushchar(char c) {
-    /* use ncurses */
-    ungetch(c);
-}
-
-/* run the input loop */
-void input_loop() {
-    int c=getch();
-    while(c!='q') {
-        display_message("");
-        view_flush();
-	switch(c) {
-            /* stuff to ignore, because it just happens */
-        case CTRL('C'):
-        case -1:
-            /* ignore */
-            break;
-        case KEY_BACKSPACE:
-        case '\b':
-        case 127: /* FIXME this is a hack */
-            /* delete a character */
-            deletec(current_view());
-            break;
-        case 'a':
-        case ' ':
-            /* add text */
-            /* read characters until a stop character is
-               encountered */
-            display_message("m:a");
-            view_flush();
-            c=getch();
-            while(c!=CTRL('C') && c!=CTRL('D')) {
-                switch(c) {
-                case KEY_ENTER:
-                case KEY_IL:
-                case '\n':
-                case '\r':
-                    /* new line */
-                    insertlb(current_view());
-                    break;
-                case KEY_BACKSPACE:
-                case '\b':
-                case 127: /* FIXME this is a hack */
-                    /* delete a character */
-                    deletec(current_view());
-                    break;
-                case KEY_LEFT:
-                    /* move left */
-                    cursor_left(current_view());
-                    break;
-                case KEY_DOWN:
-                    /* move down */
-                    cursor_down(current_view());
-                    break;
-                case KEY_UP:
-                    /* move up */
-                    cursor_up(current_view());
-                    break;
-                case KEY_RIGHT:
-                    /* move right */
-                    cursor_right(current_view());
-                    break;
-                default:
-                    insertc(current_view(),c);
-                }
-                view_flush();
-                c=getch();
-            }
-            display_message("");
-            break;
-        case 'w':
-            /* write the file */
-            /* FIXME TODO what if the filename is blank? */
-            buffer_to_file(current_view()->buffer);
-            display_message("wrote");
-            break;
-	case 'h':
-        case KEY_LEFT:
-	    /* move left */
-	    cursor_left(current_view());
-	    break;
-	case 'j':
-        case KEY_DOWN:
-	    /* move down */
-	    cursor_down(current_view());
-	    break;
-	case 'k':
-        case KEY_UP:
-	    /* move up */
-	    cursor_up(current_view());
-	    break;
-	case 'l':
-        case KEY_RIGHT:
-	    /* move right */
-	    cursor_right(current_view());
-	    break;
-	default:
-	    /* unknown character */
-            unknown_action(c);
-	}
-	/* respond */
-	view_flush();
-	c=getch();
-    }
-}
-
 
 /* map of actions */
 input_action_t actions[KEY_MAX];
@@ -152,6 +45,16 @@ void input_init() {
     int i;
     for(i=0;i<KEY_MAX;i++)
         actions[i]=unknown_action;
+}
+
+/* sets the action for a given character code */
+void set_action(int c,input_action_t action) {
+    actions[c]=action;
+}
+
+/* returns the action for a given character code */
+input_action_t get_action(int c) {
+    return actions[c];
 }
 
 /* do nothing */
@@ -165,4 +68,32 @@ void unknown_action(char c) {
     /* just print the ? of doom */
     display_message("?");
 #endif
+}
+
+/* just ignore if */
+void ignore_action(char c) {
+    UNUSED(c);
+}
+
+/* push a character onto the queue */
+void pushchar(char c) {
+    /* use ncurses */
+    ungetch(c);
+}
+
+/* run the input loop */
+void input_loop() {
+    int c=getch();
+    while(c!='q') {
+        /* clear displayed message */
+        display_message("");
+        view_flush();
+        /* get and call the relevant action */
+        if(c<KEY_MAX) 
+            actions[c](c);
+	/* respond */
+	view_flush();
+        /* get the next character */
+	c=getch();
+    }
 }

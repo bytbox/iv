@@ -34,6 +34,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "conf.h"
 #include "config.h"
 #include "input.h"
 #include "view.h"
@@ -65,6 +66,11 @@ int main(int argc,char *argv[]) {
     /* start up the editor */
     prepare_signal_handler();
     view_init();
+    conf_init();
+    /* get ready for input */
+    input_init();
+    /* now read the configuration */
+    read_configuration();
 
     /* display startup message */
     char *msg=malloc(500);

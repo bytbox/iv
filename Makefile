@@ -55,7 +55,8 @@ src/splash.c: src/splash.txt
 	scripts/text2c src/splash.txt $@ splash
 
 mostlyclean:
-	rm -f ${MODULES} iv MANIFEST src/splash.c ${DISTNAME}.tar.gz
+	rm -f ${MODULES} iv MANIFEST src/splash.c \
+	      ${DISTNAME}.tar.gz ${DISTNAME}.tar.bz2
 	rm -rf ${DISTNAME}
 
 clean: mostlyclean
@@ -70,11 +71,12 @@ iv: ${MODULES}
 
 sdist: ${DISTNAME}.tar.gz
 
-${DISTNAME}.tar.gz: mostlyclean doc
+${DISTNAME}.tar.gz ${DISTNAME}.tar.bz2: mostlyclean doc
 	find . -type f | grep -v ".svn" | grep -v "MANIFEST" \
 	  | sed "s/.\//${DISTNAME}\//" > MANIFEST
 	ln -s . ${DISTNAME}
-	${TAR} czvf $@ -T MANIFEST
+	${TAR} czf ${DISTNAME}.tar.gz -T MANIFEST
+	${TAR} cjf ${DISTNAME}.tar.bz2 -T MANIFEST
 	rm -rf ${DISTNAME} MANIFEST
 
 test:

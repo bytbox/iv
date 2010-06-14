@@ -31,4 +31,10 @@
 #ifndef CONF_H
 #define CONF_H
 
+/* get ready for configuration operations */
+void conf_init();
+
+/* read all configuration files */
+void read_configuration();
+
 #endif /* !CONF_H */

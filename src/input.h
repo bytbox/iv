@@ -62,5 +62,8 @@ input_action_t get_action(int);
 /* don't know what to do */
 void unknown_action(char);
 
+/* just ignore it */
+void ignore_action(char);
+
 #endif /* !INPUT_H */
 

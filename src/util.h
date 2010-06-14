@@ -32,6 +32,13 @@
 #define UTIL_H
 
 /*
+  utility macros
+*/
+
+/* mark as ignored (suppressing unused warnings) */
+#define UNUSED(x) (x=x)
+
+/*
   linked lists
 */
 
