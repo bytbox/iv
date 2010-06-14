@@ -34,7 +34,7 @@
 /* get ready for configuration operations */
 void conf_init();
 
-/* read all configuration files */
-void read_configuration();
+/* read and apply all configuration files, from the specified directory */
+void read_configuration(char *);
 
 #endif /* !CONF_H */

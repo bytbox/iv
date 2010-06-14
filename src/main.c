@@ -63,6 +63,10 @@ int main(int argc,char *argv[]) {
             exit(EXIT_FAILURE);
         }
 
+    char *confdir=getenv("IV_CONFDIR");
+    if(!confdir)
+        confdir="~/.iv.d";
+
     /* start up the editor */
     prepare_signal_handler();
     view_init();
@@ -70,7 +74,7 @@ int main(int argc,char *argv[]) {
     /* get ready for input */
     input_init();
     /* now read the configuration */
-    read_configuration();
+    read_configuration(confdir);
 
     /* display startup message */
     char *msg=malloc(500);

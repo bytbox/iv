@@ -28,6 +28,9 @@
   SUCH DAMAGE.
 */
 
+#include <dirent.h>
+#include <stdio.h>
+
 #include "conf.h"
 
 /* get ready for configuration operations */
@@ -35,7 +38,15 @@ void conf_init() {
 
 }
 
-void read_configuration() {
+/* read and apply the configuration from the specified directory */
+void read_configuration(char *dirname) {
     /* read the configuration in full. In places, this may involve contacting
        other modules. */
+    /* open the configuration directory */
+    DIR *d=opendir(dirname);
+    if(!d) {
+        /* FIXME make an actual error */
+        return;
+    }
+    closedir(d);
 }
