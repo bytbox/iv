@@ -42,7 +42,7 @@ TAR=tar
 INSTALL=/usr/bin/install -c
 
 MODULES=src/main.o src/view.o src/input.o src/buffer.o src/util.o src/error.o \
-	src/subprocess.o src/conf.o src/regex.o
+	src/subprocess.o src/conf.o src/regex.o src/splash.o
 
 all: iv doc
 
@@ -51,8 +51,11 @@ doc: doc/iv.1
 doc/iv.1: doc/iv.xml
 	xmlto man -o doc doc/iv.xml
 
+src/splash.c: src/splash.txt
+	scripts/text2c src/splash.txt $@ splash
+
 mostlyclean:
-	rm -f ${MODULES} iv MANIFEST ${DISTNAME}.tar.gz
+	rm -f ${MODULES} iv MANIFEST src/splash.c ${DISTNAME}.tar.gz
 	rm -rf ${DISTNAME}
 
 clean: mostlyclean
@@ -68,10 +71,10 @@ iv: ${MODULES}
 sdist: ${DISTNAME}.tar.gz
 
 ${DISTNAME}.tar.gz: mostlyclean doc
-	find . -type f | grep -v ".svn" | grep -v "MANIFEST" > MANIFEST
-	mkdir -p ${DISTNAME}
-	cp `cat MANIFEST` ${DISTNAME}
-	${TAR} czvf $@ ${DISTNAME}
+	find . -type f | grep -v ".svn" | grep -v "MANIFEST" \
+	  | sed "s/.\//${DISTNAME}\//" > MANIFEST
+	ln -s . ${DISTNAME}
+	${TAR} czvf $@ -T MANIFEST
 	rm -rf ${DISTNAME} MANIFEST
 
 test:
