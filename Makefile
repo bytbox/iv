@@ -41,8 +41,10 @@ LD=ld
 TAR=tar
 INSTALL=/usr/bin/install -c
 
-MODULES=src/main.o src/view.o src/input.o src/buffer.o src/util.o src/error.o \
+
+COREMODULES=src/view.o src/input.o src/buffer.o src/util.o src/error.o \
 	src/subprocess.o src/conf.o src/regex.o src/splash.o
+MODULES=${COREMODULES} src/actions.o
 
 all: iv doc
 
@@ -55,8 +57,8 @@ src/splash.c: src/splash.txt
 	scripts/text2c src/splash.txt $@ splash
 
 mostlyclean:
-	rm -f ${MODULES} iv MANIFEST src/splash.c \
-	      ${DISTNAME}.tar.gz ${DISTNAME}.tar.bz2
+	rm -f ${MODULES} src/main.o src/actiongen.o iv MANIFEST src/splash.c \
+	      ${DISTNAME}.tar.gz ${DISTNAME}.tar.bz2 src/actions.c
 	rm -rf ${DISTNAME}
 
 clean: mostlyclean
@@ -70,8 +72,14 @@ install: all
 	for f in `find etc -type f | grep -v ".svn"`;do \
 	  ${INSTALL} -m 644 $$f "/$$f";done
 
-iv: ${MODULES}
-	${CC} -o iv ${MODULES} ${LFLAGS}
+iv: ${MODULES} src/main.o
+	${CC} -o iv src/main.o ${MODULES} ${LFLAGS}
+
+src/actions.c: iv-actiongen
+	./iv-actiongen < src/actions.txt > src/actions.c
+
+iv-actiongen: ${COREMODULES} src/actiongen.o
+	${CC} -o $@ src/actiongen.o ${COREMODULES} ${LFLAGS}
 
 sdist: ${DISTNAME}.tar.gz
 

@@ -137,9 +137,15 @@ void *hashtable_retrieve(hashtable_t *,void *);
 
 /* iterate through a hashtable */
 int hashtable_foreach(hashtable_t *,int (*)(hashtable_t *,void *,void *),void *);
+
+/* remove an item from a hashtable */
 void *hashtable_remove(hashtable_t *,void *); /* table,key->value */
+
+/* free all memory used by a hashtable */
 int cleanup_hashtable(hashtable_t *);
 
+/* print a C array representation of a hashtable */
+void hashtable_print(hashtable_t *);
 
 
 #endif /* !UTIL_H */
