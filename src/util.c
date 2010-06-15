@@ -177,6 +177,7 @@ hashtable_t *make_hashtable(int size,int (*hash)(void *),char (*eq)(void *,void 
     return table;
 }
 
+/* adds a value to the hashtable */
 int hashtable_add(hashtable_t *table,void *key,void *value) {
     int h;
     kvpair_t *pair;
@@ -192,6 +193,7 @@ int hashtable_add(hashtable_t *table,void *key,void *value) {
     return 0;
 }
 
+/* modifies the contents of the hashtable */
 int hashtable_mod(hashtable_t *table,void *key,void *value) {
     int h,i;
     h=table->hash(key);
@@ -205,6 +207,7 @@ int hashtable_mod(hashtable_t *table,void *key,void *value) {
     return 1;
 }
 
+/* gets data from the hashtable */
 void *hashtable_retrieve(hashtable_t *table,void *key) {
     int h,i;
     h=table->hash(key);
@@ -216,6 +219,7 @@ void *hashtable_retrieve(hashtable_t *table,void *key) {
     return 0;
 }
 
+/* iterates through the hastable */
 int hashtable_foreach(hashtable_t *table,
                       int (*callback)(hashtable_t *,void *,void *),
                       void *arg) {
@@ -228,6 +232,7 @@ int hashtable_foreach(hashtable_t *table,
     return 0;
 }
 
+/* removes an entry from the hashtable */
 void *hashtable_remove(hashtable_t *table,void *key) {
     void *val=0;
     int h,i;
@@ -242,6 +247,7 @@ void *hashtable_remove(hashtable_t *table,void *key) {
     return val;
 }
 
+/* cleans up all memory allocated by the hashtable */
 int cleanup_hashtable(hashtable_t *table) {
     int i,j;
     /* free all kvpairs (since they're not added by the user) */
