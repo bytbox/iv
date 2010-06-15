@@ -30,23 +30,30 @@
 
 #include <dirent.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "conf.h"
+#include "error.h"
 
 /* get ready for configuration operations */
 void conf_init() {
 
 }
 
+/* read and apply the keymap */
+void read_keymap(char *filename) {
+    FILE *f=fopen(filename,"r");
+    if(!f) return; /* ignore the error */
+
+    fclose(f);
+}
+
 /* read and apply the configuration from the specified directory */
 void read_configuration(char *dirname) {
     /* read the configuration in full. In places, this may involve contacting
        other modules. */
-    /* open the configuration directory */
-    DIR *d=opendir(dirname);
-    if(!d) {
-        /* FIXME make an actual error */
-        return;
-    }
-    closedir(d);
+    char *keymap=malloc(strlen(dirname)+20);
+    sprintf(keymap,"%s/keymap",dirname);
+    read_keymap(keymap);
 }

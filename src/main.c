@@ -80,6 +80,8 @@ int main(int argc,char *argv[]) {
     /* catch all errors, and call next stage */
     if((err=error_catch(ERR_NONE,ERR_NONE,main1,0))) {
         /* there was some sort of error */
+        /* get out of view mode */
+        view_close();
         if(err & ERR_SEE_ERRNO)
             perror("uncaught error");
         return 1;
@@ -93,11 +95,6 @@ void main1(void *data) {
     /* extract stuff */
     int argc=argc_;
     char **argv=argv_;
-    /* figure out what the configuration directory should be */
-    char *confdir=getenv("IV_CONFDIR");
-    if(!confdir) /* if it's not set, use default */
-        confdir="~/.iv.d";
-
     /* start up the editor */
     prepare_signal_handler();
     view_init();
@@ -105,6 +102,10 @@ void main1(void *data) {
     /* get ready for input */
     input_init();
     /* now read the configuration */
+    /* figure out what the configuration directory should be */
+    char *confdir=getenv("IV_CONFDIR");
+    if(!confdir) /* if it's not set, use default */
+        confdir="~/.iv.d";
     read_configuration("/etc/iv"); /* global configuration */
     read_configuration(confdir); /* local configuration */
 

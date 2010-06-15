@@ -32,13 +32,13 @@
 #define ERROR_H
 
 /* definitions describing errors. These are very carefully designed to be
-   completely (although not statistically) orthogonal. */
+   conceptually (although not statistically) orthogonal. */
 /* no error - although in practice, if this error is ever thrown, there /is/
    an error */
 #define ERR_NONE              0x00000000
 /* the user made a mistake */
 #define ERR_USER              0x00000001
-/* error reading configuration */
+/* error in configuration */
 #define ERR_CONFIG            0x00000010
 /* More information available in errno */
 #define ERR_SEE_ERRNO         0x10000000
