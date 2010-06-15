@@ -103,5 +103,43 @@ int strsize(char *);
 char *strexpand(char *,int);
 
 
-#endif /* !UTIL_H */
+/*
+  Hashtables
+*/
 
+/* a key-value pair for use in hash tables */
+typedef struct {
+    void *key;
+    void *value;
+} kvpair_t;
+
+/* hash table */
+typedef struct {
+    int size; /* the size of the hashtable */
+    int *rsize; /* an array of sizes of rows */
+    int *ruse; /* an array of usages of rows */
+    kvpair_t ***table; /* an array of arrays of pointers to kvpairs */
+    int (*hash)(void *); /* takes a key */
+    char (*equal)(void *,void *); /* takes two keys */
+} hashtable_t;
+
+/* create a hashtable */
+hashtable_t *make_hashtable(int,int (*)(void *),char (*)(void *,void *));
+
+/* add data to a hashtable */
+int hashtable_add(hashtable_t *,void *,void *); /* table, key, value */
+
+/* modify data in a hashtable */
+int hashtable_mod(hashtable_t *,void *,void *);
+
+/* get data from a hashtable */
+void *hashtable_retrieve(hashtable_t *,void *);
+
+/* iterate through a hashtable */
+int hashtable_foreach(hashtable_t *,int (*)(hashtable_t *,void *,void *),void *);
+void *hashtable_remove(hashtable_t *,void *); /* table,key->value */
+int cleanup_hashtable(hashtable_t *);
+
+
+
+#endif /* !UTIL_H */

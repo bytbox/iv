@@ -156,3 +156,108 @@ char *strexpand(char *str,int newsize) {
     } else return str;
 }
 
+/*
+  Hashtable stuff
+*/
+
+/* create a hashtable */
+hashtable_t *make_hashtable(int size,int (*hash)(void *),char (*eq)(void *,void *)) {
+    int i;
+    hashtable_t *table=(hashtable_t *)malloc(sizeof(hashtable_t));
+    /* basic stuff */
+    table->size=size;
+    table->rsize=(int *)calloc(sizeof(int),size);
+    table->ruse=(int *)calloc(sizeof(int),size); /* all usages are zero */
+    table->table=(kvpair_t ***)calloc(sizeof(kvpair_t **),size);
+    table->hash=hash;
+    table->equal=eq;
+    /* now create the rows of the table */
+    for(i=0;i<size;i++)
+        table->table[i]=(kvpair_t **)calloc(sizeof(kvpair_t *),(table->rsize[i]=2));
+    return table;
+}
+
+int hashtable_add(hashtable_t *table,void *key,void *value) {
+    int h;
+    kvpair_t *pair;
+    if(hashtable_retrieve(table,key)) /* replace the old value */
+        return hashtable_mod(table,key,value);
+    pair=(kvpair_t *)calloc(sizeof(kvpair_t),1);
+    h=table->hash(key);
+    if(h>=table->size) return 1; /* invalid hash */
+    pair->key=key,pair->value=value;
+    if(table->ruse[h]>=table->rsize[h]) /* reallocate */
+        table->table[h]=realloc(table->table[h],sizeof(int)*((table->rsize[h]*=2)+2));
+    table->table[h][table->ruse[h]++]=pair;
+    return 0;
+}
+
+int hashtable_mod(hashtable_t *table,void *key,void *value) {
+    int h,i;
+    h=table->hash(key);
+    if(h>=table->size) return 1; /* invalid hash */
+    for(i=0;i<table->ruse[h];i++) 
+        if(table->table[h][i]->key)
+            if(table->equal(table->table[h][i]->key,key)) {
+                table->table[h][i]->value=value;
+                return 0;
+            }
+    return 1;
+}
+
+void *hashtable_retrieve(hashtable_t *table,void *key) {
+    int h,i;
+    h=table->hash(key);
+    if(h>=table->size) return 0; /* invalid hash */
+    for(i=0;i<table->ruse[h];i++) 
+        if(table->table[h][i]->key)
+            if(table->equal(table->table[h][i]->key,key))
+                return table->table[h][i]->value;
+    return 0;
+}
+
+int hashtable_foreach(hashtable_t *table,
+                      int (*callback)(hashtable_t *,void *,void *),
+                      void *arg) {
+    int i,j,r;
+    for(i=0;i<table->size;i++) /* for every row */
+        for(j=0;j<table->ruse[i];j++) /* for every kvpair */
+            if(table->table[i][j]->key) /* that actually exist */
+                if((r=callback(table,table->table[i][j]->key,arg)))
+                    return r;
+    return 0;
+}
+
+void *hashtable_remove(hashtable_t *table,void *key) {
+    void *val=0;
+    int h,i;
+    h=table->hash(key);
+    if(h>=table->size) return 0; /* invalid hash */
+    for(i=0;i<table->ruse[h];i++) 
+        if(table->table[h][i]->key)
+            if(table->equal(table->table[h][i]->key,key)) {
+                val=table->table[h][i]->value;
+                table->table[h][i]->key=0;
+            }
+    return val;
+}
+
+int cleanup_hashtable(hashtable_t *table) {
+    int i,j;
+    /* free all kvpairs (since they're not added by the user) */
+    for(i=0;i<table->size;i++)
+        for(j=0;j<table->ruse[i];j++)
+            free(table->table[i][j]);
+    
+    /* free all rows */
+    for(i=0;i<table->size;i++)
+        free(table->table[i]);
+    
+    /* free all else */
+    free(table->rsize);
+    free(table->ruse);
+    free(table->table);
+    free(table);
+    return 0;
+}
+
