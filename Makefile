@@ -57,7 +57,7 @@ src/splash.c: src/splash.txt
 	scripts/text2c src/splash.txt $@ splash
 
 mostlyclean:
-	rm -f ${MODULES} src/main.o src/actiongen.o iv MANIFEST src/splash.c \
+	rm -f ${MODULES} src/main.o iv MANIFEST src/splash.c \
 	      ${DISTNAME}.tar.gz ${DISTNAME}.tar.bz2 src/actions.c \
 	      scripts/iv-actiongen
 	rm -rf ${DISTNAME}

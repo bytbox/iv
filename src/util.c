@@ -28,6 +28,7 @@
   SUCH DAMAGE.
 */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -266,4 +267,3 @@ int cleanup_hashtable(hashtable_t *table) {
     free(table);
     return 0;
 }
-

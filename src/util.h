@@ -144,8 +144,4 @@ void *hashtable_remove(hashtable_t *,void *); /* table,key->value */
 /* free all memory used by a hashtable */
 int cleanup_hashtable(hashtable_t *);
 
-/* print a C array representation of a hashtable */
-void hashtable_print(hashtable_t *,void (*)(void *),void (*)(void *));
-
-
 #endif /* !UTIL_H */

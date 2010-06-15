@@ -17,40 +17,21 @@
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
-  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
-  CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+  THE CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
   USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
   ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
   OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
   OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
-  SUCH DAMAGE.
+  SUCH DAMAGE.  
 */
 
-/*
-  Alternate execution starting point for generating the hashtable of actions
-  from a file (read from standard input).
-*/
+#include "input.h"
 
-#include <stdio.h>
-#include <stdlib.h>
+struct {
+    char *name;
+    input_action_t action;
+} action_table[];
 
-int main(/* arguments are ignored */) {
-    /* read from file */
-    char *buffer=malloc(100); /* assume nothing malicious */
-    puts("/* auto-generated array - do not modify */");
-    puts("#include \"input.h\"");
-    puts("struct {");
-    puts("    char *name;");
-    puts("    input_action_t action;");
-    puts("} action_table[]={");
-    while(!feof(stdin)) {
-        /* for each line */
-        /* print the corresponding array entry */
-        scanf("%s\n",buffer);
-        printf("    {\"%s\",%s_action},\n",buffer,buffer);
-    }
-    puts("};");
-    return 0;
-}
