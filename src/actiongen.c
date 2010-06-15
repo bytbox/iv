@@ -35,9 +35,11 @@
 
 #include <stdio.h>
 
+#include "input.h"
 #include "util.h"
 
 int main(/* arguments are ignored */) {
-    
+    hashtable_t *h=make_hashtable(ACTION_HASH_SIZE,action_hash,action_eql);
+    cleanup_hashtable(h);
     return 0;
 }

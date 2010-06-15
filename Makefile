@@ -42,7 +42,7 @@ TAR=tar
 INSTALL=/usr/bin/install -c
 
 
-COREMODULES=src/view.o src/input.o src/buffer.o src/util.o src/error.o \
+COREMODULES=src/input.o src/buffer.o src/view.o src/util.o src/error.o \
 	src/subprocess.o src/conf.o src/regex.o src/splash.o
 MODULES=${COREMODULES} src/actions.o
 

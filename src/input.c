@@ -30,6 +30,7 @@
 
 #include <curses.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 #include "config.h"
@@ -97,3 +98,16 @@ void input_loop() {
 	c=getch();
     }
 }
+
+/* hash the given string */
+int action_hash(void *vstr) {
+    char *str=vstr;
+    int len=strlen(str);
+    return (len*str[0])%ACTION_HASH_SIZE;
+}
+
+/* hash the given equality */
+char action_eql(void *a,void *b) {
+    return strcmp((char *)a,(char *)b);
+}
+

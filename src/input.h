@@ -33,6 +33,8 @@
 
 #define CTRL(x) (x-'A'+1)
 
+#define ACTION_HASH_SIZE 200
+
 typedef void (* input_action_t) (char);
 
 /* initialize the input system */
@@ -64,6 +66,12 @@ void unknown_action(char);
 
 /* just ignore it */
 void ignore_action(char);
+
+/* hash the given string */
+int action_hash(void *);
+
+/* hash the given equality */
+char action_eql(void *,void *);
 
 #endif /* !INPUT_H */
 
