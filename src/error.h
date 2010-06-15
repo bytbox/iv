@@ -41,7 +41,7 @@
 /* error reading configuration */
 #define ERR_CONFIG            0x00000010
 /* More information available in errno */
-#define ERR_IO                0x10000000
+#define ERR_SEE_ERRNO         0x10000000
 /* internal error (buggy code? assert failed?) */
 #define ERR_INTERNAL          0x40000000
 /* fatal error */
@@ -52,8 +52,11 @@
 /* initialize the error handling module */
 void error_init();
 
+/* cleans up any memory allocated by the error module */
+void error_cleanup();
+
 /* chaining function to catch certain types of errors. */
-int error_catch(int base,int mask,void (*next)(void));
+int error_catch(int base,int mask,void (*next)(void *),void *);
 
 /* throws the error, and never returns (it jumps down several stack frames as
    specified by calls to error_catch, or else exits completely */

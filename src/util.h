@@ -57,6 +57,12 @@ typedef struct {
 /* creates an empty linked list */
 linked_list_t *make_linked_list();
 
+/* returns the head */
+void *ll_head(linked_list_t *);
+
+/* pops off the head */
+void *ll_pop(linked_list_t *);
+
 /* returns the nth element */
 void *ll_nth(linked_list_t *,int);
 
@@ -68,6 +74,8 @@ void ll_append(linked_list_t *,void *);
 
 /* prepend an element */
 void ll_prepend(linked_list_t *,void *);
+/* convenience for people who actually wanted a stack */
+#define ll_push ll_prepend
 
 /* returns the length of the list */
 int ll_len(linked_list_t *);

@@ -39,6 +39,14 @@ linked_list_t *make_linked_list() {
     return l;
 }
 
+void *ll_head(linked_list_t *l) {
+    return ll_nth(l,0);
+}
+
+void *ll_pop(linked_list_t *l) {
+    return ll_del(l,0);
+}
+
 void *ll_nth(linked_list_t *l,int x) {
     llnode_t *n=l->head;
     int i=0;

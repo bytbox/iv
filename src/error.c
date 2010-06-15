@@ -39,7 +39,7 @@ linked_list_t *error_catch_stack;
 /* a frame in the error_catch_stack */
 struct error_catch_frame {
     /* the next function being called */
-    void (*next)(void);
+    void (*next)(void *);
     
     /* the base of requirements */
     int base;
@@ -56,7 +56,11 @@ void error_init() {
     error_catch_stack=make_linked_list();
 }
 
-int error_catch(int base,int mask,void (*next)(void)) {
+void error_cleanup() {
+    ll_free(error_catch_stack);
+}
+
+int error_catch(int base,int mask,void (*next)(void *),void *data) {
     int r;
     /* create the new frame */
     struct error_catch_frame *frame=
@@ -64,11 +68,29 @@ int error_catch(int base,int mask,void (*next)(void)) {
     frame->base=base; /* copy information */
     frame->mask=mask;
     frame->next=next;
+    /* add the frame to the stack */
+    ll_push(error_catch_stack,frame);
     /* call setjmp */
     if((r=setjmp(frame->dest)))
         return r;
     /* chain */
-    next();
+    next(data);
     /* there was no error if we reach this line */
     return 0;
+}
+
+/* test conformance of an error to a given base and mask */
+int error_conforms(int error,int base,int mask) {
+    int force0=(!base) & mask; /* if 1, error must be 0 */
+    int force1=base & mask; /* if 1, error must be 1 */
+    return ((force0 | error) == error) && 
+            (((error ^ force1) & (error | force1)) == error);
+}
+
+/* this method throws an error, and doesn't return */
+void error_throw(int error) {
+    struct error_catch_frame *frame=ll_pop(error_catch_stack);
+    while(!error_conforms(error,frame->base,frame->mask))
+        frame=ll_pop(error_catch_stack);
+    longjmp(frame->dest,error);
 }

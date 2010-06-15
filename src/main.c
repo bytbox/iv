@@ -38,6 +38,7 @@
 #include "config.h"
 #include "error.h"
 #include "input.h"
+#include "util.h"
 #include "view.h"
 
 void show_help();
@@ -46,10 +47,19 @@ void show_version();
 void prepare_signal_handler();
 void signal_handler(int);
 
+/* stuff that happens inside error handling */
+void main1(void *);
+
+/* variables for trading between stages */
+int opt;
+short openany;
+int argc_;
+char **argv_;
+
 int main(int argc,char *argv[]) {
+    argc_=argc;
+    argv_=argv;
     /* option parsing */
-    int opt;
-    short openany=0;
     while((opt=getopt(argc,argv,"hV"))!=-1)
         switch(opt) {
         case 'h':
@@ -66,7 +76,23 @@ int main(int argc,char *argv[]) {
 
     /* prepare error handling */
     error_init();
+    int err;
+    /* catch all errors, and call next stage */
+    if((err=error_catch(ERR_NONE,ERR_NONE,main1,0))) {
+        /* there was some sort of error */
+        if(err & ERR_SEE_ERRNO)
+            perror("uncaught error");
+        return 1;
+    }
+    return 0;
+}
 
+/* inside error handling */
+void main1(void *data) {
+    UNUSED(data);
+    /* extract stuff */
+    int argc=argc_;
+    char **argv=argv_;
     /* figure out what the configuration directory should be */
     char *confdir=getenv("IV_CONFDIR");
     if(!confdir) /* if it's not set, use default */
@@ -108,7 +134,6 @@ int main(int argc,char *argv[]) {
 
     /* close up the editor */
     view_close();
-    return 0;
 }
 
 void prepare_signal_handler() {
