@@ -58,7 +58,8 @@ src/splash.c: src/splash.txt
 
 mostlyclean:
 	rm -f ${MODULES} src/main.o src/actiongen.o iv MANIFEST src/splash.c \
-	      ${DISTNAME}.tar.gz ${DISTNAME}.tar.bz2 src/actions.c
+	      ${DISTNAME}.tar.gz ${DISTNAME}.tar.bz2 src/actions.c \
+	      scripts/iv-actiongen
 	rm -rf ${DISTNAME}
 
 clean: mostlyclean
@@ -75,10 +76,10 @@ install: all
 iv: ${MODULES} src/main.o
 	${CC} -o iv src/main.o ${MODULES} ${LFLAGS}
 
-src/actions.c: iv-actiongen
-	./iv-actiongen < src/actions.txt > src/actions.c
+src/actions.c: scripts/iv-actiongen
+	scripts/iv-actiongen < src/actions.txt > src/actions.c
 
-iv-actiongen: ${COREMODULES} src/actiongen.o
+scripts/iv-actiongen: ${COREMODULES} src/actiongen.o
 	${CC} -o $@ src/actiongen.o ${COREMODULES} ${LFLAGS}
 
 sdist: ${DISTNAME}.tar.gz

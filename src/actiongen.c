@@ -35,6 +35,9 @@
 
 #include <stdio.h>
 
+#include "util.h"
+
 int main(/* arguments are ignored */) {
+    
     return 0;
 }
