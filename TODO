@@ -7,7 +7,6 @@
 
 == Modules
  - mode
- - error
  - regex
  - subprocess
  - conf
