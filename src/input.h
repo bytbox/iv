@@ -37,6 +37,8 @@
 
 typedef void (* input_action_t) (char);
 
+extern input_action_t actions[];
+
 /* initialize the input system */
 void input_init();
 
@@ -66,6 +68,20 @@ void unknown_action(char);
 
 /* just ignore it */
 void ignore_action(char);
+
+/* moving the cursor around */
+void down_action(char);
+void up_action(char);
+void left_action(char);
+void right_action(char);
+
+/* saving the file */
+void write_action(char);
+
+
+/*
+  stuff for hash maps
+*/
 
 /* hash the given string */
 int action_hash(void *);

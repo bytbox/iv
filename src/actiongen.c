@@ -39,18 +39,19 @@
 int main(/* arguments are ignored */) {
     /* read from file */
     char *buffer=malloc(100); /* assume nothing malicious */
+    int cnt=0;
     puts("/* auto-generated array - do not modify */");
+    puts("#include \"actions.h\"");
     puts("#include \"input.h\"");
-    puts("struct {");
-    puts("    char *name;");
-    puts("    input_action_t action;");
-    puts("} action_table[]={");
+    puts("struct action_struct action_table[]={");
     while(!feof(stdin)) {
         /* for each line */
         /* print the corresponding array entry */
         scanf("%s\n",buffer);
         printf("    {\"%s\",%s_action},\n",buffer,buffer);
+        cnt++;
     }
     puts("};");
+    printf("\nint action_count=%d;\n",cnt);
     return 0;
 }

@@ -76,6 +76,38 @@ void ignore_action(char c) {
     UNUSED(c);
 }
 
+/* move the cursor down */
+void down_action(char c) {
+    UNUSED(c);
+    cursor_down(current_view());
+}
+
+/* move the cursor left */
+void left_action(char c) {
+    UNUSED(c);
+    cursor_left(current_view());
+}
+
+/* move the cursor up */
+void up_action(char c) {
+    UNUSED(c);
+    cursor_up(current_view());
+}
+
+/* move the cursor right */
+void right_action(char c) {
+    UNUSED(c);
+    cursor_right(current_view());
+}
+
+/* save the file */
+void write_action(char c) {
+    UNUSED(c);
+    /* FIXME TODO what if the filename is blank? */
+    buffer_to_file(current_view()->buffer);
+    display_message("wrote");    
+}
+
 /* push a character onto the queue */
 void pushchar(char c) {
     /* use ncurses */

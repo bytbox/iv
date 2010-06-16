@@ -57,6 +57,7 @@ int argc_;
 char **argv_;
 
 int main(int argc,char *argv[]) {
+    int err;
     argc_=argc;
     argv_=argv;
     /* option parsing */
@@ -76,7 +77,6 @@ int main(int argc,char *argv[]) {
 
     /* prepare error handling */
     error_init();
-    int err;
     /* catch all errors, and call next stage */
     if((err=error_catch(ERR_NONE,ERR_NONE,main1,0))) {
         /* there was some sort of error */

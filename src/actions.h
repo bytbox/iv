@@ -30,8 +30,9 @@
 
 #include "input.h"
 
-struct {
+extern struct action_struct {
     char *name;
     input_action_t action;
 } action_table[];
 
+extern int action_count;

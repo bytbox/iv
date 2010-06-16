@@ -1,2 +1,7 @@
 unknown
 ignore
+down
+left
+right
+up
+write

@@ -33,6 +33,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "actions.h"
 #include "conf.h"
 #include "error.h"
 
@@ -41,11 +42,35 @@ void conf_init() {
 
 }
 
+/* convert a string to its key number */
+int str2key(char *keystr) {
+    if(strlen(keystr)==0)
+        return 0; /* invalid key - ignore line */
+    if(strlen(keystr)==1)
+        /* just use the first character */
+        return keystr[0];
+    return 0; /* invalid key - ignore line */
+}
+
 /* read and apply the keymap */
 void read_keymap(char *filename) {
     FILE *f=fopen(filename,"r");
+    /* fixed malloc is safe - we're using fscanf */
+    char *keystr=malloc(22);
+    char *action=malloc(102);
     if(!f) return; /* ignore the error */
-
+    while(!feof(f)) {
+        fscanf(f,"%20s%100s",keystr,action);
+        /* convert the keystring to a key number */
+        int key=str2key(keystr);
+        /* look up the action */
+        /* quick hack - look through the assoc list */
+        int i;
+        for(i=0;i<action_count;i++)
+            if(!strcmp(action_table[i].name,action))
+                /* assign action_table[i].action to keystr */
+                actions[key]=action_table[i].action;
+    }
     fclose(f);
 }
 
