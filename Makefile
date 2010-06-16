@@ -26,45 +26,73 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                     #
 ####################################################################################
 
+#Meta-information
 PNAME=iv
 VERSION=0.0.2
 DISTNAME=${PNAME}-${VERSION}
 
+#flags
 CFLAGS=-g -O0 -Wall -Wextra -ansi -DVERSION=\"${VERSION}\"
+CXXFLAGS=-g -O0 -Wall -Wextra -DVERSION=\"${VERSION}\"
 LFLAGS=-lncurses
 
+#directories
 PREFIX=/usr/local
 
+#programs
 CC=cc
+CXX=g++
 AR=ar
 LD=ld
 TAR=tar
 INSTALL=/usr/bin/install -c
+YACC=yacc
+LEX=lex
 
-
+#modules
 COREMODULES=src/input.o src/buffer.o src/view.o src/util.o src/error.o \
 	src/subprocess.o src/conf.o src/regex.o src/splash.o
+TESTMODULES=tests/driver.o tests/suite.o tests/runner.o tests/flatrunner.o \
+	tests/lightrunner.o tests/cursesrunner.o
 MODULES=${COREMODULES} src/actions.o
 
+#meta-rules
+.PHONY: all doc test sdist mostlyclean clean
+.SUFFIXES: .c .cxx .o
+
+#general rules
+.cxx.o:
+	g++ ${CXXFLAGS} -c -o $@ $?
+
+#all means the executable and the documentation
 all: iv doc
 
+#################
+# Documentation #
+#################
 doc: doc/iv.1
 
 doc/iv.1: doc/iv.xml
 	xmlto man -o doc doc/iv.xml
 
-src/splash.c: src/splash.txt
-	scripts/text2c src/splash.txt $@ splash
-
+############
+# Cleaning #
+############
 mostlyclean:
 	rm -f ${MODULES} src/main.o iv MANIFEST src/splash.c \
 	      ${DISTNAME}.tar.gz ${DISTNAME}.tar.bz2 src/actions.c \
-	      scripts/iv-actiongen
+	      scripts/iv-actiongen tests/iv-tests ${TESTMODULES}
 	rm -rf ${DISTNAME}
 
 clean: mostlyclean
 	rm -f doc/iv.1
 
+src/splash.c: src/splash.txt
+	scripts/text2c src/splash.txt $@ splash
+
+################
+# Installation #
+################
 install: all
 	${INSTALL} iv ${PREFIX}/bin
 	${INSTALL} -D doc/iv.1 ${PREFIX}/share/man/man1/iv.1
@@ -79,9 +107,12 @@ iv: ${MODULES} src/main.o
 src/actions.c: scripts/iv-actiongen
 	scripts/iv-actiongen < src/actions.txt > src/actions.c
 
-scripts/iv-actiongen: ${COREMODULES} src/actiongen.o
-	${CC} -o $@ src/actiongen.o ${COREMODULES} ${LFLAGS}
+scripts/iv-actiongen: src/util.o src/actiongen.o src/actions.txt
+	${CC} -o $@ src/actiongen.o src/util.o ${LFLAGS}
 
+#######################
+# Source distribution #
+#######################
 sdist: ${DISTNAME}.tar.gz
 
 ${DISTNAME}.tar.gz ${DISTNAME}.tar.bz2: mostlyclean doc
@@ -92,6 +123,12 @@ ${DISTNAME}.tar.gz ${DISTNAME}.tar.bz2: mostlyclean doc
 	${TAR} cjf ${DISTNAME}.tar.bz2 -T MANIFEST
 	rm -rf ${DISTNAME} MANIFEST
 
-test:
+###########
+# Testing #
+###########
+test: tests/iv-tests
+	tests/iv-tests
 
-.PHONY: doc
+tests/iv-tests: ${TESTMODULES} ${MODULES}
+	${CXX} -o $@ ${TESTMODULES} ${MODULES} ${LFLAGS}
+

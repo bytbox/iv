@@ -2,8 +2,9 @@ IV Development History
 
 ================================
 
-Version 0.0.2 (June 13, 2010)
+Version 0.0.2 (June 16, 2010)
 
+ * Test suite infrastructure
  * Improved error handling
  * Added keymap configuration
  * Display splash screen on startup
