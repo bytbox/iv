@@ -87,6 +87,7 @@ view_t *create_view(buffer_t *);
 /* sets the given view to be the current view */
 void activate_view(view_t *);
 
+
 /*
   displayed message management 
 */

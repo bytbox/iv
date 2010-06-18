@@ -34,12 +34,14 @@
 #include <unistd.h>
 
 #include "config.h"
+#include "error.h"
 #include "input.h"
 #include "util.h"
 #include "view.h"
 
-/* map of actions */
+/* maps of actions */
 input_action_t actions[KEY_MAX];
+input_action_t text_actions[KEY_MAX];
 
 /* initialize the input module */
 void input_init() {
@@ -59,53 +61,63 @@ input_action_t get_action(int c) {
 }
 
 /* do nothing */
-void unknown_action(char c) {
-#ifdef DEBUG
-    /* print out the unknown character */
-    char *msg=malloc(10);
-    sprintf(msg,"? %d",c);
-    display_message(msg);
-#else
+void unknown_action() {
     /* just print the ? of doom */
     display_message("?");
-#endif
 }
 
 /* just ignore if */
-void ignore_action(char c) {
-    UNUSED(c);
+void ignore_action() {
 }
 
 /* move the cursor down */
-void down_action(char c) {
-    UNUSED(c);
+void down_action() {
     cursor_down(current_view());
 }
 
 /* move the cursor left */
-void left_action(char c) {
-    UNUSED(c);
+void left_action() {
     cursor_left(current_view());
 }
 
 /* move the cursor up */
-void up_action(char c) {
-    UNUSED(c);
+void up_action() {
     cursor_up(current_view());
 }
 
 /* move the cursor right */
-void right_action(char c) {
-    UNUSED(c);
+void right_action() {
     cursor_right(current_view());
 }
 
 /* save the file */
-void write_action(char c) {
-    UNUSED(c);
-    /* FIXME TODO what if the filename is blank? */
+void write_action() {
     buffer_to_file(current_view()->buffer);
     display_message("wrote");    
+}
+
+/* writing text */
+void text_action() {
+    int c=getch(),err;
+    /* start up a very similar input loop */
+    while(c!=CTRL('D')) {
+        /* clear displayed message */
+        display_message("");
+        view_flush();
+        /* get and call the relevant action */
+        if(c<KEY_MAX) /* make sure the key is valid */
+            /* catch any errors */
+            if((err=error_catch(ERR_NONE,ERR_FATAL,text_actions[c],0))) {
+                /* some error */
+                display_message("error");
+                if(err & ERR_READONLY) /* readonly */
+                    display_message("readonly");
+            }
+	/* respond */
+	view_flush();
+        /* get the next character */
+	c=getch();        
+    }
 }
 
 /* push a character onto the queue */
@@ -116,14 +128,20 @@ void pushchar(char c) {
 
 /* run the input loop */
 void input_loop() {
-    int c=getch();
+    int c=getch(),err;
     while(c!='q') {
         /* clear displayed message */
         display_message("");
         view_flush();
         /* get and call the relevant action */
-        if(c<KEY_MAX) 
-            actions[c](c);
+        if(c<KEY_MAX) /* make sure the key is valid */
+            /* catch any errors */
+            if((err=error_catch(ERR_NONE,ERR_FATAL,actions[c],0))) {
+                /* some error */
+                display_message("error");
+                if(err & ERR_READONLY) /* readonly */
+                    display_message("readonly");
+            }
 	/* respond */
 	view_flush();
         /* get the next character */

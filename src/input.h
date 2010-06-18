@@ -35,9 +35,14 @@
 
 #define ACTION_HASH_SIZE 200
 
-typedef void (* input_action_t) (char);
+/* an action */
+typedef void (* input_action_t) ();
 
+/* actions in standard mode (whatever the current mode is) */
 extern input_action_t actions[];
+
+/* actions in text mode (whatever the current mode is) */
+extern input_action_t text_actions[];
 
 /* initialize the input system */
 void input_init();
@@ -64,19 +69,22 @@ input_action_t get_action(int);
 */
 
 /* don't know what to do */
-void unknown_action(char);
+void unknown_action();
 
 /* just ignore it */
-void ignore_action(char);
+void ignore_action();
 
 /* moving the cursor around */
-void down_action(char);
-void up_action(char);
-void left_action(char);
-void right_action(char);
+void down_action();
+void up_action();
+void left_action();
+void right_action();
 
 /* saving the file */
-void write_action(char);
+void write_action();
+
+/* writing text */
+void text_action();
 
 
 /*

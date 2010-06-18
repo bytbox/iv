@@ -34,6 +34,7 @@
 #include <unistd.h>
 
 #include "buffer.h"
+#include "error.h"
 #include "splash.h"
 #include "util.h"
 #include "view.h"
@@ -166,6 +167,10 @@ buffer_t *buffer_from_file(char *filename) {
 
 /* writes the buffer to the appropriate file */
 void buffer_to_file(buffer_t *b) {
+    /* check for readonly-ness */
+    if(b->readonly)
+        /* throw the appropriate error */
+        error_throw(ERR_READONLY);
     /* open the file */
     FILE *f=fopen(b->filename,"w");
     /* for each line */

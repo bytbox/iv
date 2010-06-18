@@ -84,6 +84,8 @@ int main(int argc,char *argv[]) {
         view_close();
         if(err & ERR_SEE_ERRNO)
             perror("uncaught error");
+        else
+            fprintf(stderr,"uncaught error (%d)\n",err);
         return 1;
     }
     return 0;

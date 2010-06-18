@@ -32,8 +32,8 @@ VERSION=0.0.2
 DISTNAME=${PNAME}-${VERSION}
 
 #flags
-CFLAGS=-g -O0 -Wall -Wextra -ansi -DVERSION=\"${VERSION}\"
-CXXFLAGS=-g -O0 -Wall -Wextra -DVERSION=\"${VERSION}\"
+CFLAGS=-g -O0 -Wall -Wextra -ansi -DVERSION=\"${VERSION}\" -Isrc -Itests
+CXXFLAGS=-g -O0 -Wall -Wextra -DVERSION=\"${VERSION}\" -Isrc -Itests
 LFLAGS=-lncurses
 
 #directories
@@ -53,7 +53,7 @@ LEX=lex
 COREMODULES=src/input.o src/buffer.o src/view.o src/util.o src/error.o \
 	src/subprocess.o src/conf.o src/regex.o src/splash.o
 TESTMODULES=tests/driver.o tests/suite.o tests/runner.o tests/flatrunner.o \
-	tests/lightrunner.o tests/cursesrunner.o
+	tests/lightrunner.o tests/cursesrunner.o tests/suites/splash.o
 MODULES=${COREMODULES} src/actions.o
 
 #meta-rules
