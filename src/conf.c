@@ -49,6 +49,8 @@ int str2key(char *keystr) {
     if(strlen(keystr)==1)
         /* just use the first character */
         return keystr[0];
+    if(!strcmp(keystr,"space"))
+        return ' ';
     return 0; /* invalid key - ignore line */
 }
 
