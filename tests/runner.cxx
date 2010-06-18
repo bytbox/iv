@@ -29,3 +29,21 @@
 */
 
 #include "runner.hxx"
+
+TestRunner::TestRunner() {
+    suite_count=0;
+}
+
+TestRunner::~TestRunner() {
+
+}
+
+void TestRunner::run_tests() {
+    /* go through all suites, and run them */
+    for(int i=0;i<suite_count;i++)
+        run_suite(suites[i]);
+}
+
+void TestRunner::add_suite(TestSuite *suite) {
+    suites[suite_count++]=suite;
+}

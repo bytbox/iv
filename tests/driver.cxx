@@ -34,12 +34,44 @@ using namespace std;
 
 /* C header files */
 #include <getopt.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 /* iv header files */
+
+/* iv-test header files */
 #include "runner.hxx"
 #include "suite.hxx"
 
+/* suites */
+#include "suites/splash.hxx"
+
+/* options */
+#define RUNNER FlatRunner
+
 int main(int argc,char *argv[]) {
-    TestRunner *runner;
+    int opt;
+    while((opt=getopt(argc,argv,"hV"))!=-1)
+        switch(opt) {
+        case 'h':
+            return 0;
+        case 'V':
+            printf("iv %s\n",VERSION);
+            printf("iv -V for more information\n");
+            return 0;
+        case '?':
+            exit(EXIT_FAILURE);
+        default:
+            exit(EXIT_FAILURE);
+        }
+
+    /* create the runner */
+    TestRunner *runner=new RUNNER();
+    /* FIXME make this happen automatically */
+    /* add the suites */
+    runner->add_suite(new __splashSuite());
+    /* run the tests */
+    runner->run_tests();
+    delete runner;
     return 0;
 }

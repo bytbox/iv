@@ -5,14 +5,14 @@
 
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions are met:
-    * Redistributions of source code must retain the above copyright notice,
-      this list of conditions and the following disclaimer.
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
       notice, this list of conditions and the following disclaimer in the
       documentation and/or other materials provided with the distribution.
     * The names of its contributors may not be used to endorse or promote
-      products derived from this software without specific prior written
-      permission.
+      products derived from this software without specific prior
+      written permission.
 
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -26,38 +26,15 @@
   THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <string>
-using namespace std;
+#include "splash.hxx"
 
-#include "suite.hxx"
+#include "splash.h"
 
-TestSuite::TestSuite() {
-    cur=0;
+bool splash_not_null() {
+    assert_true(splash);
+    return true;
 }
 
-TestSuite::~TestSuite() {
-
-}
-
-/* returns the total number of test cases */
-int TestSuite::case_count() {
-    return tc_cnt;
-}
-
-/* returns the number of the current test case */
-int TestSuite::case_current() {
-    return cur;
-}
-
-/* returns the name of the current test case */
-string TestSuite::name_current() {
-    return names[cur];
-}
-
-bool TestSuite::done() {
-    return case_current()==case_count();
-}
-
-bool TestSuite::run_case() {
-    return cases[cur++]();
-}
+BEGIN_SUITE(splash)
+ADD_CASE(splash_not_null)
+END_SUITE()

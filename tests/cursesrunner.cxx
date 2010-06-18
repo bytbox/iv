@@ -29,3 +29,7 @@
 */
 
 #include "runner.hxx"
+
+CursesRunner::~CursesRunner() {
+
+}

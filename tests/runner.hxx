@@ -31,9 +31,49 @@
 #ifndef RUNNER_HXX
 #define RUNNER_HXX
 
+#define SUITE_MAX 1000
+
+#include "suite.hxx"
+
 class TestRunner {
 public:
+    TestRunner();
     virtual ~TestRunner();
+
+    /* running the tests */
+    virtual void run_tests();
+    virtual void run_suite(TestSuite *)=0;
+
+    /* suite management */
+    virtual void add_suite(TestSuite *);
+protected:
+    /* the suites */
+    TestSuite *suites[SUITE_MAX];
+    int suite_count;
+private:
+};
+
+class FlatRunner : public TestRunner {
+public:
+    FlatRunner();
+    virtual ~FlatRunner();
+
+    /* running a suite */
+    virtual void run_suite(TestSuite *);
+protected:
+private:
+};
+
+class LightRunner : public TestRunner {
+public:
+    virtual ~LightRunner();
+protected:
+private:
+};
+
+class CursesRunner : public TestRunner {
+public:
+    virtual ~CursesRunner();
 protected:
 private:
 };
