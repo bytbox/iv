@@ -40,6 +40,8 @@
 #define ERR_USER              0x00000001
 /* error in configuration */
 #define ERR_CONFIG            0x00000010
+/* Someone tried to change a readonly buffer */
+#define ERR_READONLY          0x00000100
 /* More information available in errno */
 #define ERR_SEE_ERRNO         0x10000000
 /* internal error (buggy code? assert failed?) */
