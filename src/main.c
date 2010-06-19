@@ -150,9 +150,6 @@ void prepare_signal_handler() {
 
 void signal_handler(int signal) {
     switch(signal) {
-    case SIGINT:
-        pushchar(CTRL('C'));
-        break;
     default:
         /* uncaught signal - don't fret */
         break;

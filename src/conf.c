@@ -28,6 +28,7 @@
   SUCH DAMAGE.
 */
 
+#include <curses.h>
 #include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -39,7 +40,9 @@
 
 /* get ready for configuration operations */
 void conf_init() {
-
+    int i;
+    for(i=0;i<KEY_MAX;i++)
+        actions[i]=text_actions[i]=unknown_action;
 }
 
 /* convert a string to its key number */
