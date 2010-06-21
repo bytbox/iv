@@ -34,6 +34,7 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "error.h"
 #include "util.h"
 #include "view.h"
 
@@ -227,6 +228,8 @@ void cursor_right(view_t *view) {
 
 /* inserts a character at the cursor */
 void insertc(view_t *view,char c) {
+    if(view->buffer->readonly)
+        error_throw(ERR_READONLY);
     if(c<0) return;
     if(c=='\t') {
         /* FIXME TODO */
@@ -240,6 +243,7 @@ void insertc(view_t *view,char c) {
     char *tln=malloc(strlen(line)+2);
     char *ln=tln;
     sprintf(ln,"%s",line);
+    /* put the line back together */
     /* copy the first part back */
     line[0]='\0';
     strncat(line,ln,view->cursor_x);
@@ -260,6 +264,8 @@ void insertc(view_t *view,char c) {
 /* inserts a line break at the cursor */
 void insertlb(view_t *view) {
     buffer_t *b=view->buffer;
+    if(b->readonly) 
+        error_throw(ERR_READONLY);
     /* enlarge the line count */
     b->line_count++;
     /* allocate more space */

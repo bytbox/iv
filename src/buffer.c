@@ -68,7 +68,7 @@ buffer_t *make_blank_buffer() {
     for(i=0;i<strlen(splash);i++)
         if(splash[i]=='\n')
             /* start a new line */
-            buffer->lines[++ln]=malloc(SPLASH_LONGEST_LINE),x=0;
+            buffer->lines[++ln]=malloc(sizetoalloc(SPLASH_LONGEST_LINE)),x=0;
         else 
             /* copy the character */
             buffer->lines[ln][x++]=splash[i];

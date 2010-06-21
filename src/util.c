@@ -134,7 +134,7 @@ void ll_free(linked_list_t *l) {
    string */
 int sizetoalloc(int len) {
     int size=1;
-    while(size<=len+2)
+    while(size<=len+1)
         size*=2;
     return size;
 }
@@ -147,14 +147,10 @@ int strsize(char *str) {
 
 /* expands the string to be able to fit the specified size */
 char *strexpand(char *str,int newsize) {
-    if(newsize+1>=strsize(str)) {
-        /* figure out what the new size will be */
-        int size=strsize(str);
-        while(newsize+1>=size)
-            size*=2; /* double size for each expansion */
-        /* reallocate memory */
-        return realloc(str,size);
-    } else return str;
+    fprintf(stderr,"considering %d and %d\n",newsize,(int)strlen(str));
+    if(newsize+2>=strsize(str)-8)
+        return realloc(str,sizetoalloc(newsize)+5);
+    else return str;
 }
 
 /*

@@ -46,8 +46,10 @@ input_action_t text_actions[KEY_MAX];
 /* initialize the input module */
 void input_init() {
     int i;
-    for(i=0;i<KEY_MAX;i++)
+    for(i=0;i<KEY_MAX;i++) {
         actions[i]=unknown_action;
+        text_actions[i]=unknown_action;
+    }
 }
 
 /* sets the action for a given character code */
@@ -105,14 +107,19 @@ void text_action() {
         display_message("");
         view_flush();
         /* get and call the relevant action */
-        if(c<KEY_MAX) /* make sure the key is valid */
-            /* catch any errors */
-            if((err=error_catch(ERR_NONE,ERR_FATAL,text_actions[c],0))) {
-                /* some error */
-                display_message("error");
-                if(err & ERR_READONLY) /* readonly */
-                    display_message("readonly");
-            }
+        if(c<KEY_MAX) { /* make sure the key is valid */
+            /* print the key if no action assigned */
+            if(text_actions[c]==unknown_action)
+                insertc(current_view(),c);
+            else
+                /* catch any errors */
+                if((err=error_catch(ERR_NONE,ERR_FATAL,text_actions[c],0))) {
+                    /* some error */
+                    display_message("error");
+                    if(err & ERR_READONLY) /* readonly */
+                        display_message("readonly");
+                }
+        }
 	/* respond */
 	view_flush();
         /* get the next character */

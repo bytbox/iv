@@ -33,6 +33,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <term.h>
 
 #include "actions.h"
 #include "conf.h"
@@ -54,6 +55,10 @@ int str2key(char *keystr) {
         return keystr[0];
     if(!strcmp(keystr,"space"))
         return ' ';
+    if(strlen(keystr)==2 && keystr[0]=='^')
+        /* it's a control character */
+        return CTRL(keystr[1]);
+    fprintf(stderr,":: %s\n",strfnames[KEY_DOWN]);
     return 0; /* invalid key - ignore line */
 }
 
@@ -61,22 +66,38 @@ int str2key(char *keystr) {
 void read_keymap(char *filename) {
     FILE *f=fopen(filename,"r");
     /* fixed malloc is safe - we're using fscanf */
-    char *keystr=malloc(22);
-    char *action=malloc(102);
+    char *keystr=malloc(22);char *_k=keystr;
+    char *action=malloc(102);char *_a=action;
     if(!f) return; /* ignore the error */
     while(!feof(f)) {
         fscanf(f,"%20s%100s",keystr,action);
-        /* convert the keystring to a key number */
-        int key=str2key(keystr);
-        /* look up the action */
-        /* quick hack - look through the assoc list */
-        int i;
-        for(i=0;i<action_count;i++)
-            if(!strcmp(action_table[i].name,action))
-                /* assign action_table[i].action to keystr */
-                actions[key]=action_table[i].action;
+        /* is this in normal mode or text mode? */
+        if(keystr[0]=='+') {
+            keystr++;
+            /* convert the keystring to a key number */
+            int key=str2key(keystr);
+            /* look up the action */
+            /* quick hack - look through the assoc list */
+            int i;
+            for(i=0;i<action_count;i++)
+                if(!strcmp(action_table[i].name,action))
+                    /* assign action_table[i].action to keystr */
+                    text_actions[key]=action_table[i].action;
+        } else {
+            /* convert the keystring to a key number */
+            int key=str2key(keystr);
+            /* look up the action */
+            /* quick hack - look through the assoc list */
+            int i;
+            for(i=0;i<action_count;i++)
+                if(!strcmp(action_table[i].name,action))
+                    /* assign action_table[i].action to keystr */
+                    actions[key]=action_table[i].action;
+        }
     }
     fclose(f);
+    free(_k);
+    free(_a);
 }
 
 /* read and apply the configuration from the specified directory */
