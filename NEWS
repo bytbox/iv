@@ -2,8 +2,9 @@ IV Development History
 
 ================================
 
-Version 0.0.2 (June 16, 2010)
+Version 0.0.2 (June 21, 2010)
 
+ * Improved build system
  * Test suite infrastructure
  * Improved error handling
  * Added keymap configuration
