@@ -62,7 +62,10 @@ MODULES=${COREMODULES} src/actions.o src/defaults.o
 
 #general rules
 .cxx.o:
-	g++ ${CXXFLAGS} -c -o $@ $?
+	${CXX} ${CXXFLAGS} -c -o $@ $?
+
+.c.o:
+	${CC} ${CFLAGS} -c -o $@ $?
 
 #all means the executable and the documentation
 all: iv doc
