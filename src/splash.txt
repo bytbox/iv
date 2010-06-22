@@ -1,4 +1,4 @@
-iv v0.0.3 - an editor
+iv %VERSION% - an editor
 Copyright (c) 2010, Scott Lawrence <bytbox@gmail.com>
 All rights reserved.
 

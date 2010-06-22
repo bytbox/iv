@@ -26,16 +26,11 @@
   THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-/*
-  Alternate execution starting point for generating the default settings.
-*/
+#ifndef STRINGS_SUITE_HXX
+#define STRINGS_SUITE_HXX
 
-#include <stdio.h>
+#include "suite.hxx"
 
-int main(int argc,char *argv[]) {
-    if(argc!=2) {
-        /* error: we need 1 argument! */
-        fprintf(stderr,"usage: %s SETTINGSDIR\n",argv[0]);
-    }
-    return 0;
-}
+SUITE(strings)
+
+#endif /* !STRINGS_SUITE_HXX */

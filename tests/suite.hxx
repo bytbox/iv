@@ -81,7 +81,7 @@ public: \
     tc_cnt=0;
 
 /* add a test case */
-#define ADD_CASE(fname) names[tc_cnt]="""fname"""; \
+#define ADD_CASE(fname) names[tc_cnt]=#fname; \
     cases[tc_cnt++]=fname;
 
 /* done with suite */

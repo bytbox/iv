@@ -26,16 +26,51 @@
   THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-/*
-  Alternate execution starting point for generating the default settings.
-*/
+/* C Includes */
+#include <stdlib.h>
 
-#include <stdio.h>
+/* Test System Includes */
+#include "strings.hxx"
 
-int main(int argc,char *argv[]) {
-    if(argc!=2) {
-        /* error: we need 1 argument! */
-        fprintf(stderr,"usage: %s SETTINGSDIR\n",argv[0]);
-    }
-    return 0;
+#include "util.h"
+
+#define TEST_STRING_SIZE 10000
+
+/* test that sizetoalloc() returns a large enough value */
+bool sizetoalloc_more() {
+    for(int i=0;i<TEST_STRING_SIZE;i++)
+        assert_true(sizetoalloc(i)>i);
+    return true;
 }
+
+/* test that strsize() returns a large enough value */
+bool strsize_more() {
+    for(int i=0;i<TEST_STRING_SIZE;i++) {
+        char *str=new char[i+1];
+        for(int j=0;j<i;j++)
+            str[j]='a';
+        str[i]='\0';
+        assert_true(strsize(str)>i);
+        delete str;
+    }
+    return true;
+}
+
+/* test that strsize() returns values that match sizetoalloc() */
+bool strsize_matches_sizetoalloc() {
+    for(int i=0;i<TEST_STRING_SIZE;i++) {
+        char *str=new char[i+1];
+        for(int j=0;j<i;j++)
+            str[j]='a';
+        str[i]='\0';
+        assert_true(strsize(str)==sizetoalloc(i));
+        delete str;
+    }
+    return false;
+}
+
+BEGIN_SUITE(strings)
+ADD_CASE(sizetoalloc_more)
+ADD_CASE(strsize_more)
+ADD_CASE(strsize_matches_sizetoalloc)
+END_SUITE()

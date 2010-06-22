@@ -27,6 +27,7 @@
 */
 
 #include <iostream>
+using namespace std;
 
 #include "runner.hxx"
 
@@ -44,11 +45,15 @@ void FlatRunner::run_suite(TestSuite *suite) {
     /* iterate through all of the cases */
     while(!suite->done()) {
         /* run a test case */
+        /* print information */
         cout << " test case " << suite->case_current()+1 << "/" 
              << suite->case_count() << " ("
              << suite->name_current() << ") ..." << flush;
-        bool result=suite->run_case();
-        cout << " passed!" << endl;
+        bool result=suite->run_case(); /* run */
+        if(result) /* we passed */
+            cout << " passed!" << endl;
+        else /* we failed */
+            cout << " failed!" << endl;
     }
     cout << endl;
 }

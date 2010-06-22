@@ -31,4 +31,14 @@
 #ifndef REGEX_H
 #define REGEX_H
 
+/* enable calling from C++ land */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* enable calling from C++ land */
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* !REGEX_H */

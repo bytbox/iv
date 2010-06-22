@@ -45,9 +45,10 @@ using namespace std;
 
 /* suites */
 #include "suites/splash.hxx"
+#include "suites/strings.hxx"
 
 /* options */
-#define RUNNER FlatRunner
+#define RUNNER LightRunner
 
 int main(int argc,char *argv[]) {
     int opt;
@@ -70,6 +71,7 @@ int main(int argc,char *argv[]) {
     /* FIXME make this happen automatically */
     /* add the suites */
     runner->add_suite(new __splashSuite());
+    runner->add_suite(new __stringsSuite());
     /* run the tests */
     runner->run_tests();
     delete runner;

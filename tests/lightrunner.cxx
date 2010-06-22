@@ -28,8 +28,54 @@
   SUCH DAMAGE.
 */
 
+/* C++ includes */
+#include <iostream>
+#include <string>
+using namespace std;
+
+/* C includes */
+#include <stdio.h>
+#include <string.h>
+
+/* Test System includes */
 #include "runner.hxx"
+
+LightRunner::LightRunner() {
+
+}
 
 LightRunner::~LightRunner() {
 
+}
+
+void LightRunner::run_suite(TestSuite *suite) {
+    /* start output */
+    cout << "Running suite '" << suite->namestr() << "'... ";
+    int passed=0; /* the number of tests passed */
+    char *progress=new char[100]; /* the current progress string being displayed */
+    string faillist="";
+    /* run the test suite */
+    /* iterate through all of the cases */
+    while(!suite->done()) {
+        /* run a test case */
+        /* generate information */
+        sprintf(progress,"%d/%d",suite->case_current()+1,suite->case_count());
+        /* print information */
+        cout << progress << flush;
+        bool result=suite->run_case(); /* run */
+        /* were we successful? */
+        if(result) 
+            passed++; /* we passed one more */
+        else
+            /* update the fail list */
+            faillist+=suite->name_current()+" ";
+        for(unsigned i=0;i<strlen(progress);i++)
+            cout << "\b";
+    }
+    /* print out the status */
+    if(passed!=suite->case_count())
+        cout << "FAILED " << faillist;
+    else cout << "passed!";
+    delete progress;
+    cout << endl; /* next line for next suite */
 }

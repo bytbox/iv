@@ -53,8 +53,9 @@ LEX=lex
 COREMODULES=src/input.o src/buffer.o src/view.o src/util.o src/error.o \
 	src/subprocess.o src/conf.o src/regex.o src/splash.o
 TESTMODULES=tests/driver.o tests/suite.o tests/runner.o tests/flatrunner.o \
-	tests/lightrunner.o tests/cursesrunner.o tests/suites/splash.o
-MODULES=${COREMODULES} src/actions.o src/defaults.o
+	tests/lightrunner.o tests/cursesrunner.o ${TESTSUITES} 
+TESTSUITES=tests/suites/splash.o tests/suites/strings.o
+MODULES=${COREMODULES} src/actions.o src/defaults.o src/keys.o
 
 #meta-rules
 .PHONY: all doc test sdist mostlyclean clean
@@ -86,14 +87,16 @@ mostlyclean:
 	      ${DISTNAME}.tar.gz ${DISTNAME}.tar.bz2 src/actions.c \
 	      scripts/iv-actiongen tests/iv-tests ${TESTMODULES} \
 	      src/actiongen.o src/defaultgen.o src/defaults.c \
-	      scripts/iv-defaultgen
+	      scripts/iv-defaultgen src/keys.c
 	rm -rf ${DISTNAME}
 
 clean: mostlyclean
 	rm -f doc/iv.1
 
+#generate the splash screen
 src/splash.c: src/splash.txt
 	scripts/text2c src/splash.txt $@ splash
+	sed -i s/%VERSION%/${VERSION}/ $@
 
 ################
 # Installation #
@@ -120,6 +123,9 @@ src/defaults.c: scripts/iv-defaultgen
 
 scripts/iv-defaultgen: src/defaultgen.o
 	${CC} -o $@ src/defaultgen.o ${LFLAGS}
+
+src/keys.c: scripts/keygen src/keys.txt
+	scripts/keygen < src/keys.txt > src/keys.c
 
 #######################
 # Source distribution #

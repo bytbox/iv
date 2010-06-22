@@ -31,6 +31,11 @@
 #ifndef UTIL_H
 #define UTIL_H
 
+/* enable calling from C++ land */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
   utility macros
 */
@@ -143,5 +148,9 @@ void *hashtable_remove(hashtable_t *,void *); /* table,key->value */
 
 /* free all memory used by a hashtable */
 int cleanup_hashtable(hashtable_t *);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* !UTIL_H */

@@ -66,7 +66,11 @@ private:
 
 class LightRunner : public TestRunner {
 public:
+    LightRunner();
     virtual ~LightRunner();
+
+    /* running a suite */
+    virtual void run_suite(TestSuite *);
 protected:
 private:
 };
