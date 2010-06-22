@@ -26,8 +26,13 @@
   THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+/* C++ Includes */
+#include <iostream>
+using namespace std;
+
 /* C Includes */
 #include <stdlib.h>
+#include <string.h>
 
 /* Test System Includes */
 #include "strings.hxx"
@@ -63,10 +68,10 @@ bool strsize_matches_sizetoalloc() {
         for(int j=0;j<i;j++)
             str[j]='a';
         str[i]='\0';
-        assert_true(strsize(str)==sizetoalloc(i));
+        assert_true(strsize(str)==sizetoalloc(strlen(str)));
         delete str;
     }
-    return false;
+    return true;
 }
 
 BEGIN_SUITE(strings)

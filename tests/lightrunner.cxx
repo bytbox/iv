@@ -62,13 +62,15 @@ void LightRunner::run_suite(TestSuite *suite) {
         sprintf(progress,"%d/%d",suite->case_current()+1,suite->case_count());
         /* print information */
         cout << progress << flush;
+        string curname=suite->name_current(); /* the name of the current test
+                                                 case */
         bool result=suite->run_case(); /* run */
         /* were we successful? */
         if(result) 
             passed++; /* we passed one more */
         else
             /* update the fail list */
-            faillist+=suite->name_current()+" ";
+            faillist+=curname+" ";
         for(unsigned i=0;i<strlen(progress);i++)
             cout << "\b";
     }
