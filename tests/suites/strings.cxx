@@ -31,6 +31,7 @@
 using namespace std;
 
 /* C Includes */
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -56,7 +57,7 @@ bool strsize_more() {
             str[j]='a';
         str[i]='\0';
         assert_true(strsize(str)>i);
-        delete str;
+        delete[] str;
     }
     return true;
 }
@@ -69,7 +70,40 @@ bool strsize_matches_sizetoalloc() {
             str[j]='a';
         str[i]='\0';
         assert_true(strsize(str)==sizetoalloc(strlen(str)));
-        delete str;
+        delete[] str;
+    }
+    return true;
+}
+
+/* test that sizetoalloc always returns a power of two */
+bool sizetoalloc_pow2() {
+    for(int i=0;i<TEST_STRING_SIZE;i++) {
+        for(int j=sizetoalloc(i);j>0;j/=2)
+            assert_true(j%2==0 || j==1);
+    }
+    return true;
+}
+
+/* test that sizetoalloc is never twice its argument */
+bool sizetoalloc_double_less() {
+    for(int i=0;i<TEST_STRING_SIZE;i++)
+        assert_true(sizetoalloc(i)/2<=i+1);
+    return true;
+}
+
+/* test that strexpand does not change the string */
+bool strexpand_nochange1() {
+    for(int i=0;i<TEST_STRING_SIZE;i++) {
+        char *str=(char *)malloc(i+1);
+        for(int j=0;j<i;j++)
+            str[j]=(rand()%253)+1;
+        str[i]='\0';
+        char *ostr=(char *)malloc(i+2);
+        sprintf(ostr,"%s",str);
+        ostr=strexpand(ostr,i);
+        assert_false(strcmp(ostr,str));
+        free(str);
+        free(ostr);
     }
     return true;
 }
@@ -78,4 +112,7 @@ BEGIN_SUITE(strings)
 ADD_CASE(sizetoalloc_more)
 ADD_CASE(strsize_more)
 ADD_CASE(strsize_matches_sizetoalloc)
+ADD_CASE(sizetoalloc_pow2)
+ADD_CASE(sizetoalloc_double_less)
+ADD_CASE(strexpand_nochange1)
 END_SUITE()

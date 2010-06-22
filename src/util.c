@@ -147,7 +147,6 @@ int strsize(char *str) {
 
 /* expands the string to be able to fit the specified size */
 char *strexpand(char *str,int newsize) {
-    fprintf(stderr,"considering %d and %d\n",newsize,(int)strlen(str));
     if(newsize+2>=strsize(str)-8)
         return realloc(str,sizetoalloc(newsize)+5);
     else return str;

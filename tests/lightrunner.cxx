@@ -78,6 +78,6 @@ void LightRunner::run_suite(TestSuite *suite) {
     if(passed!=suite->case_count())
         cout << "FAILED " << faillist;
     else cout << "passed!";
-    delete progress;
+    delete[] progress;
     cout << endl; /* next line for next suite */
 }
