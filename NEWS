@@ -1,5 +1,12 @@
 IV Development History
 
+Version 0.0.3 (June 25, 2010)
+================================
+
+ * Improved documentation
+ * Fixed bugs in keymap configuration.
+ * Restored old functionality from v0.0.1
+
 ================================
 
 Version 0.0.2 (June 21, 2010)
