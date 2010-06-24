@@ -59,8 +59,10 @@
 
 </refsect1>
 
-<refsect1><title>Files</title>
-<para>Describe the files needed, and reference the data model.</para>
+<refsect1><title>Configuration</title>
+  <para>&iv; draws its configuration from four sources: defaults built into
+    the program, the settings in /etc/iv, the settings in ~/.iv, and
+    (optionally) the settings in the directory specified by IV_CONFDIR.</para>
 
 <variablelist>
 <varlistentry>
@@ -74,13 +76,14 @@
 </refsect1> <!-- OPTIONS -->
 
 <refsect1><title>Environment</title>
-<para>Describe environmanet variables that do stuff.</para>
+<para>A few environment variables dictate IV's behavior.</para>
 
 <variablelist>
 <varlistentry>
   <term>IV_CONFDIR</term>
   <listitem>
-    <para>Sets the directory from which to read the configuration.</para>
+    <para>Sets another directory from which to read configuration, in addition
+      to the defaults.</para>
   </listitem>
 </varlistentry>
 
