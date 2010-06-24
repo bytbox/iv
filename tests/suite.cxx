@@ -1,5 +1,5 @@
 /*
-  iv - an editor
+  iv - the editor that Isn't VI
   Copyright (c) 2010, Scott Lawrence <bytbox@gmail.com>
   All rights reserved.
 
