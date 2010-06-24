@@ -41,7 +41,7 @@ PREFIX=/usr/local
 
 #programs
 CC=cc
-CXX=g++
+CXX=c++
 AR=ar
 LD=ld
 TAR=tar
