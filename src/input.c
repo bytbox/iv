@@ -52,16 +52,6 @@ void input_init() {
     }
 }
 
-/* sets the action for a given character code */
-void set_action(int c,input_action_t action) {
-    actions[c]=action;
-}
-
-/* returns the action for a given character code */
-input_action_t get_action(int c) {
-    return actions[c];
-}
-
 /* do nothing */
 void unknown_action() {
     /* just print the ? of doom */
@@ -96,6 +86,11 @@ void right_action() {
 void write_action() {
     buffer_to_file(current_view()->buffer);
     display_message("wrote");    
+}
+
+/* delete char */
+void backspace_action() {
+    deletec(current_view());
 }
 
 /* writing text */

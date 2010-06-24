@@ -8,3 +8,10 @@
  key_up               up
  key_right            right
  key_left             left
++key_down             down
++key_up               up
++key_right            right
++key_left             left
++^H                   backspace
++backspace_key        backspace
++127                  backspace

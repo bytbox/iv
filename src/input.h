@@ -86,6 +86,9 @@ void write_action();
 /* writing text */
 void text_action();
 
+/* delete a character */
+void backspace_action();
+
 
 /*
   stuff for hash maps

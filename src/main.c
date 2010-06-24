@@ -137,6 +137,7 @@ void main1(void *data) {
 
     /* close up the editor */
     view_close();
+    free(msg);
 }
 
 void prepare_signal_handler() {

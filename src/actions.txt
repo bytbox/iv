@@ -6,3 +6,4 @@ right
 up
 write
 text
+backspace

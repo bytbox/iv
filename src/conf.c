@@ -28,6 +28,7 @@
   SUCH DAMAGE.
 */
 
+#include <ctype.h>
 #include <curses.h>
 #include <dirent.h>
 #include <stdio.h>
@@ -38,6 +39,7 @@
 #include "actions.h"
 #include "conf.h"
 #include "error.h"
+#include "keys.h"
 
 /* get ready for configuration operations */
 void conf_init() {
@@ -58,8 +60,15 @@ int str2key(char *keystr) {
     if(strlen(keystr)==2 && keystr[0]=='^')
         /* it's a control character */
         return CTRL(keystr[1]);
-    fprintf(stderr,":: %s\n",strfnames[KEY_DOWN]);
-    return 0; /* invalid key - ignore line */
+    if(keystr[0]>='0' && keystr[0]<='9') 
+        /* it's a number */
+        return atoi(keystr);
+    /* ensure that everything in keystr is upper case */
+    unsigned i;
+    for(i=0;i<strlen(keystr);i++)
+        keystr[i]=toupper(keystr[i]);
+    /* assume it's a curses key */
+    return curses_strtokey(keystr);
 }
 
 /* read and apply the keymap */
@@ -72,28 +81,20 @@ void read_keymap(char *filename) {
     while(!feof(f)) {
         fscanf(f,"%20s%100s",keystr,action);
         /* is this in normal mode or text mode? */
-        if(keystr[0]=='+') {
-            keystr++;
-            /* convert the keystring to a key number */
-            int key=str2key(keystr);
-            /* look up the action */
-            /* quick hack - look through the assoc list */
-            int i;
-            for(i=0;i<action_count;i++)
-                if(!strcmp(action_table[i].name,action))
-                    /* assign action_table[i].action to keystr */
-                    text_actions[key]=action_table[i].action;
-        } else {
-            /* convert the keystring to a key number */
-            int key=str2key(keystr);
-            /* look up the action */
-            /* quick hack - look through the assoc list */
-            int i;
-            for(i=0;i<action_count;i++)
-                if(!strcmp(action_table[i].name,action))
-                    /* assign action_table[i].action to keystr */
-                    actions[key]=action_table[i].action;
-        }
+        input_action_t *table;
+        if(keystr[0]=='+')
+            table=text_actions,keystr++;
+        else
+            table=actions;
+        /* convert the keystring to a key number */
+        int key=str2key(keystr);
+        /* look up the action */
+        /* quick hack - look through the assoc list */
+        int i;
+        for(i=0;i<action_count;i++)
+            if(!strcmp(action_table[i].name,action))
+                /* assign action_table[i].action to keystr */
+                table[key]=action_table[i].action;
     }
     fclose(f);
     free(_k);
@@ -107,4 +108,5 @@ void read_configuration(char *dirname) {
     char *keymap=malloc(strlen(dirname)+20);
     sprintf(keymap,"%s/keymap",dirname);
     read_keymap(keymap);
+    free(keymap);
 }
