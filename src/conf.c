@@ -78,8 +78,8 @@ void read_keymap(char *filename) {
     char *keystr=malloc(22);char *_k=keystr;
     char *action=malloc(102);char *_a=action;
     if(!f) return; /* ignore the error */
+    fscanf(f,"%20s%100s",keystr,action);
     while(!feof(f)) {
-        fscanf(f,"%20s%100s",keystr,action);
         /* is this in normal mode or text mode? */
         input_action_t *table;
         if(keystr[0]=='+')
@@ -95,6 +95,7 @@ void read_keymap(char *filename) {
             if(!strcmp(action_table[i].name,action))
                 /* assign action_table[i].action to keystr */
                 table[key]=action_table[i].action;
+        fscanf(f,"%20s%100s",keystr,action);
     }
     fclose(f);
     free(_k);

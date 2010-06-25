@@ -227,10 +227,13 @@ void cursor_right(view_t *view) {
 }
 
 /* inserts a character at the cursor */
-void insertc(view_t *view,char c) {
+void insertc(view_t *view,unsigned char c) {
+    /* check readonly */
     if(view->buffer->readonly)
         error_throw(ERR_READONLY);
-    if(c<0) return;
+    /* check valid character */
+    if((char)c<0) return;
+    /* handle tabs */
     if(c=='\t') {
         /* FIXME TODO */
         return;
