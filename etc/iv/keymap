@@ -15,3 +15,6 @@
 +key_backspace        backspace
 +127                  backspace
 +^H                   backspace
++key_enter            newline
++^J                   newline
++^M                   newline

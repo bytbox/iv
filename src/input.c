@@ -93,6 +93,11 @@ void backspace_action() {
     deletec(current_view());
 }
 
+/* insert line break */
+void newline_action() {
+    insertlb(current_view());
+}
+
 /* writing text */
 void text_action() {
     int c=getch(),err;

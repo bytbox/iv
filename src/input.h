@@ -89,6 +89,9 @@ void text_action();
 /* delete a character */
 void backspace_action();
 
+/* create a new ling */
+void newline_action();
+
 
 /*
   stuff for hash maps
