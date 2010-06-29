@@ -28,7 +28,7 @@
 
 #Meta-information
 PNAME=iv
-VERSION=0.0.3
+VERSION=0.0.4
 DISTNAME=${PNAME}-${VERSION}
 
 #flags
@@ -86,7 +86,7 @@ mostlyclean:
 	rm -f ${MODULES} src/main.o iv MANIFEST src/splash.c \
 	      ${DISTNAME}.tar.gz ${DISTNAME}.tar.bz2 src/actions.c \
 	      scripts/iv-actiongen tests/iv-tests ${TESTMODULES} \
-	      src/actiongen.o src/defaultgen.o src/defaults.c \
+	      src/altmain/actiongen.o src/altmain/defaultgen.o src/defaults.c \
 	      scripts/iv-defaultgen src/keys.c
 	rm -rf ${DISTNAME}
 
@@ -115,14 +115,14 @@ iv: ${MODULES} src/main.o
 src/actions.c: scripts/iv-actiongen
 	scripts/iv-actiongen < src/actions.txt > src/actions.c
 
-scripts/iv-actiongen: src/util.o src/actiongen.o src/actions.txt
-	${CC} -o $@ src/actiongen.o src/util.o ${LFLAGS}
+scripts/iv-actiongen: src/util.o src/altmain/actiongen.o src/actions.txt
+	${CC} -o $@ src/altmain/actiongen.o src/util.o ${LFLAGS}
 
 src/defaults.c: scripts/iv-defaultgen
 	scripts/iv-defaultgen etc/iv > src/defaults.c
 
-scripts/iv-defaultgen: src/defaultgen.o
-	${CC} -o $@ src/defaultgen.o ${LFLAGS}
+scripts/iv-defaultgen: src/altmain/defaultgen.o
+	${CC} -o $@ src/altmain/defaultgen.o ${LFLAGS}
 
 src/keys.c: scripts/keygen src/keys.txt
 	scripts/keygen < src/keys.txt > src/keys.c
