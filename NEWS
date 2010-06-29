@@ -1,5 +1,12 @@
 IV Development History
 
+Version 0.0.4 (June 30, 2010)
+================================
+ 
+ * Added multibuffer support
+ * Added cut/copy/paste support
+
+
 Version 0.0.3 (June 25, 2010)
 ================================
 
