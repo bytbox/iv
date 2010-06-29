@@ -3,7 +3,8 @@ IV Development History
 Version 0.0.4 (June 30, 2010)
 ================================
 
- * improved interface messages
+ * Added ingrained default configuration
+ * Improved interface messages
  * Got rid of directory-open crash bug 
  * Added multibuffer support
  * Added cut/copy/paste support
