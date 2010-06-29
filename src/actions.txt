@@ -8,3 +8,4 @@ write
 text
 backspace
 newline
+open

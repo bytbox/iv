@@ -98,6 +98,12 @@ void newline_action() {
     insertlb(current_view());
 }
 
+/* open a file */
+void open_action() {
+    /* input the name of the file */
+    /* FIXME TODO */
+}
+
 /* writing text */
 void text_action() {
     int c=getch(),err;

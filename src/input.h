@@ -53,6 +53,9 @@ void pushchar(char);
 /* run the input loop */
 void input_loop();
 
+/* open a file */
+void open_action();
+
 /*
   managing actions
 */
