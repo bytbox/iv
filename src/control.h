@@ -28,11 +28,70 @@
   SUCH DAMAGE.  
 */
 
-#include "input.h"
+#ifndef INPUT_H
+#define INPUT_H
 
-extern struct action_struct {
-    char *name;
-    input_action_t action;
-} action_table[];
+#define CTRL(x) (x-'A'+1)
 
-extern int action_count;
+#define ACTION_HASH_SIZE 200
+
+/* an action */
+typedef void (* input_action_t) ();
+
+/* actions in standard mode (whatever the current mode is) */
+extern input_action_t actions[];
+
+/* actions in text mode (whatever the current mode is) */
+extern input_action_t text_actions[];
+
+/* initialize the input system */
+void input_init();
+
+/* push a character onto the queue */
+void pushchar(char);
+
+/* run the input loop */
+void input_loop();
+
+
+/*
+  managing actions
+*/
+
+/* set the action for a given key combination */
+void set_action(int,input_action_t);
+
+/* get the action for a given key combination */
+input_action_t get_action(int);
+
+/*
+  stuff for hash maps
+*/
+
+/* hash the given string */
+int action_hash(void *);
+
+/* hash the given equality */
+char action_eql(void *,void *);
+
+/*
+  The list of actions. 
+*/
+
+void unknown_action();
+void ignore_action();
+void down_action();
+void left_action();
+void right_action();
+void up_action();
+void write_action();
+void text_action();
+void backspace_action();
+void newline_action();
+void open_action();
+void hsplit_action();
+void vsplit_action();
+void qsplit_action();
+
+#endif /* !INPUT_H */
+

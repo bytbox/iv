@@ -35,7 +35,7 @@
 
 #include "config.h"
 #include "error.h"
-#include "input.h"
+#include "control.h"
 #include "util.h"
 #include "view.h"
 
@@ -51,6 +51,54 @@ void input_init() {
         text_actions[i]=unknown_action;
     }
 }
+
+/* push a character onto the queue */
+void pushchar(char c) {
+    /* use ncurses */
+    ungetch(c);
+}
+
+/* run the input loop */
+void input_loop() {
+    int c=getch(),err;
+    while(c!='q') {
+        /* clear displayed message */
+        display_message("");
+        view_flush();
+        /* get and call the relevant action */
+        if(c<KEY_MAX) /* make sure the key is valid */
+            /* catch any errors */
+            if((err=error_catch(ERR_NONE,ERR_FATAL,actions[c],0))) {
+                /* some error */
+                display_message("error");
+                if(err & ERR_READONLY) /* readonly */
+                    display_message("readonly");
+            }
+	/* respond */
+	view_flush();
+        /* get the next character */
+	c=getch();
+    }
+}
+
+/* hash the given string */
+int action_hash(void *vstr) {
+    char *str=vstr;
+    int len=strlen(str);
+    return (len*str[0])%ACTION_HASH_SIZE;
+}
+
+/* hash the given equality */
+char action_eql(void *a,void *b) {
+    return strcmp((char *)a,(char *)b);
+}
+
+
+
+/*
+  The actions
+*/
+
 
 /* do nothing */
 void unknown_action() {
@@ -131,46 +179,5 @@ void text_action() {
         /* get the next character */
 	c=getch();        
     }
-}
-
-/* push a character onto the queue */
-void pushchar(char c) {
-    /* use ncurses */
-    ungetch(c);
-}
-
-/* run the input loop */
-void input_loop() {
-    int c=getch(),err;
-    while(c!='q') {
-        /* clear displayed message */
-        display_message("");
-        view_flush();
-        /* get and call the relevant action */
-        if(c<KEY_MAX) /* make sure the key is valid */
-            /* catch any errors */
-            if((err=error_catch(ERR_NONE,ERR_FATAL,actions[c],0))) {
-                /* some error */
-                display_message("error");
-                if(err & ERR_READONLY) /* readonly */
-                    display_message("readonly");
-            }
-	/* respond */
-	view_flush();
-        /* get the next character */
-	c=getch();
-    }
-}
-
-/* hash the given string */
-int action_hash(void *vstr) {
-    char *str=vstr;
-    int len=strlen(str);
-    return (len*str[0])%ACTION_HASH_SIZE;
-}
-
-/* hash the given equality */
-char action_eql(void *a,void *b) {
-    return strcmp((char *)a,(char *)b);
 }
 

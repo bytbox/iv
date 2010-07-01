@@ -36,7 +36,7 @@
 #include <string.h>
 #include <term.h>
 
-#include "actions.h"
+#include "actionlist.h"
 #include "conf.h"
 #include "error.h"
 #include "keys.h"

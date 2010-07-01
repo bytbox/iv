@@ -41,8 +41,8 @@ int main(/* arguments are ignored */) {
     char *buffer=malloc(100); /* assume nothing malicious */
     int cnt=0;
     puts("/* auto-generated array - do not modify */");
-    puts("#include \"actions.h\"");
-    puts("#include \"input.h\"");
+    puts("#include \"actionlist.h\"");
+    puts("#include \"control.h\"");
     puts("struct action_struct action_table[]={");
     while(!feof(stdin)) {
         /* for each line */

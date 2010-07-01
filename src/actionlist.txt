@@ -9,3 +9,6 @@ text
 backspace
 newline
 open
+hsplit
+vsplit
+qsplit

@@ -50,12 +50,12 @@ YACC=yacc
 LEX=lex
 
 #modules
-COREMODULES=src/input.o src/buffer.o src/view.o src/util.o src/error.o \
+COREMODULES=src/control.o src/buffer.o src/view.o src/util.o src/error.o \
 	src/subprocess.o src/conf.o src/regex.o src/splash.o
 TESTMODULES=tests/driver.o tests/suite.o tests/runner.o tests/flatrunner.o \
 	tests/lightrunner.o tests/cursesrunner.o ${TESTSUITES} 
 TESTSUITES=tests/suites/splash.o tests/suites/strings.o
-MODULES=${COREMODULES} src/actions.o src/defaults.o src/keys.o
+MODULES=${COREMODULES} src/actionlist.o src/defaults.o src/keys.o
 
 #meta-rules
 .PHONY: all doc test sdist mostlyclean clean
@@ -84,7 +84,7 @@ doc/iv.1: doc/iv.xml
 ############
 mostlyclean:
 	rm -f ${MODULES} src/main.o iv MANIFEST src/splash.c \
-	      ${DISTNAME}.tar.gz ${DISTNAME}.tar.bz2 src/actions.c \
+	      ${DISTNAME}.tar.gz ${DISTNAME}.tar.bz2 src/actionlist.c \
 	      scripts/iv-actiongen tests/iv-tests ${TESTMODULES} \
 	      src/altmain/actiongen.o src/altmain/defaultgen.o src/defaults.c \
 	      scripts/iv-defaultgen src/keys.c
@@ -112,10 +112,10 @@ install: all
 iv: ${MODULES} src/main.o
 	${CC} -o iv src/main.o ${MODULES} ${LFLAGS}
 
-src/actions.c: scripts/iv-actiongen
-	scripts/iv-actiongen < src/actions.txt > src/actions.c
+src/actionlist.c: scripts/iv-actiongen
+	scripts/iv-actiongen < src/actionlist.txt > src/actionlist.c
 
-scripts/iv-actiongen: src/util.o src/altmain/actiongen.o src/actions.txt
+scripts/iv-actiongen: src/util.o src/altmain/actiongen.o src/actionlist.txt
 	${CC} -o $@ src/altmain/actiongen.o src/util.o ${LFLAGS}
 
 src/defaults.c: scripts/iv-defaultgen

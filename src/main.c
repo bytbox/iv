@@ -37,7 +37,7 @@
 #include "conf.h"
 #include "config.h"
 #include "error.h"
-#include "input.h"
+#include "control.h"
 #include "util.h"
 #include "view.h"
 
