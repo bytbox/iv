@@ -9,3 +9,4 @@ iv
 *.tar.bz2
 src/keys.c
 doc/iv.1
+tests/iv-tests
