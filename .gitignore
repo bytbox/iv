@@ -8,3 +8,4 @@ iv
 *.tar.gz
 *.tar.bz2
 src/keys.c
+doc/iv.1

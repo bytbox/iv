@@ -181,3 +181,17 @@ void text_action() {
     }
 }
 
+/* create a horizontal split - one window to the right of the other */
+void hsplit_action() {
+
+}
+
+/* create a vertical split - one window above the other */
+void vsplit_action() {
+
+}
+
+/* quit split mode */
+void qsplit_action() {
+
+}
