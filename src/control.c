@@ -152,6 +152,12 @@ void open_action() {
     /* FIXME TODO */
 }
 
+/* goto a line */
+void goto_action() {
+    /* input the line number */
+    /* FIXME TODO */
+}
+
 /* writing text */
 void text_action() {
     int c=getch(),err;
