@@ -80,6 +80,7 @@ char action_eql(void *,void *);
 
 void unknown_action();
 void ignore_action();
+void goto_action();
 void down_action();
 void left_action();
 void right_action();

@@ -5,6 +5,7 @@
  l                    right
  h                    left
  w                    write
+ g                    goto
  key_down             down
  key_up               up
  key_right            right

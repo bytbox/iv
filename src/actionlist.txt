@@ -1,5 +1,6 @@
 unknown
 ignore
+goto
 down
 left
 right

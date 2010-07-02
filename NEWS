@@ -8,6 +8,7 @@ Version 0.0.4 (June 30, 2010)
  * Got rid of directory-open crash bug 
  * Added multibuffer support
  * Added cut/copy/paste support
+ * Added goto-line command
  * Added open-file command
 
 
