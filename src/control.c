@@ -150,6 +150,7 @@ void newline_action() {
 void open_action() {
     /* input the name of the file */
     char *fname=get_input("f:");
+    activate_view(create_view(buffer_from_file(fname)));
 }
 
 /* goto a line */

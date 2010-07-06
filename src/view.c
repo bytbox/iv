@@ -34,9 +34,12 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "control.h"
 #include "error.h"
 #include "util.h"
 #include "view.h"
+
+#define MAX_INPUT_SIZE 800
 
 /* the message being displayed */
 char *message;
@@ -181,10 +184,28 @@ char *displayed_message() {
 
 /* long-running function to get input */
 char *get_input(char *prefix) {
-    mvaddstr(0,0,prefix);
+    view_t *view=current_view();
+    /* write the prefix */
+    mvaddstr(view->height,0,prefix);
     doupdate();
     refresh();
-    return 0;
+    /* read input */
+    char *buffer=(char *)malloc(MAX_INPUT_SIZE);
+    int c=getch(),i=0;
+    while(c!='\n' && c!='\r') {
+        if(c==CTRL('D'))
+            return 0; /* no input */
+        /* add the character to the screen */
+        addch(c);
+        doupdate(); /* and flush */
+        refresh();
+        /* add to our internal buffer */
+        buffer[i++]=c;
+        if(i==MAX_INPUT_SIZE)
+            return 0; /* FIXME throw actual error */
+        c=getch();
+    }
+    return buffer;
 }
 
 /*
