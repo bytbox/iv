@@ -98,6 +98,10 @@ void display_message(char *);
 /* returns the displayed message */
 char *displayed_message();
 
+/* retreives a string from the user in the buffer, and returns it. The string
+   passed as a parameter is used as a prefix. */
+char *get_input(char *);
+
 /*
   cursor manipulation and scrolling
 */

@@ -133,7 +133,7 @@ void right_action() {
 /* save the file */
 void write_action() {
     buffer_to_file(current_view()->buffer);
-    display_message("wrote");    
+    display_message("w"); 
 }
 
 /* delete char */
@@ -149,7 +149,7 @@ void newline_action() {
 /* open a file */
 void open_action() {
     /* input the name of the file */
-    /* FIXME TODO */
+    char *fname=get_input("f:");
 }
 
 /* goto a line */

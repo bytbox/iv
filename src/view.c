@@ -169,12 +169,22 @@ void activate_view(view_t *view) {
         view_layout.active=view_layout.view2=view;
 }
 
+/* display the given message */
 void display_message(char *msg) {
     message=msg;
 }
 
+/* returns the currently displayed message */
 char *displayed_message() {
     return message;
+}
+
+/* long-running function to get input */
+char *get_input(char *prefix) {
+    mvaddstr(0,0,prefix);
+    doupdate();
+    refresh();
+    return 0;
 }
 
 /*
