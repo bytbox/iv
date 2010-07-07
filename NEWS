@@ -5,6 +5,7 @@ Version 0.0.4 (June 30, 2010)
 
  * Added ingrained default configuration
  * Improved interface messages
+   - Greater consistency, not greater readbility
  * Got rid of directory-open crash bug 
  * Added multibuffer support
  * Added cut/copy/paste support
