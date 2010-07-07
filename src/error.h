@@ -38,6 +38,8 @@
 #define ERR_NONE              0x00000000
 /* the user made a mistake */
 #define ERR_USER              0x00000001
+/* bad input of some sort */
+#define ERR_BADINPUT          0x00000002
 /* error in configuration */
 #define ERR_CONFIG            0x00000010
 /* Someone tried to change a readonly buffer */

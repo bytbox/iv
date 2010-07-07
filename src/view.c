@@ -372,3 +372,18 @@ void deletec(view_t *view) {
     /* we've been modified */
     view->buffer->modified=1;
 }
+
+/* goto the given line in the given view */
+void goto_line(view_t *view,int lno) {
+    if(lno<=0)
+        error_throw(ERR_BADINPUT);
+    /* set the cursor line and refresh */
+    view->cursor_line=lno-1;
+    /* move the screen */
+    while(view->topline>lno-1)
+        view->topline--;
+    while(view->cursor_line-view->topline>=view->height)
+        view->topline++;
+    /* clean the cursor X coordinate */
+    clean_cursor_x(view);
+}

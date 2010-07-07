@@ -130,4 +130,7 @@ void deletec(view_t *);
 /* inserts a line break at the cursor */
 void insertlb(view_t *);
 
+/* goto a given line */
+void goto_line(view_t *,int);
+
 #endif /* !VIEW_H */

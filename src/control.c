@@ -29,6 +29,8 @@
 */
 
 #include <curses.h>
+#include <errno.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -39,9 +41,14 @@
 #include "util.h"
 #include "view.h"
 
+#define ERRSTR_MAXLEN 500
+
 /* maps of actions */
 input_action_t actions[KEY_MAX];
 input_action_t text_actions[KEY_MAX];
+
+/* private error handling function */
+void handle_error(int);
 
 /* initialize the input module */
 void input_init() {
@@ -68,12 +75,8 @@ void input_loop() {
         /* get and call the relevant action */
         if(c<KEY_MAX) /* make sure the key is valid */
             /* catch any errors */
-            if((err=error_catch(ERR_NONE,ERR_FATAL,actions[c],0))) {
-                /* some error */
-                display_message("error");
-                if(err & ERR_READONLY) /* readonly */
-                    display_message("readonly");
-            }
+            if((err=error_catch(ERR_NONE,ERR_FATAL,actions[c],0)))
+                handle_error(err);
 	/* respond */
 	view_flush();
         /* get the next character */
@@ -156,7 +159,12 @@ void open_action() {
 /* goto a line */
 void goto_action() {
     /* input the line number */
-    /* FIXME TODO */
+    char *lno=get_input("l:");
+    errno=0;
+    int a=strtol(lno,0,10);
+    if(errno)
+        error_throw(ERR_BADINPUT | ERR_SEE_ERRNO);
+    goto_line(current_view(),a);
 }
 
 /* writing text */
@@ -174,12 +182,8 @@ void text_action() {
                 insertc(current_view(),c);
             else
                 /* catch any errors */
-                if((err=error_catch(ERR_NONE,ERR_FATAL,text_actions[c],0))) {
-                    /* some error */
-                    display_message("error");
-                    if(err & ERR_READONLY) /* readonly */
-                        display_message("readonly");
-                }
+                if((err=error_catch(ERR_NONE,ERR_FATAL,text_actions[c],0)))
+                    handle_error(err);
         }
 	/* respond */
 	view_flush();
@@ -201,4 +205,23 @@ void vsplit_action() {
 /* quit split mode */
 void qsplit_action() {
 
+}
+
+
+/* handle errors */
+void handle_error(int err) {
+    /* some error */
+    char *errstr=calloc(ERRSTR_MAXLEN,sizeof(char));
+    if(err & ERR_READONLY) /* readonly */
+        sprintf(errstr,"ro");
+    else if(err & ERR_BADINPUT)
+        sprintf(errstr,"bi");
+    else
+        sprintf(errstr,"e");
+
+    /* if there is system error information available, show it */
+    if(err & ERR_SEE_ERRNO)
+        sprintf(errstr,"%s: %s",errstr,strerror(errno));
+    /* display the message */
+    display_message(errstr);
 }
