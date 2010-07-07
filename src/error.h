@@ -42,6 +42,10 @@
 #define ERR_CONFIG            0x00000010
 /* Someone tried to change a readonly buffer */
 #define ERR_READONLY          0x00000100
+/* we tried to read a file we can't read */
+#define ERR_NOREAD            0x00001000
+/* wrong type */
+#define ERR_BADTYPE           0x00002000
 /* More information available in errno */
 #define ERR_SEE_ERRNO         0x10000000
 /* internal error (buggy code? assert failed?) */

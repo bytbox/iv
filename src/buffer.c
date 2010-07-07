@@ -31,6 +31,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <unistd.h>
 
 #include "buffer.h"
@@ -90,7 +92,7 @@ buffer_t *buffer_from_file(char *filename) {
     FILE *f;
     buffer_t *b;
     if(access(filename,F_OK)) { /* exists? */
-        /* attempt to create the file */
+        /* nothing with that name exists - attempt to create the file */
         f=fopen(filename,"w");
         if(!f) {
             /* couldn't create the file - error out */
@@ -105,10 +107,18 @@ buffer_t *buffer_from_file(char *filename) {
         b->lines[0][0]='\0';
         b->line_count=1; /* there is one line */
     } else {
+        /* something with that name exists - get the type */
+        struct stat st;
+        if(stat(filename,&st))
+            /* stat failed! */
+            error_throw(ERR_SEE_ERRNO);
+        if(!(S_ISREG(st.st_mode) || S_ISLNK(st.st_mode)))
+            /* we can't open this */
+            error_throw(ERR_BADTYPE);
         /* check that we have read permissions */
         if(access(filename,R_OK)) {
             /* couldn't read the file - error out */
-            return make_blank_buffer();
+            error_throw(ERR_NOREAD);
         }
         /* can we write? */
         b=malloc(sizeof(buffer_t));
