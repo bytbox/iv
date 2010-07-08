@@ -74,10 +74,13 @@ all: iv doc
 #################
 # Documentation #
 #################
-doc: doc/iv.1
+doc: doc/iv.1 doc/README.html
 
 doc/iv.1: doc/iv.xml
 	xmlto man -o doc doc/iv.xml
+
+doc/README.html: README
+	rst2html README $@
 
 ############
 # Cleaning #
@@ -113,7 +116,7 @@ iv: ${MODULES} src/main.o
 	${CC} -o iv src/main.o ${MODULES} ${LFLAGS}
 
 src/actionlist.c: scripts/iv-actiongen
-	scripts/iv-actiongen < src/actionlist.txt > src/actionlist.c
+	scripts/iv-actiongen < src/actionlist.txt > $@
 
 scripts/iv-actiongen: src/util.o src/altmain/actiongen.o src/actionlist.txt
 	${CC} -o $@ src/altmain/actiongen.o src/util.o ${LFLAGS}

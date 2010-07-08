@@ -3,6 +3,7 @@ IV Development History
 Version 0.0.4 (June 30, 2010)
 ================================
 
+ * Added README.html
  * Added ingrained default configuration
  * Improved interface messages
    - Greater consistency, not greater readbility
