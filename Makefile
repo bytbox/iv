@@ -38,6 +38,7 @@ LFLAGS=-lncurses
 
 #directories
 PREFIX=/usr/local
+SHARE=${PREFIX}/share
 
 #programs
 CC=cc
@@ -94,23 +95,12 @@ mostlyclean:
 	rm -rf ${DISTNAME}
 
 clean: mostlyclean
-	rm -f doc/iv.1
+	rm -f doc/iv.1 doc/README.html
 
 #generate the splash screen
 src/splash.c: src/splash.txt
 	scripts/text2c src/splash.txt $@ splash
 	sed -i s/%VERSION%/${VERSION}/ $@
-
-################
-# Installation #
-################
-install: all
-	${INSTALL} iv ${PREFIX}/bin
-	${INSTALL} -D doc/iv.1 ${PREFIX}/share/man/man1/iv.1
-	find etc -type d | sed "s/^/\\//" | grep -v ".svn" \
-	  | xargs ${INSTALL} -d
-	for f in `find etc -type f | grep -v ".svn"`;do \
-	  ${INSTALL} -m 644 $$f "/$$f";done
 
 iv: ${MODULES} src/main.o
 	${CC} -o iv src/main.o ${MODULES} ${LFLAGS}
@@ -129,6 +119,20 @@ scripts/iv-defaultgen: src/altmain/defaultgen.o
 
 src/keys.c: scripts/keygen src/keys.txt
 	scripts/keygen < src/keys.txt > src/keys.c
+
+################
+# Installation #
+################
+install: all
+	${INSTALL} iv ${PREFIX}/bin
+	${INSTALL} -D doc/iv.1 ${SHARE}/man/man1/iv.1
+	${INSTALL} -d ${SHARE}/doc/iv
+	${INSTALL} doc/README.html ${SHARE}/doc/iv
+	${INSTALL} README ${SHARE}/doc/iv
+	find etc -type d | sed "s/^/\\//" | grep -v ".svn" \
+	  | xargs ${INSTALL} -d
+	for f in `find etc -type f | grep -v ".svn"`;do \
+	  ${INSTALL} -m 644 $$f "/$$f";done
 
 #######################
 # Source distribution #
