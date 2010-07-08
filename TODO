@@ -15,4 +15,5 @@
  - Memory leaks
  - Splint errors
  - Test suite
+ - Better error handling
 
