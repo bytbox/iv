@@ -81,7 +81,7 @@ doc/iv.1: doc/iv.xml
 	xmlto man -o doc doc/iv.xml
 
 doc/README.html: README
-	rst2html README $@
+	rst2html "--title=About iv" README $@
 
 ############
 # Cleaning #
