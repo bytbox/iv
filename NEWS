@@ -1,6 +1,6 @@
 IV Development History
 
-Version 0.0.4 (June 30, 2010)
+Version 0.0.4 (July 9, 2010)
 ================================
 
  * Added README.html
@@ -8,8 +8,6 @@ Version 0.0.4 (June 30, 2010)
  * Improved interface messages
    - Greater consistency, not greater readbility
  * Got rid of directory-open crash bug 
- * Added multibuffer support
- * Added cut/copy/paste support
  * Added goto-line command
  * Added open-file command
 

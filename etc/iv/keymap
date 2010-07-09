@@ -1,5 +1,11 @@
+#file and buffer manipulation
  o                    open
+ w                    write
+ W                    write-as
+
  space                text
+
+#motion
  j                    down
  k                    up
  l                    right
@@ -8,8 +14,7 @@
  K                    screen-up
  L                    screen-right
  H                    screen-left
- w                    write
- W                    write-as
+
  g                    goto
  key_down             down
  key_up               up

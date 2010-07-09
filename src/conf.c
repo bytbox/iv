@@ -80,22 +80,24 @@ void read_keymap(char *filename) {
     if(!f) return; /* ignore the error */
     fscanf(f,"%20s%100s",keystr,action);
     while(!feof(f)) {
-        /* is this in normal mode or text mode? */
-        input_action_t *table;
-        if(keystr[0]=='+')
-            table=text_actions,keystr++;
-        else
-            table=actions;
-        /* convert the keystring to a key number */
-        int key=str2key(keystr);
-        /* look up the action */
-        /* quick hack - look through the assoc list */
-        int i;
-        for(i=0;i<action_count;i++)
-            if(!strcmp(action_table[i].name,action))
-                /* assign action_table[i].action to keystr */
-                table[key]=action_table[i].action;
-        fscanf(f,"%20s%100s",keystr,action);
+        if(keystr[0]!='#') {/* make sure it's not a comment */
+            /* is this in normal mode or text mode? */
+            input_action_t *table;
+            if(keystr[0]=='+')
+                table=text_actions,keystr++;
+            else
+                table=actions;
+            /* convert the keystring to a key number */
+            int key=str2key(keystr);
+            /* look up the action */
+            /* quick hack - look through the assoc list */
+            int i;
+            for(i=0;i<action_count;i++)
+                if(!strcmp(action_table[i].name,action))
+                    /* assign action_table[i].action to keystr */
+                    table[key]=action_table[i].action;
+            fscanf(f,"%20s%100s",keystr,action);
+        }
     }
     fclose(f);
     free(_k);
