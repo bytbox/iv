@@ -14,12 +14,13 @@
  K                    screen-up
  L                    screen-right
  H                    screen-left
-
- g                    goto
  key_down             down
  key_up               up
  key_right            right
  key_left             left
+ g                    goto
+
+ i                    info
 +key_down             down
 +key_up               up
 +key_right            right
