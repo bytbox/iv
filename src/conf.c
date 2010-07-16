@@ -56,8 +56,12 @@ int str2key(char *keystr) {
     if(strlen(keystr)==1)
         /* just use the first character */
         return keystr[0];
+    /* TODO FIXME improve the keys.txt system so that we don't need these
+       hacks */
     if(!strcmp(keystr,"space"))
         return ' ';
+    if(!strcmp(keystr,"tab"))
+        return '\t';
     if(strlen(keystr)==2 && keystr[0]=='^')
         /* it's a control character */
         return CTRL(keystr[1]);

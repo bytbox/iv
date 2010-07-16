@@ -264,11 +264,6 @@ void insertc(view_t *view,unsigned char c) {
         error_throw(ERR_READONLY);
     /* check valid character */
     if((char)c<0) return;
-    /* handle tabs */
-    if(c=='\t') {
-        /* FIXME TODO */
-        return;
-    }
     char *line=view->buffer->lines[view->cursor_line];
     /* make sure the line is long enough */
     view->buffer->lines[view->cursor_line]=strexpand(line,strlen(line)+2);

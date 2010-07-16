@@ -139,6 +139,11 @@ void write_action() {
     display_message("w"); 
 }
 
+/* tab action */
+void tab_action() {
+    insertc(current_view(),'\t');
+}
+
 /* delete char */
 void backspace_action() {
     deletec(current_view());

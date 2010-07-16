@@ -89,6 +89,7 @@ void write_action();
 void text_action();
 void backspace_action();
 void newline_action();
+void tab_action();
 void open_action();
 void hsplit_action();
 void vsplit_action();
