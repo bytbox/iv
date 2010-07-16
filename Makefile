@@ -90,8 +90,7 @@ mostlyclean:
 	rm -f ${MODULES} src/main.o iv MANIFEST src/splash.c \
 	      ${DISTNAME}.tar.gz ${DISTNAME}.tar.bz2 src/actionlist.c \
 	      scripts/iv-actiongen tests/iv-tests ${TESTMODULES} \
-	      src/altmain/actiongen.o src/altmain/defaultgen.o src/defaults.c \
-	      scripts/iv-defaultgen src/keys.c
+	      src/altmain/actiongen.o src/defaults.c src/keys.c
 	rm -rf ${DISTNAME}
 
 clean: mostlyclean
@@ -113,9 +112,6 @@ scripts/iv-actiongen: src/util.o src/altmain/actiongen.o src/actionlist.txt
 
 src/defaults.c: scripts/iv-defaultgen
 	scripts/iv-defaultgen etc/iv > src/defaults.c
-
-scripts/iv-defaultgen: src/altmain/defaultgen.o
-	${CC} -o $@ src/altmain/defaultgen.o ${LFLAGS}
 
 src/keys.c: scripts/keygen src/keys.txt
 	scripts/keygen < src/keys.txt > src/keys.c

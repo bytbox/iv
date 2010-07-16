@@ -108,6 +108,7 @@ void main1(void *data) {
     char *confdir=getenv("IV_CONFDIR");
     if(!confdir) /* if it's not set, use default */
         confdir="~/.iv.d";
+    read_default_configuration(); /* default configuration */
     read_configuration("/etc/iv"); /* global configuration */
     read_configuration(confdir); /* local configuration */
 

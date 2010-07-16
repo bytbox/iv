@@ -38,6 +38,7 @@
 
 #include "actionlist.h"
 #include "conf.h"
+#include "defaults.h"
 #include "error.h"
 #include "keys.h"
 
@@ -71,6 +72,27 @@ int str2key(char *keystr) {
     return curses_strtokey(keystr);
 }
 
+/* apply a line read from the keymap */
+void apply_keymap_line(char *keystr,char *action) {
+    if(keystr[0]!='#') {/* make sure it's not a comment */
+        /* is this in normal mode or text mode? */
+        input_action_t *table;
+        if(keystr[0]=='+')
+            table=text_actions,keystr++;
+        else
+            table=actions;
+        /* convert the keystring to a key number */
+        int key=str2key(keystr);
+        /* look up the action */
+        /* quick hack - look through the assoc list */
+        int i;
+        for(i=0;i<action_count;i++)
+            if(!strcmp(action_table[i].name,action))
+                /* assign action_table[i].action to keystr */
+                table[key]=action_table[i].action;
+    }
+}
+
 /* read and apply the keymap */
 void read_keymap(char *filename) {
     FILE *f=fopen(filename,"r");
@@ -79,29 +101,24 @@ void read_keymap(char *filename) {
     char *action=malloc(102);char *_a=action;
     if(!f) return; /* ignore the error */
     fscanf(f,"%20s%100s",keystr,action);
-    while(!feof(f)) {
-        if(keystr[0]!='#') {/* make sure it's not a comment */
-            /* is this in normal mode or text mode? */
-            input_action_t *table;
-            if(keystr[0]=='+')
-                table=text_actions,keystr++;
-            else
-                table=actions;
-            /* convert the keystring to a key number */
-            int key=str2key(keystr);
-            /* look up the action */
-            /* quick hack - look through the assoc list */
-            int i;
-            for(i=0;i<action_count;i++)
-                if(!strcmp(action_table[i].name,action))
-                    /* assign action_table[i].action to keystr */
-                    table[key]=action_table[i].action;
-            fscanf(f,"%20s%100s",keystr,action);
-        }
-    }
+    while(!feof(f))
+        apply_keymap_line(keystr,action),fscanf(f,"%20s%100s",keystr,action);
     fclose(f);
     free(_k);
     free(_a);
+}
+
+/* read and apply the default configuration */
+void read_default_configuration() {
+    /* fixed malloc is safe - we're using sscanf */
+    char *cursor=default_keymap_str;
+    char *keystr=malloc(22);char *_k=keystr;
+    char *action=malloc(102);char *_a=action;
+    int *sofar=malloc(sizeof(int));
+    while(sscanf(cursor,"%20s%100s\n%n",keystr,action,sofar)!=EOF)
+        apply_keymap_line(keystr,action),cursor+=(*sofar);
+    free(_k);
+    free(_a);    
 }
 
 /* read and apply the configuration from the specified directory */

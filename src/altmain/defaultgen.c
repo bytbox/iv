@@ -30,12 +30,29 @@
   Alternate execution starting point for generating the default settings.
 */
 
+#include <curses.h>
+#include <dirent.h>
 #include <stdio.h>
+#include <sys/types.h>
+
+#include "conf.h"
+
+/* an action */
+typedef void (* input_action_t) ();
+
+/* maps of actions */
+input_action_t actions[KEY_MAX];
+input_action_t text_actions[KEY_MAX];
+
+/* empty placeholders for functions we don't need to call */
+void unknown_action() {}
 
 int main(int argc,char *argv[]) {
     if(argc!=2) {
         /* error: we need 1 argument! */
         fprintf(stderr,"usage: %s SETTINGSDIR\n",argv[0]);
     }
+    /* read the configuration */
+    read_configuration(argv[1]);
     return 0;
 }

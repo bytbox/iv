@@ -30,9 +30,17 @@
 
 # text2c - quick hack to convert a lot of plaintext to a c string
 
+if test $# -eq 1
+then
+    echo -n char \*$1=\"
+    sed "s/\$/\\\n\\\/" | sed "s/\"/\\\\\"/g" 
+    echo \"\;
+    exit 0
+fi
+
 if test $# -ne 3
 then
-    echo usage: text2c INPUTFILE OUTPUTFILE VARNAME
+    echo usage: text2c [INPUTFILE] [OUTPUTFILE] VARNAME
     exit 1
 fi
 

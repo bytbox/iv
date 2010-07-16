@@ -28,16 +28,11 @@
   SUCH DAMAGE.
 */
 
-#ifndef CONF_H
-#define CONF_H
+#ifndef DEFAULTS_H
+#define DEFAULTS_H
 
-/* get ready for configuration operations */
-void conf_init();
+/* a string with the default keymap file in it */
+char *default_keymap_str;
 
-/* read and apply the default configuration */
-void read_default_configuration();
+#endif /* !DEFAULTS_H */
 
-/* read and apply all configuration files, from the specified directory */
-void read_configuration(char *);
-
-#endif /* !CONF_H */
