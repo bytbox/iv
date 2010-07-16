@@ -3,6 +3,7 @@ IV Development History
 Version 0.0.4 (July 9, 2010)
 ================================
 
+ * Tab characters
  * Added README.html
  * Added ingrained default configuration
  * Improved interface messages
