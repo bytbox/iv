@@ -213,9 +213,9 @@ void handle_error(int err) {
     /* some error */
     char *errstr=calloc(ERRSTR_MAXLEN,sizeof(char));
     if(err & ERR_READONLY) /* readonly */
-        sprintf(errstr,"ro");
+        sprintf(errstr,"e:ro");
     else if(err & ERR_BADINPUT)
-        sprintf(errstr,"bi");
+        sprintf(errstr,"e:bi");
     else
         sprintf(errstr,"e");
 
