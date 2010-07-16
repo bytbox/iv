@@ -126,19 +126,28 @@ void draw_view(view_t *view,int y,int x,int h,int w) {
     /* adjust the cursor if necessary FIXME TODO */
     buffer_t *b=view->buffer;
     /* for each line on the screen */
-    int i;
+    int i,ax,actual_x=view->cursor_x;
     for(i=view->topline;i<b->line_count && i<h+view->topline;i++) {
+        ax=0; /* to keep track of where we actually need to put the cursor */
         /* for each character we can display */
         int j,len=strlen(b->lines[i]);
+        move(y+i-view->topline,x);
         for(j=0;j<len && j<w;j++) {
             /* display the character */
-            mvaddch(y+i-view->topline,x+j,b->lines[i][j]);
+            addch(b->lines[i][j]);
+            if(view->cursor_line-view->topline==i) {
+                /* pay attention to the x position */
+                ax++;
+                if(ax==view->cursor_x)
+                    getyx(stdscr,i,actual_x);
+            }
         }
         /* fill the rest of the line with blanks */
+        getyx(stdscr,i,j);
         for(;j<w;j++)
             mvaddch(y+(i-view->topline),x+j,' ');
     }
-    move(view->cursor_line-view->topline,view->cursor_x);
+    move(view->cursor_line-view->topline,actual_x);
 }
 
 void view_close() {
