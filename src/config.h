@@ -31,9 +31,6 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-/* the version of iv */
-#define VERSION "0.0.4"
-
 /* the build date */
 #define BUILD_DATE "$(shell date +%Y-%m-%d)"
 

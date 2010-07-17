@@ -28,7 +28,7 @@
 
 #Meta-information
 PNAME=iv
-VERSION=0.0.4
+VERSION=0.1.0
 DISTNAME=${PNAME}-${VERSION}
 
 #flags
