@@ -1,0 +1,7 @@
+#!/bin/sh
+
+PATH=scripts:$PATH
+dir=$1
+
+#first read keymap
+cat $1/keymap | grep -v "^#" | text2c default_keymap_str

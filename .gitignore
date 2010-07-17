@@ -3,7 +3,6 @@ src/actionlist.c
 src/splash.c
 src/defaults.c
 scripts/iv-actiongen
-scripts/iv-defaultgen
 iv
 *.tar.gz
 *.tar.bz2
