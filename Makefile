@@ -124,7 +124,7 @@ install: all
 	${INSTALL} -D doc/iv.1 ${SHARE}/man/man1/iv.1
 	${INSTALL} -d ${SHARE}/doc/iv
 	${INSTALL} doc/README.html ${SHARE}/doc/iv
-	${INSTALL} README ${SHARE}/doc/iv
+	${INSTALL} README.rst ${SHARE}/doc/iv
 	find etc -type d | sed "s/^/\\//" | grep -v ".svn" \
 	  | xargs ${INSTALL} -d
 	for f in `find etc -type f | grep -v ".svn"`;do \
