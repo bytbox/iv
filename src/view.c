@@ -130,7 +130,7 @@ void draw_view(view_t *view,int y,int x,int h,int w) {
     for(i=view->topline;i<b->line_count && i<h+view->topline;i++) {
         ax=0; /* to keep track of where we actually need to put the cursor */
         /* for each character we can display */
-        int j,len=strlen(b->lines[i]);
+        int j,len=strlen(b->lines[i]),__;
         move(y+i-view->topline,x);
         for(j=0;j<len && j<w;j++) {
             /* display the character */
@@ -143,7 +143,7 @@ void draw_view(view_t *view,int y,int x,int h,int w) {
             }
         }
         /* fill the rest of the line with blanks */
-        getyx(stdscr,i,j);
+        getyx(stdscr,__,j);
         for(;j<w;j++)
             mvaddch(y+(i-view->topline),x+j,' ');
     }
