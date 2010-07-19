@@ -33,6 +33,9 @@
 
 #include "buffer.h"
 
+#define VERTICAL    0
+#define HORIZONTAL  1
+
 typedef struct {
     /* the associated buffer */
     buffer_t *buffer;
@@ -47,7 +50,7 @@ typedef struct {
     int cursor_x;
 
     /* the preferred x value of the cursor. This value is changed only
-       during deliberate horizontal motion. */
+       as a result of deliberate horizontal motion. */
     int pref_x;
 
     /* the height of the view */
