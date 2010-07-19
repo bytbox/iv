@@ -110,7 +110,7 @@ src/actionlist.c: scripts/iv-actiongen
 scripts/iv-actiongen: src/util.o src/altmain/actiongen.o src/actionlist.txt
 	${CC} -o $@ src/altmain/actiongen.o src/util.o ${LFLAGS}
 
-src/defaults.c: scripts/iv-defaultgen
+src/defaults.c: scripts/iv-defaultgen etc/iv/keymap
 	scripts/iv-defaultgen etc/iv > src/defaults.c
 
 src/keys.c: scripts/keygen src/keys.txt
