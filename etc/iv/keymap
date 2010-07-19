@@ -2,6 +2,9 @@
  o                    open
  w                    write
  W                    write-as
+ s                    hsplit
+ S                    vsplit
+ ^S                   qsplit
 
  space                text
 
@@ -21,6 +24,7 @@
  g                    goto
 
  i                    info
+
 +key_down             down
 +key_up               up
 +key_right            right
