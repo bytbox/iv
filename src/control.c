@@ -174,11 +174,13 @@ void goto_action() {
 
 /* writing text */
 void text_action() {
+    /* clear displayed message to 't'*/
+    display_message("t");
+    view_flush();
+    /* start input */
     int c=getch(),err;
     /* start up a very similar input loop */
     while(c!=CTRL('D')) {
-        /* clear displayed message */
-        display_message("");
         view_flush();
         /* get and call the relevant action */
         if(c<KEY_MAX) { /* make sure the key is valid */
@@ -194,7 +196,11 @@ void text_action() {
 	view_flush();
         /* get the next character */
 	c=getch();        
+        /* clear displayed message to 't'*/
+        display_message("t");
     }
+    /* clear displayed message */
+    display_message("");
 }
 
 /* create a horizontal split - one window to the right of the other */
