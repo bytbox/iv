@@ -2,9 +2,10 @@
  o                    open
  w                    write
  W                    write-as
- s                    hsplit
- S                    vsplit
- ^S                   qsplit
+ p                    hsplit
+ P                    vsplit
+ ^P                   qsplit
+ ^N                   switch
 
  space                text
 
