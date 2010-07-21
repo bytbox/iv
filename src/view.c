@@ -139,7 +139,7 @@ void draw_view(view_t *view,int y,int x,int h,int w) {
                 /* pay attention to the x position */
                 ax++;
                 if(ax==view->cursor_x)
-                    getyx(stdscr,i,actual_x);
+                    getyx(stdscr,__,actual_x);
             }
         }
         /* fill the rest of the line with blanks */
