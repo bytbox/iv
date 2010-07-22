@@ -52,7 +52,7 @@ LEX=lex
 
 #modules
 COREMODULES=src/control.o src/buffer.o src/view.o src/util.o src/error.o \
-	src/subprocess.o src/conf.o src/regex.o src/splash.o
+	src/subprocess.o src/conf.o src/regex.o src/splash.o src/nls.o
 TESTMODULES=tests/driver.o tests/suite.o tests/runner.o tests/flatrunner.o \
 	tests/lightrunner.o tests/cursesrunner.o ${TESTSUITES} 
 TESTSUITES=tests/suites/splash.o tests/suites/strings.o
