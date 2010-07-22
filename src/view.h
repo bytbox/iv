@@ -92,6 +92,17 @@ void activate_view(view_t *);
 
 
 /*
+  split modes
+*/
+
+/* creating splits */
+void create_split(int, view_t *);
+
+/* kill any existing split */
+void kill_split();
+
+
+/*
   displayed message management 
 */
 

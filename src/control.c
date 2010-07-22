@@ -205,17 +205,22 @@ void text_action() {
 
 /* create a horizontal split - one window to the right of the other */
 void hsplit_action() {
-
+    /* create another view with the current buffer */
+    view_t *view=create_view(current_view()->buffer);
+    create_split(HORIZONTAL,view);
 }
 
 /* create a vertical split - one window above the other */
 void vsplit_action() {
-
+    /* create another view with the current buffer */
+    view_t *view=create_view(current_view()->buffer);
+    create_split(VERTICAL,view);
 }
 
 /* quit split mode */
 void qsplit_action() {
-
+    /* pass the kill on to the view module */
+    kill_split();
 }
 
 

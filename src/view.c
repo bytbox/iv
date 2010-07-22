@@ -181,6 +181,17 @@ void activate_view(view_t *view) {
         view_layout.active=view_layout.view2=view;
 }
 
+/* set the split mode, and the second view to be used. (The first view to be
+   used is the active one. */
+void create_split(int type, view_t *view) {
+
+}
+
+/* get rid of any existing splits */
+void kill_split() {
+
+}
+
 /* display the given message */
 void display_message(char *msg) {
     message=msg;
