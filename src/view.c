@@ -135,7 +135,7 @@ void draw_view(view_t *view,int y,int x,int h,int w) {
         for(j=0;j<len && j<w;j++) {
             /* display the character */
             addch(b->lines[i][j]);
-            if(/*view->cursor_line-view->topline==i*/ i==view->cursor_line) {
+            if(i==view->cursor_line) {
                 /* pay attention to the x position */
                 ax++;
                 if(ax==view->cursor_x)
