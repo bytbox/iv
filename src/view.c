@@ -242,11 +242,20 @@ void clean_cursor_x(view_t *view) {
         view->cursor_x=len;
 }
 
+/* clean the preferred X cursor position */
+void clean_pref_x(view_t *view) {
+    int len=strlen(view->buffer->lines[view->cursor_line]);
+    if(view->pref_x>=len)
+        view->pref_x=len;
+}
+
 /* move the cursor to the left */
 void cursor_left(view_t *view) {
+    clean_pref_x(view);
     view->pref_x--;
     clean_cursor_x(view);
     view->pref_x=view->cursor_x;
+    clean_pref_x(view);
 }
 
 /* move the cursor down */
@@ -258,6 +267,7 @@ void cursor_down(view_t *view) {
     /* scroll down if necessary */
     if((view->cursor_line-view->topline) >= view->height)
         view->topline+=1;
+    clean_cursor_x(view);
 }
 
 /* move the cursor up */
@@ -268,13 +278,16 @@ void cursor_up(view_t *view) {
     /* scroll up if necessary */
     if((view->cursor_line-view->topline) <0)
         view->topline-=1;
+    clean_cursor_x(view);
 }
 
 /* move the cursor right */
 void cursor_right(view_t *view) {
+    clean_pref_x(view);
     view->pref_x++;
     clean_cursor_x(view);
     view->pref_x=view->cursor_x;
+    clean_pref_x(view);
 }
 
 /* inserts a character at the cursor */
