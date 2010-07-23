@@ -360,6 +360,9 @@ void deletec(view_t *view) {
     /* exit if there's nothing to delete */
     if(view->cursor_x==0 && view->cursor_line==0)
         return;
+    /* clean up our position */
+    clean_cursor_x(view);
+    clean_pref_x(view);
     /* should we merge lines? */
     if(view->cursor_x==0) {
         /* merge lines */
@@ -396,7 +399,8 @@ void deletec(view_t *view) {
     strcat(line,ln);
     free(tln); /* free temporary buffer */
     /* retreat the cursor */
-    cursor_left(view);
+    view->pref_x--;
+    view->cursor_x--;
     /* we've been modified */
     view->buffer->modified=1;
 }
