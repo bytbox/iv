@@ -78,10 +78,17 @@ all: iv doc
 doc: doc/iv.1 doc/README.html
 
 doc/iv.1: doc/iv.xml
-	xmlto man -o doc doc/iv.xml
+	if type xmlto 2> /dev/null > /dev/null;then \
+	xmlto man -o doc doc/iv.xml; \
+	else echo warning: xmlto not found - not generating manpages;\
+	fi
 
 doc/README.html: README.rst
-	rst2html "--title=About iv" README.rst $@
+	if type rst2html 2> /dev/null > /dev/null;then \
+	rst2html "--title=About iv" README.rst $@; \
+	else echo warning: docutils not found - not generating readme;\
+	fi
+
 
 ############
 # Cleaning #
