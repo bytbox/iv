@@ -10,3 +10,4 @@ src/keys.c
 doc/iv.1
 tests/iv-tests
 doc/README.html
+*.6

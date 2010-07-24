@@ -35,34 +35,18 @@ DISTNAME=${PNAME}-${VERSION}
 PREFIX=/usr/local
 SHARE=${PREFIX}/share
 
-#programs
-CC=cc
-CXX=c++
-AR=ar
-LD=ld
-TAR=tar
-INSTALL=/usr/bin/install -c
-YACC=yacc
-LEX=lex
+# programs
+GOFMT = gofmt -w
+
+#include the system-specific configuration
+include ${GOROOT}/src/Make.${GOARCH}
 
 #modules
-COREMODULES=src/control.o src/buffer.o src/view.o src/util.o src/error.o \
-	src/subprocess.o src/conf.o src/regex.o src/splash.o
-TESTMODULES=tests/driver.o tests/suite.o tests/runner.o tests/flatrunner.o \
-	tests/lightrunner.o tests/cursesrunner.o ${TESTSUITES} 
-TESTSUITES=tests/suites/splash.o tests/suites/strings.o
-MODULES=${COREMODULES} src/actionlist.o src/defaults.o src/keys.o
+MODULES=src/main.${O}
 
 #meta-rules
 .PHONY: all doc test sdist mostlyclean clean
-.SUFFIXES: .c .cxx .o
-
-#general rules
-.cxx.o:
-	${CXX} ${CXXFLAGS} -c -o $@ $?
-
-.c.o:
-	${CC} ${CFLAGS} -c -o $@ $?
+.SUFFIXES: .c .cxx .o .go .${O}
 
 #all means the executable and the documentation
 all: iv doc
@@ -95,8 +79,15 @@ mostlyclean:
 clean: mostlyclean
 	rm -f doc/iv.1 doc/README.html
 
-iv:
-	@echo TODO FIXME
+.go.${O}:
+	${GC} -o $@ $?
+
+iv: ${MODULES}
+	${LD} -o $@ $?
+
+format: src/*.go
+	${GOFMT} src/*.go
+
 
 ################
 # Installation #
@@ -118,7 +109,7 @@ install: all
 sdist: ${DISTNAME}.tar.gz
 
 ${DISTNAME}.tar.gz ${DISTNAME}.tar.bz2: mostlyclean doc
-	find . -type f | grep -v ".svn" | grep -v "MANIFEST" \
+	find . -type f | grep -v "MANIFEST" \
 	  | sed "s/.\//${DISTNAME}\//" > MANIFEST
 	ln -s . ${DISTNAME}
 	${TAR} czf ${DISTNAME}.tar.gz -T MANIFEST
