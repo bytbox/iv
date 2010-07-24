@@ -26,17 +26,12 @@
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                     #
 ####################################################################################
 
-#Meta-information
+# Meta-information
 PNAME=iv
 VERSION=0.1.0
 DISTNAME=${PNAME}-${VERSION}
 
-#flags
-CFLAGS=-g -O0 -Wall -Wextra -ansi -DVERSION=\"${VERSION}\" -Isrc -Itests
-CXXFLAGS=-g -O0 -Wall -Wextra -DVERSION=\"${VERSION}\" -Isrc -Itests
-LFLAGS=-lncurses
-
-#directories
+# directories
 PREFIX=/usr/local
 SHARE=${PREFIX}/share
 
@@ -94,34 +89,14 @@ doc/README.html: README.rst
 # Cleaning #
 ############
 mostlyclean:
-	rm -f ${MODULES} src/main.o iv MANIFEST src/splash.c \
-	      ${DISTNAME}.tar.gz ${DISTNAME}.tar.bz2 src/actionlist.c \
-	      scripts/iv-actiongen tests/iv-tests ${TESTMODULES} \
-	      src/altmain/actiongen.o src/defaults.c src/keys.c
+	@echo TODO FIXME
 	rm -rf ${DISTNAME}
 
 clean: mostlyclean
 	rm -f doc/iv.1 doc/README.html
 
-#generate the splash screen
-src/splash.c: src/splash.txt
-	scripts/text2c src/splash.txt $@ splash
-	sed -i s/%VERSION%/${VERSION}/ $@
-
-iv: ${MODULES} src/main.o
-	${CC} -o iv src/main.o ${MODULES} ${LFLAGS}
-
-src/actionlist.c: scripts/iv-actiongen
-	scripts/iv-actiongen < src/actionlist.txt > $@
-
-scripts/iv-actiongen: src/util.o src/altmain/actiongen.o src/actionlist.txt
-	${CC} -o $@ src/altmain/actiongen.o src/util.o ${LFLAGS}
-
-src/defaults.c: scripts/iv-defaultgen etc/iv/keymap
-	scripts/iv-defaultgen etc/iv > src/defaults.c
-
-src/keys.c: scripts/keygen src/keys.txt
-	scripts/keygen < src/keys.txt > src/keys.c
+iv:
+	@echo TODO FIXME
 
 ################
 # Installation #
@@ -153,9 +128,5 @@ ${DISTNAME}.tar.gz ${DISTNAME}.tar.bz2: mostlyclean doc
 ###########
 # Testing #
 ###########
-test: tests/iv-tests
-	tests/iv-tests
-
-tests/iv-tests: ${TESTMODULES} ${MODULES}
-	${CXX} -o $@ ${TESTMODULES} ${MODULES} ${LFLAGS}
-
+test:
+	@echo TODO FIXME
