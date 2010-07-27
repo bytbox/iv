@@ -38,11 +38,11 @@ SHARE=${PREFIX}/share
 # programs
 GOFMT = gofmt -w
 
+# modules
+MODULES = src/main.go src/view.go
+
 #include the system-specific configuration
 include ${GOROOT}/src/Make.${GOARCH}
-
-#modules
-MODULES=src/main.${O}
 
 #meta-rules
 .PHONY: all doc test sdist mostlyclean clean
@@ -73,7 +73,7 @@ doc/README.html: README.rst
 # Cleaning #
 ############
 mostlyclean:
-	@echo TODO FIXME
+	rm iv src/iv.6
 	rm -rf ${DISTNAME}
 
 clean: mostlyclean
@@ -82,8 +82,11 @@ clean: mostlyclean
 .go.${O}:
 	${GC} -o $@ $?
 
-iv: ${MODULES}
+iv: src/iv.${O}
 	${LD} -o $@ $?
+
+src/iv.${O}: ${MODULES}
+	${GC} -o $@ ${MODULES}
 
 format: src/*.go
 	${GOFMT} src/*.go
