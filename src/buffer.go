@@ -10,7 +10,7 @@ import (
 // A Buffer stores a buffer of text data, along with highlighting information.
 type Buffer struct {
 	filename string
-	lines vector.StringVector
+	lines    vector.StringVector
 }
 
 // NewBufferBlank creates a blank buffer
@@ -44,4 +44,3 @@ func NewBufferDefault() (*Buffer, os.Error) {
 	}
 	return b, nil
 }
-

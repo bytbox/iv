@@ -41,7 +41,7 @@ func cleanExit(code int) {
 
 func printErr(err os.Error) {
 	if err != nil {
-		fmt.Fprintf(os.Stderr,"%s\n",err.String())
+		fmt.Fprintf(os.Stderr, "%s\n", err.String())
 		cleanExit(RET_UNKNOWN)
 	}
 }
@@ -52,7 +52,7 @@ func main() {
 	opts.Description("the editor that isn't vi")
 	opts.Parse()
 	if *displayVersion {
-		fmt.Printf("iv v%s\n",VERSION)
+		fmt.Printf("iv v%s\n", VERSION)
 		cleanExit(RET_NOERR)
 	}
 

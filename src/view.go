@@ -7,10 +7,17 @@ import (
 
 // A View represents the presentation of the application
 type View interface {
+	// General functions
 	Init() os.Error
 	Shutdown() os.Error
+	// Hide() temporarily hides the view, enabling stdio to be used. In 
+	// views that do not operate within a terminal, this should bring up a
+	// terminal instead.
+	Hide() os.Error
+	// Refresh the display
+	Refresh() os.Error
 
-
+	// Displayer opening functions
 	OpenFile(filename string) os.Error
 	OpenBuffer(buffer *Buffer) os.Error
 }
@@ -22,7 +29,7 @@ func NewCursesView() View {
 }
 
 func (v cView) Init() os.Error {
-	curses.Initscr()     /* start ncurses */
+	curses.Initscr() /* start ncurses */
 	if curses.Stdwin == nil {
 		v.Shutdown()
 		return &IVError{"Could not initialize curses"}
@@ -36,6 +43,14 @@ func (v cView) Init() os.Error {
 func (v cView) Shutdown() os.Error {
 	curses.Endwin()
 	return nil
+}
+
+func (v cView) Hide() os.Error {
+	return NotImplementedError()
+}
+
+func (v cView) Refresh() os.Error {
+	return NotImplementedError()
 }
 
 func (v cView) OpenFile(filename string) os.Error {
