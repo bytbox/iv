@@ -12,7 +12,11 @@ type IVError struct {
 }
 
 func (ce IVError) String() string {
-	return fmt.Sprintf("iv: %s\n", ce.message)
+	return fmt.Sprintf("iv: %s", ce.message)
+}
+
+func NotImplementedError() IVError {
+	return IVError{"not yet implemented"}
 }
 
 // Return codes
@@ -21,11 +25,26 @@ const (
 	RET_UNKNOWN = 127
 )
 
+// the version of iv this is
+const VERSION = "0.0.1"
+
 var displayVersion = opts.Longflag("version",
 	"print version information")
 
 
 var view = NewCursesView()
+
+func cleanExit(code int) {
+	view.Shutdown()
+	os.Exit(code)
+}
+
+func printErr(err os.Error) {
+	if err != nil {
+		fmt.Fprintf(os.Stderr,"%s\n",err.String())
+		cleanExit(RET_UNKNOWN)
+	}
+}
 
 func main() {
 	// handle options
@@ -33,16 +52,22 @@ func main() {
 	opts.Description("the editor that isn't vi")
 	opts.Parse()
 	if *displayVersion {
-		fmt.Printf("some text\n")
-		os.Exit(RET_NOERR)
+		fmt.Printf("iv v%s\n",VERSION)
+		cleanExit(RET_NOERR)
 	}
 
 	// start up the view
 	view.Init()
-	defer view.Shutdown()
 
 	// open up files
 	for i := 0; i < len(opts.Args); i++ {
-		fmt.Printf("Opening '%s'\n", opts.Args[i])
+		printErr(view.OpenFile(opts.Args[i]))
 	}
+	if len(opts.Args) == 0 {
+		// open the default buffer
+		buffer, err := NewBufferDefault()
+		printErr(err)
+		printErr(view.OpenBuffer(buffer))
+	}
+	cleanExit(RET_NOERR)
 }

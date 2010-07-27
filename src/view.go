@@ -5,10 +5,14 @@ import (
 	"os"
 )
 
+// A View represents the presentation of the application
 type View interface {
 	Init() os.Error
 	Shutdown() os.Error
-	Open(filename string) os.Error
+
+
+	OpenFile(filename string) os.Error
+	OpenBuffer(buffer *Buffer) os.Error
 }
 
 type cView struct{}
@@ -34,6 +38,10 @@ func (v cView) Shutdown() os.Error {
 	return nil
 }
 
-func (v cView) Open(filename string) os.Error {
-	return nil
+func (v cView) OpenFile(filename string) os.Error {
+	return NotImplementedError()
+}
+
+func (v cView) OpenBuffer(buffer *Buffer) os.Error {
+	return NotImplementedError()
 }
