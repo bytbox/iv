@@ -10,7 +10,7 @@ type View interface {
 	// General functions
 	Init() os.Error
 	Shutdown() os.Error
-	// Hide() temporarily hides the view, enabling stdio to be used. In 
+	// Hide() temporarily hides the view, enabling stdio to be used. In
 	// views that do not operate within a terminal, this should bring up a
 	// terminal instead.
 	Hide() os.Error
