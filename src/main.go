@@ -15,6 +15,11 @@ func (ce IVError) String() string {
 	return fmt.Sprintf("iv: %s\n", ce.message)
 }
 
+// Return codes
+const (
+	RET_NOERR   = 0
+	RET_UNKNOWN = 127
+)
 
 var displayVersion = opts.Longflag("version",
 	"print version information")
@@ -27,9 +32,9 @@ func main() {
 	opts.Parse()
 	if *displayVersion {
 		fmt.Printf("some text\n")
-		os.Exit(0)
+		os.Exit(RET_NOERR)
 	}
-	
+
 	// start up the view
 	view.Init()
 	defer view.Shutdown()
