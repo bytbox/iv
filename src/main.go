@@ -29,6 +29,8 @@ var view = NewCursesView()
 
 func main() {
 	// handle options
+	opts.Usage("[options] [FILENAME [...]]")
+	opts.Description("the editor that isn't vi")
 	opts.Parse()
 	if *displayVersion {
 		fmt.Printf("some text\n")
