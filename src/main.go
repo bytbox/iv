@@ -38,4 +38,9 @@ func main() {
 	// start up the view
 	view.Init()
 	defer view.Shutdown()
+
+	// open up files
+	for i := 0; i < len(opts.Args); i++ {
+		fmt.Printf("Opening '%s'\n", opts.Args[i])
+	}
 }

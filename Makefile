@@ -39,7 +39,7 @@ SHARE=${PREFIX}/share
 GOFMT = gofmt -w
 
 # modules
-MODULES = src/main.go src/view.go
+MODULES = src/main.go src/view.go src/buffer.go src/display.go
 
 #include the system-specific configuration
 include ${GOROOT}/src/Make.${GOARCH}
