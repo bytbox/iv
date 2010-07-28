@@ -72,8 +72,16 @@ func (v *cView) Refresh() os.Error {
 	v.win.Clear()
 
 	// draw the buffer
-	v.drawDisplay(v.mainDisplay,0,0,maxx, maxy-1)
-
+	switch {
+	case v.splitMode == NOSPLIT:
+		v.drawDisplay(v.mainDisplay,0,0,maxx, maxy-1)
+	case v.splitMode == VSPLIT:
+		v.drawDisplay(v.mainDisplay,0,0,maxx, (maxy-1)/2)
+		v.drawDisplay(v.auxDisplay,0,(maxy-1/2),maxx, maxy-1)
+	case v.splitMode == HSPLIT:
+		v.drawDisplay(v.mainDisplay,0,0,maxx/2, maxy-1)
+		v.drawDisplay(v.mainDisplay,maxx/2,0,maxx, maxy-1)
+	}
 
 	// now actually refresh the window
 	return v.win.Refresh()
