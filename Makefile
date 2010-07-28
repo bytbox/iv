@@ -38,14 +38,23 @@ SHARE=${PREFIX}/share
 # programs
 GOFMT = gofmt -w
 
+# flags
+GCFLAGS = -Isrc
+GCF = ${GC} ${GCFLAGS}
+
+LDFLAGS = -Lsrc
+LDF = ${LD} ${LDFLAGS}
+
 # modules
-MODULES = src/main.go src/view.go src/buffer.go src/display.go
+CURSESMODULES = src/main.6 src/cursesview.6
+QTMODULES = src/qtmain.6 src/qtview.6
+COREMODULES = src/errors.6 src/buffer.6
 
 #include the system-specific configuration
 include ${GOROOT}/src/Make.${GOARCH}
 
-#meta-rules
-.PHONY: all doc test sdist mostlyclean clean
+# meta-rules
+.PHONY: all doc test sdist mostlyclean clean qt4
 .SUFFIXES: .c .cxx .o .go .${O}
 
 #all means the executable and the documentation
@@ -73,20 +82,34 @@ doc/README.html: README.rst
 # Cleaning #
 ############
 mostlyclean:
-	rm iv src/iv.6
+	rm -f iv ${COREMODULES} ${CURSESMODULES} ${QTMODULES}
 	rm -rf ${DISTNAME}
 
 clean: mostlyclean
 	rm -f doc/iv.1 doc/README.html
 
+###################
+# Actual building #
+###################
+
+iv: ${COREMODULES} ${CURSESMODULES}
+	${LDF} -o $@ src/main.6
+
+qt: iv-qt
+iv-qt: ${COREMODULES} ${QTMODULES}
+	${LDF} -o $@ src/qtmain.6
+
 .go.${O}:
-	${GC} -o $@ $?
+	${GCF} -o $@ $?
 
-iv: src/iv.${O}
-	${LD} -o $@ $?
+src/main.${O}: src/main.go src/buffer.6 src/cursesview.6 src/view.go
+	${GCF} -o $@ src/main.go src/view.go
 
-src/iv.${O}: ${MODULES}
-	${GC} -o $@ ${MODULES}
+src/cursesview.6: src/cursesview.go src/errors.6 src/buffer.6
+	${GCF} -o $@ src/cursesview.go
+
+src/buffer.6: src/buffer.go
+	${GCF} -o $@ src/buffer.go
 
 format: src/*.go
 	${GOFMT} src/*.go

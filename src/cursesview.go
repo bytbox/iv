@@ -30,6 +30,17 @@ func (v cView) Shutdown() os.Error {
 	return nil
 }
 
+// Start() starts the control loop for the curses view.
+func (v cView) Start() os.Error {
+	// for now, don't make it a seperate goroutine
+	return v.control()
+}
+
+// The control loop for the curses view
+func (v cView) control() os.Error {
+	return nil
+}
+
 func (v cView) Hide() os.Error {
 	return errors.NotImplementedError()
 }

@@ -1,23 +1,12 @@
 package main
 
 import (
+	"buffer"
 	"fmt"
 	"opts"
 	"os"
+	"cursesview"
 )
-
-// IVError represents an error originating in the IV editor
-type IVError struct {
-	message string
-}
-
-func (ce IVError) String() string {
-	return fmt.Sprintf("iv: %s", ce.message)
-}
-
-func NotImplementedError() IVError {
-	return IVError{"not yet implemented"}
-}
 
 // Return codes
 const (
@@ -32,7 +21,7 @@ var displayVersion = opts.Longflag("version",
 	"print version information")
 
 
-var view = NewCursesView()
+var view View = cursesview.NewCursesView()
 
 func cleanExit(code int) {
 	view.Shutdown()
@@ -65,7 +54,7 @@ func main() {
 	}
 	if len(opts.Args) == 0 {
 		// open the default buffer
-		buffer, err := NewBufferDefault()
+		buffer, err := buffer.NewBufferDefault()
 		printErr(err)
 		printErr(view.OpenBuffer(buffer))
 	}

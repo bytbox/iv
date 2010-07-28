@@ -11,3 +11,4 @@ doc/iv.1
 tests/iv-tests
 doc/README.html
 *.6
+iv-qt
