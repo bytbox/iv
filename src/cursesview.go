@@ -17,10 +17,10 @@ const (
 
 type cView struct {
 	win *curses.Window
-
 	splitMode   int
 	mainDisplay *display.Display
 	auxDisplay  *display.Display
+	promptLine string
 }
 
 func NewCursesView() *cView {
@@ -67,15 +67,25 @@ func (v *cView) Hide() os.Error {
 }
 
 func (v *cView) Refresh() os.Error {
-	_, maxy := v.win.Getmax()
-	// clear and draw the background
+	maxx, maxy := v.win.Getmax()
+	// clear the window
 	v.win.Clear()
-	for i :=0; i<maxy; i++ {
-		v.win.Addch(0, i, '~', curses.A_BOLD)
-	}
+
+	// draw the buffer
+	v.drawDisplay(v.mainDisplay,0,0,maxx, maxy-1)
+
 
 	// now actually refresh the window
 	return v.win.Refresh()
+}
+
+// drawDisplay() draws the buffer within the specified coordinates
+func (v *cView) drawDisplay(disp *display.Display,
+	startx, starty, maxx, maxy int) {
+	// clear this section of the screen
+	for y := starty; y < maxy; y++ {
+		v.win.Addch(0,y,'~',curses.A_BOLD)
+	}
 }
 
 func (v *cView) OpenFile(filename string) os.Error {
