@@ -1,8 +1,8 @@
 package cursesview
 
 import (
-	"curses"
 	"buffer"
+	"curses"
 	"display"
 	"errors"
 	"os"
@@ -27,7 +27,7 @@ func NewCursesView() *cView {
 	return &cView{}
 }
 
-func (v cView) Init() os.Error {
+func (v *cView) Init() os.Error {
 	v.splitMode = NOSPLIT
 	curses.Initscr() /* start ncurses */
 	if curses.Stdwin == nil {
@@ -36,43 +36,46 @@ func (v cView) Init() os.Error {
 	}
 	v.win = curses.Stdwin
 	curses.Start_color() /* enable the use of color */
-	curses.Cbreak()      /* don't wait for RETURN or ENTER to get input */
 	curses.Noecho()      /* don't immediately echo characters */
+	v.win.Keypad(true)
 	return nil
 }
 
-func (v cView) Shutdown() os.Error {
+func (v *cView) Shutdown() os.Error {
 	curses.Endwin()
 	return nil
 }
 
 // Start() starts the control loop for the curses view.
-func (v cView) Start() os.Error {
+func (v *cView) Start() os.Error {
 	// for now, don't make it a seperate goroutine
 	return v.control()
 }
 
 // The control loop for the curses view
-func (v cView) control() os.Error {
-	for true {
-		v.win.Addch(0, 0, int32(v.win.Getch()), 0)
+func (v *cView) control() os.Error {
+	for {
+		inp := int32(v.win.Getch())
+		v.win.Addch(0, 0, inp, 0)
+		v.Refresh()
 	}
 	return nil
 }
 
-func (v cView) Hide() os.Error {
+func (v *cView) Hide() os.Error {
 	return errors.NotImplementedError()
 }
 
-func (v cView) Refresh() os.Error {
+func (v *cView) Refresh() os.Error {
+	v.win.Refresh()
+	return nil
+}
+
+func (v *cView) OpenFile(filename string) os.Error {
 	return errors.NotImplementedError()
 }
 
-func (v cView) OpenFile(filename string) os.Error {
-	return errors.NotImplementedError()
-}
-
-func (v cView) OpenBuffer(buffer *buffer.Buffer) os.Error {
+func (v *cView) OpenBuffer(buffer *buffer.Buffer) os.Error {
 	v.mainDisplay = &display.Display{}
 	v.mainDisplay.Init(buffer)
 	return nil

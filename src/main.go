@@ -58,5 +58,9 @@ func main() {
 		printErr(err)
 		printErr(view.OpenBuffer(buffer))
 	}
+	
+	// run the view
+	view.Start()
+
 	cleanExit(RET_NOERR)
 }
