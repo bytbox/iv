@@ -19,8 +19,8 @@ type cView struct {
 	win *curses.Window
 
 	splitMode   int
-	mainDisplay *display.Displayer
-	auxDisplay  *display.Displayer
+	mainDisplay *display.Display
+	auxDisplay  *display.Display
 }
 
 func NewCursesView() *cView {
@@ -73,5 +73,7 @@ func (v cView) OpenFile(filename string) os.Error {
 }
 
 func (v cView) OpenBuffer(buffer *buffer.Buffer) os.Error {
-	return errors.NotImplementedError()
+	v.mainDisplay = &display.Display{}
+	v.mainDisplay.Init(buffer)
+	return nil
 }
