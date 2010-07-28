@@ -55,9 +55,9 @@ func (v *cView) Start() os.Error {
 // The control loop for the curses view
 func (v *cView) control() os.Error {
 	for {
+		v.Refresh()
 		inp := int32(v.win.Getch())
 		v.win.Addch(0, 0, inp, 0)
-		v.Refresh()
 	}
 	return nil
 }
@@ -67,8 +67,15 @@ func (v *cView) Hide() os.Error {
 }
 
 func (v *cView) Refresh() os.Error {
-	v.win.Refresh()
-	return nil
+	_, maxy := v.win.Getmax()
+	// clear and draw the background
+	v.win.Clear()
+	for i :=0; i<maxy; i++ {
+		v.win.Addch(0, i, '~', curses.A_BOLD)
+	}
+
+	// now actually refresh the window
+	return v.win.Refresh()
 }
 
 func (v *cView) OpenFile(filename string) os.Error {
