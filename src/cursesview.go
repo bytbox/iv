@@ -2,7 +2,7 @@ package cursesview
 
 import (
 	"curses"
-	"buffer"	
+	"buffer"
 	"display"
 	"errors"
 	"os"
@@ -17,10 +17,10 @@ const (
 
 type cView struct {
 	win *curses.Window
-	
-	splitMode int
+
+	splitMode   int
 	mainDisplay *display.Displayer
-	auxDisplay *display.Displayer
+	auxDisplay  *display.Displayer
 }
 
 func NewCursesView() *cView {
@@ -28,13 +28,13 @@ func NewCursesView() *cView {
 }
 
 func (v cView) Init() os.Error {
-	v.splitMode=NOSPLIT
+	v.splitMode = NOSPLIT
 	curses.Initscr() /* start ncurses */
 	if curses.Stdwin == nil {
 		v.Shutdown()
 		return &errors.IVError{"Could not initialize curses"}
 	}
-	v.win=curses.Stdwin
+	v.win = curses.Stdwin
 	curses.Start_color() /* enable the use of color */
 	curses.Cbreak()      /* don't wait for RETURN or ENTER to get input */
 	curses.Noecho()      /* don't immediately echo characters */
@@ -55,7 +55,7 @@ func (v cView) Start() os.Error {
 // The control loop for the curses view
 func (v cView) control() os.Error {
 	for true {
-		v.win.Addch(0,0,int32(v.win.Getch()),0)
+		v.win.Addch(0, 0, int32(v.win.Getch()), 0)
 	}
 	return nil
 }
