@@ -2,6 +2,7 @@ package main
 
 import (
 	"buffer"
+	"conf"
 	"fmt"
 	"opts"
 	"os"
@@ -45,8 +46,11 @@ func main() {
 		cleanExit(RET_NOERR)
 	}
 
+	// read the configuration
+	config := conf.ReadConfig()
+
 	// start up the view
-	view.Init()
+	view.Init(config)
 
 	// open up files
 	for i := 0; i < len(opts.Args); i++ {

@@ -48,7 +48,7 @@ LDF = ${LD} ${LDFLAGS}
 # modules
 CURSESMODULES = src/main.6 src/cursesview.6
 QTMODULES = src/qtmain.6 src/qtview.6
-COREMODULES = src/errors.6 src/buffer.6 src/display.6
+COREMODULES = src/errors.6 src/buffer.6 src/display.6 src/conf.6
 
 #include the system-specific configuration
 include ${GOROOT}/src/Make.${GOARCH}
@@ -102,7 +102,7 @@ iv-qt: ${COREMODULES} ${QTMODULES}
 .go.${O}:
 	${GCF} -o $@ $?
 
-src/main.${O}: src/main.go src/buffer.6 src/cursesview.6 src/view.go
+src/main.${O}: src/main.go src/buffer.6 src/cursesview.6 src/conf.6 src/view.go
 	${GCF} -o $@ src/main.go src/view.go
 
 src/cursesview.6: src/cursesview.go src/errors.6 src/buffer.6 src/display.6

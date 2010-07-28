@@ -2,13 +2,14 @@ package main
 
 import (
 	"buffer"
+	"conf"
 	"os"
 )
 
 // A View represents the presentation of the application
 type View interface {
 	// General functions
-	Init() os.Error
+	Init(config *conf.Configuration) os.Error
 	Shutdown() os.Error
 	// Hide() temporarily hides the view, enabling stdio to be used. In
 	// views that do not operate within a terminal, this should bring up a

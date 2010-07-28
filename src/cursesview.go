@@ -2,6 +2,7 @@ package cursesview
 
 import (
 	"buffer"
+	"conf"
 	"curses"
 	"display"
 	"errors"
@@ -21,13 +22,16 @@ type cView struct {
 	mainDisplay *display.Display
 	auxDisplay  *display.Display
 	promptLine string
+	config *conf.Configuration
 }
 
 func NewCursesView() *cView {
 	return &cView{}
 }
 
-func (v *cView) Init() os.Error {
+func (v *cView) Init(config *conf.Configuration) os.Error {
+	// set the configuration
+	v.config = config
 	v.splitMode = NOSPLIT
 	curses.Initscr() /* start ncurses */
 	if curses.Stdwin == nil {
@@ -55,9 +59,11 @@ func (v *cView) Start() os.Error {
 // The control loop for the curses view
 func (v *cView) control() os.Error {
 	for {
+		// refresh and get the next character
 		v.Refresh()
 		inp := int32(v.win.Getch())
-		v.win.Addch(0, 0, inp, 0)
+		// look up the character in the configuration table
+		inp = inp
 	}
 	return nil
 }
