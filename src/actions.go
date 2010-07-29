@@ -5,13 +5,17 @@ import (
 	"os"
 )
 
-var actionList = map[string]Action{
+var actionList = map[string] Action {
 	"quit": QuitAction{},
 }
 
 // Get() returns the Action associated with the string
 func Get(name string) Action {
-	return actionList[name]
+	action, ok := actionList[name]
+	if ok {
+		return action
+	}
+	return &VoidAction{}
 }
 
 type Action interface {
