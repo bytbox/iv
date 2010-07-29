@@ -3,10 +3,11 @@ package main
 import (
 	"buffer"
 	"conf"
+	"cursesview"
 	"fmt"
 	"opts"
 	"os"
-	"cursesview"
+	"view"
 )
 
 // Return codes
@@ -22,10 +23,10 @@ var displayVersion = opts.Longflag("version",
 	"print version information")
 
 
-var view View = cursesview.NewCursesView()
+var cView view.View = cursesview.NewCursesView()
 
 func cleanExit(code int) {
-	view.Shutdown()
+	cView.Shutdown()
 	os.Exit(code)
 }
 
@@ -50,21 +51,21 @@ func main() {
 	config, _ := conf.ReadConfig()
 
 	// start up the view
-	view.Init(config)
+	cView.Init(config)
 
 	// open up files
 	for i := 0; i < len(opts.Args); i++ {
-		printErr(view.OpenFile(opts.Args[i]))
+		printErr(cView.OpenFile(opts.Args[i]))
 	}
 	if len(opts.Args) == 0 {
 		// open the default buffer
 		buffer, err := buffer.NewBufferDefault()
 		printErr(err)
-		printErr(view.OpenBuffer(buffer))
+		printErr(cView.OpenBuffer(buffer))
 	}
 	
 	// run the view
-	view.Start()
+	cView.Start()
 
 	cleanExit(RET_NOERR)
 }

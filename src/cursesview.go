@@ -33,15 +33,6 @@ func (v *cView) Init(config *conf.Configuration) os.Error {
 	// set the configuration
 	v.config = config
 	v.splitMode = NOSPLIT
-	curses.Initscr() /* start ncurses */
-	if curses.Stdwin == nil {
-		v.Shutdown()
-		return &errors.IVError{"Could not initialize curses"}
-	}
-	v.win = curses.Stdwin
-	curses.Start_color() /* enable the use of color */
-	curses.Noecho()      /* don't immediately echo characters */
-	v.win.Keypad(true)
 	return nil
 }
 
@@ -52,18 +43,32 @@ func (v *cView) Shutdown() os.Error {
 
 // Start() starts the control loop for the curses view.
 func (v *cView) Start() os.Error {
+	curses.Initscr() /* start ncurses */
+	if curses.Stdwin == nil {
+		v.Shutdown()
+		return &errors.IVError{"Could not initialize curses"}
+	}
+	v.win = curses.Stdwin
+	curses.Start_color() /* enable the use of color */
+	curses.Noecho()      /* don't immediately echo characters */
+	v.win.Keypad(true)
 	// for now, don't make it a seperate goroutine
 	return v.control()
 }
 
 // The control loop for the curses view
 func (v *cView) control() os.Error {
+	// generate the keymap
+	v.config.UpdateKeymap()
 	for {
 		// refresh and get the next character
 		v.Refresh()
 		inp := int32(v.win.Getch())
 		// look up the character in the configuration table
-		inp = inp
+		action, ok := v.config.ActiveKeymap[conf.Key(inp)]
+		if ok {
+			action.Act(v)
+		}
 	}
 	return nil
 }
@@ -100,6 +105,10 @@ func (v *cView) drawDisplay(disp *display.Display,
 	for y := starty; y < maxy; y++ {
 		v.win.Addch(0,y,'~',curses.A_BOLD)
 	}
+}
+
+func (v *cView) ActiveDisplay() *display.Display {
+	return v.mainDisplay
 }
 
 func (v *cView) OpenFile(filename string) os.Error {

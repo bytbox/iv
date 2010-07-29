@@ -97,12 +97,13 @@ coremods:
 	${GCF} -o src/errors.6 src/errors.go
 	${GCF} -o src/buffer.6 src/buffer.go
 	${GCF} -o src/display.6 src/display.go
-	${GCF} -o src/conf.6 src/conf.go
 	${GCF} -o src/actions.6 src/actions.go
+	${GCF} -o src/conf.6 src/conf.go
+	${GCF} -o src/view.6 src/view.go
 
 cursesmods:
 	${GCF} -o src/cursesview.6 src/cursesview.go
-	${GCF} -o src/main.6 src/main.go src/view.go
+	${GCF} -o src/main.6 src/main.go
 
 curses:iv
 iv: coremods cursesmods
