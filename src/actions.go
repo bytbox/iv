@@ -30,5 +30,10 @@ func (a VoidAction) Act(callback Callback) os.Error {
 
 type QuitAction struct {}
 func (a QuitAction) Act(callback Callback) os.Error {
-	return callback.Shutdown()
+	err := callback.Shutdown()
+	if err != nil {
+		return err
+	}
+	os.Exit(0)
+	return nil
 }
