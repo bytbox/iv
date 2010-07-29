@@ -24,4 +24,8 @@ type View interface {
 	// Displayer opening functions
 	OpenFile(filename string) os.Error
 	OpenBuffer(buffer *buffer.Buffer) os.Error
+
+	// Handle the bar on the bottom
+	SetMessage(string)
+	Prompt(string) string
 }

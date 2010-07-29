@@ -23,6 +23,7 @@ type cView struct {
 	auxDisplay  *display.Display
 	promptLine string
 	config *conf.Configuration
+	message string
 }
 
 func NewCursesView() *cView {
@@ -109,6 +110,14 @@ func (v *cView) drawDisplay(disp *display.Display,
 
 func (v *cView) ActiveDisplay() *display.Display {
 	return v.mainDisplay
+}
+
+func (v *cView) SetMessage(msg string) {
+	v.message=msg
+}
+
+func (v *cView) Prompt(string) string {
+	return ""
 }
 
 func (v *cView) OpenFile(filename string) os.Error {
