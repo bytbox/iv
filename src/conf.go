@@ -57,7 +57,7 @@ type ModeConfig struct {}
 // property is on.
 type PropertyConfig struct {}
 
-type Key int
+type Key int32
 type Keymap map[Key]actions.Action
 
 // ReadConfigFrom() reads the configuration from the specified directory.

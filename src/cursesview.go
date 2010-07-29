@@ -63,9 +63,9 @@ func (v *cView) control() os.Error {
 	for {
 		// refresh and get the next character
 		v.Refresh()
-		inp := int32(v.win.Getch())
+		inp := conf.Key(v.win.Getch())
 		// look up the character in the configuration table
-		action, ok := v.config.ActiveKeymap[conf.Key(inp)]
+		action, ok := v.config.ActiveKeymap[inp]
 		if ok {
 			action.Act(v)
 		}

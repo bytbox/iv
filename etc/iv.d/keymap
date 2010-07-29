@@ -1,4 +1,7 @@
-#file and buffer manipulation
+//quiting
+ q                    quit
+
+//file and buffer manipulation
  o                    open
  w                    write
  W                    write-as
@@ -9,7 +12,7 @@
 
  space                text
 
-#motion
+//motion
  j                    down
  k                    up
  l                    right
