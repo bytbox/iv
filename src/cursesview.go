@@ -17,13 +17,13 @@ const (
 )
 
 type cView struct {
-	win *curses.Window
+	win         *curses.Window
 	splitMode   int
 	mainDisplay *display.Display
 	auxDisplay  *display.Display
-	promptLine string
-	config *conf.Configuration
-	message string
+	promptLine  string
+	config      *conf.Configuration
+	message     string
 }
 
 func NewCursesView() *cView {
@@ -86,13 +86,13 @@ func (v *cView) Refresh() os.Error {
 	// draw the buffer
 	switch {
 	case v.splitMode == NOSPLIT:
-		v.drawDisplay(v.mainDisplay,0,0,maxx, maxy-1)
+		v.drawDisplay(v.mainDisplay, 0, 0, maxx, maxy-1)
 	case v.splitMode == VSPLIT:
-		v.drawDisplay(v.mainDisplay,0,0,maxx, (maxy-1)/2)
-		v.drawDisplay(v.auxDisplay,0,(maxy-1/2),maxx, maxy-1)
+		v.drawDisplay(v.mainDisplay, 0, 0, maxx, (maxy-1)/2)
+		v.drawDisplay(v.auxDisplay, 0, (maxy - 1/2), maxx, maxy-1)
 	case v.splitMode == HSPLIT:
-		v.drawDisplay(v.mainDisplay,0,0,maxx/2, maxy-1)
-		v.drawDisplay(v.mainDisplay,maxx/2,0,maxx, maxy-1)
+		v.drawDisplay(v.mainDisplay, 0, 0, maxx/2, maxy-1)
+		v.drawDisplay(v.mainDisplay, maxx/2, 0, maxx, maxy-1)
 	}
 
 	// now actually refresh the window
@@ -100,11 +100,10 @@ func (v *cView) Refresh() os.Error {
 }
 
 // drawDisplay() draws the buffer within the specified coordinates
-func (v *cView) drawDisplay(disp *display.Display,
-	startx, starty, maxx, maxy int) {
+func (v *cView) drawDisplay(disp *display.Display, startx, starty, maxx, maxy int) {
 	// clear this section of the screen
 	for y := starty; y < maxy; y++ {
-		v.win.Addch(0,y,'~',curses.A_BOLD)
+		v.win.Addch(0, y, '~', curses.A_BOLD)
 	}
 }
 
@@ -113,7 +112,7 @@ func (v *cView) ActiveDisplay() *display.Display {
 }
 
 func (v *cView) SetMessage(msg string) {
-	v.message=msg
+	v.message = msg
 }
 
 func (v *cView) Prompt(string) string {

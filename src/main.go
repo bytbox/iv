@@ -63,7 +63,7 @@ func main() {
 		printErr(err)
 		printErr(cView.OpenBuffer(buffer))
 	}
-	
+
 	// run the view
 	cView.Start()
 

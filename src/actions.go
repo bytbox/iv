@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-var actionList = map[string] Action {
+var actionList = map[string]Action{
 	"quit": QuitAction{},
 }
 
@@ -27,12 +27,14 @@ type Callback interface {
 	ActiveDisplay() *display.Display
 }
 
-type VoidAction struct {}
+type VoidAction struct{}
+
 func (a VoidAction) Act(callback Callback) os.Error {
 	return nil
 }
 
-type QuitAction struct {}
+type QuitAction struct{}
+
 func (a QuitAction) Act(callback Callback) os.Error {
 	err := callback.Shutdown()
 	if err != nil {

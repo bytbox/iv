@@ -13,13 +13,13 @@ import (
 // quick hack to convert string to key
 func String2Key(str string) Key {
 	switch {
-	case len(str)==1:
+	case len(str) == 1:
 		return Key(str[0])
 	}
 	return 0
 }
 
-// ReadConfig() locates and reads the configuration from all relevant 
+// ReadConfig() locates and reads the configuration from all relevant
 // directories.
 func ReadConfig() (*Configuration, os.Error) {
 	config := &Configuration{}
@@ -28,7 +28,7 @@ func ReadConfig() (*Configuration, os.Error) {
 	// read configuration from user directory
 	userdir := os.Getenv("HOME")
 	if len(userdir) > 0 {
-		config.ReadConfigFrom(path.Join(userdir,".iv.d"))
+		config.ReadConfigFrom(path.Join(userdir, ".iv.d"))
 	}
 	// read configuration from environment directory, if available
 	envdir := os.Getenv("IV_CONFDIR")
@@ -45,17 +45,17 @@ type Configuration struct {
 	// The base keymap, overriden in part by mode- and property- specific
 	// keymaps.
 	BaseKeymap Keymap
-	// The active keymap, which represents the sum of the BaseKeymap and 
+	// The active keymap, which represents the sum of the BaseKeymap and
 	// the various applicable mode- and property- specific keymaps.
 	ActiveKeymap Keymap
 }
 
 // A ModeConfig encapsulates the configuration for a mode.
-type ModeConfig struct {}
+type ModeConfig struct{}
 
-// A PropertyConfig describes the configuration to be applied if a certain 
+// A PropertyConfig describes the configuration to be applied if a certain
 // property is on.
-type PropertyConfig struct {}
+type PropertyConfig struct{}
 
 type Key int32
 type Keymap map[Key]actions.Action
@@ -66,7 +66,7 @@ func (config *Configuration) ReadConfigFrom(dirname string) os.Error {
 	config.Sources.Push(dirname)
 	// read the keymap
 	config.BaseKeymap = BlankKeymap()
-	config.BaseKeymap.ReadFrom(path.Join(dirname,"keymap"))
+	config.BaseKeymap.ReadFrom(path.Join(dirname, "keymap"))
 	return nil
 }
 
