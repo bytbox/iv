@@ -54,7 +54,8 @@ COREMODULES = src/errors.6 src/buffer.6 src/display.6 src/conf.6
 include ${GOROOT}/src/Make.${GOARCH}
 
 # meta-rules
-.PHONY: all doc test sdist mostlyclean clean qt4
+.PHONY: all doc test sdist mostlyclean clean qt \
+	curses cursesmods coremods qtmods
 .SUFFIXES: .c .cxx .o .go .${O}
 
 #all means the executable and the documentation
@@ -92,21 +93,31 @@ clean: mostlyclean
 # Actual building #
 ###################
 
-iv: ${COREMODULES} ${CURSESMODULES}
+coremods:
+	${GCF} -o src/errors.6 src/errors.go
+	${GCF} -o src/buffer.6 src/buffer.go
+	${GCF} -o src/display.6 src/display.go
+	${GCF} -o src/conf.6 src/conf.go
+	${GCF} -o src/actions.6 src/actions.go
+
+cursesmods:
+	${GCF} -o src/cursesview.6 src/cursesview.go
+	${GCF} -o src/main.6 src/main.go src/view.go
+
+curses:iv
+iv: coremods cursesmods
 	${LDF} -o $@ src/main.6
 
+qtmods:
+	${GCF} -o src/qtview.6 src/qtview.go
+	${GCF} -o src/qtmain.6 src/qtmain.go
+
 qt: iv-qt
-iv-qt: ${COREMODULES} ${QTMODULES}
+iv-qt: coremods qtmods
 	${LDF} -o $@ src/qtmain.6
 
 .go.${O}:
 	${GCF} -o $@ $?
-
-src/main.${O}: src/main.go src/buffer.6 src/cursesview.6 src/conf.6 src/view.go
-	${GCF} -o $@ src/main.go src/view.go
-
-src/cursesview.6: src/cursesview.go src/errors.6 src/buffer.6 src/display.6 src/conf.6
-	${GCF} -o $@ src/cursesview.go
 
 format: src/*.go
 	${GOFMT} src/*.go
