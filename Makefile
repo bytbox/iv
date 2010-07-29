@@ -105,7 +105,7 @@ iv-qt: ${COREMODULES} ${QTMODULES}
 src/main.${O}: src/main.go src/buffer.6 src/cursesview.6 src/conf.6 src/view.go
 	${GCF} -o $@ src/main.go src/view.go
 
-src/cursesview.6: src/cursesview.go src/errors.6 src/buffer.6 src/display.6
+src/cursesview.6: src/cursesview.go src/errors.6 src/buffer.6 src/display.6 src/conf.6
 	${GCF} -o $@ src/cursesview.go
 
 format: src/*.go

@@ -47,7 +47,7 @@ func main() {
 	}
 
 	// read the configuration
-	config := conf.ReadConfig()
+	config, _ := conf.ReadConfig()
 
 	// start up the view
 	view.Init(config)
