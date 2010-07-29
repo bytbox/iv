@@ -16,6 +16,8 @@ const (
 	VSPLIT
 )
 
+var Initstring string
+
 type cView struct {
 	win         *curses.Window
 	splitMode   int
@@ -34,6 +36,7 @@ func (v *cView) Init(config *conf.Configuration) os.Error {
 	// set the configuration
 	v.config = config
 	v.splitMode = NOSPLIT
+	v.message = Initstring
 	return nil
 }
 
@@ -83,7 +86,7 @@ func (v *cView) Refresh() os.Error {
 	// clear the window
 	v.win.Clear()
 
-	// draw the buffer
+	// draw the display(s)
 	switch {
 	case v.splitMode == NOSPLIT:
 		v.drawDisplay(v.mainDisplay, 0, 0, maxx, maxy-1)
@@ -94,6 +97,9 @@ func (v *cView) Refresh() os.Error {
 		v.drawDisplay(v.mainDisplay, 0, 0, maxx/2, maxy-1)
 		v.drawDisplay(v.mainDisplay, maxx/2, 0, maxx, maxy-1)
 	}
+
+	// draw the message or prompt at the bottom
+	v.win.Addstr(0, maxy-1, v.message, 0)
 
 	// now actually refresh the window
 	return v.win.Refresh()
