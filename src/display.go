@@ -20,6 +20,7 @@ func (d *Display) Init(b *buffer.Buffer) {
 	d.buffer = b
 }
 
+
 //
 // Cursor movement
 //
