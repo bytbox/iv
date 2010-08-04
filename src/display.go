@@ -19,3 +19,43 @@ type Display struct {
 func (d *Display) Init(b *buffer.Buffer) {
 	d.buffer = b
 }
+
+//
+// Cursor movement
+//
+
+func (d *Display) CursorDown() {
+
+}
+
+func (d *Display) CursorUp() {
+
+}
+
+func (d *Display) CursorLeft() {
+
+}
+
+func (d *Display) CursorRight() {
+
+}
+
+//
+// Page movement (separate from the cursor)
+//
+
+func (d *Display) PageDown() {
+
+}
+
+func (d *Display) PageUp() {
+
+}
+
+func (d *Display) PageLeft() {
+
+}
+
+func (d *Display) PageRight() {
+
+}

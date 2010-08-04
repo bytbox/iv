@@ -22,25 +22,25 @@ func NewBufferBlank() (*Buffer, os.Error) {
 func NewBufferFromFile(filename string) (*Buffer, os.Error) {
 	contents, err := ioutil.ReadFile(filename)
 	if err != nil {
-		return &Buffer{}, err
+		return nil, err
 	}
 	b, err := NewBufferBlank()
 	if err != nil {
-		return &Buffer{}, err
+		return nil, err
 	}
 	b.filename = filename
 	lines := strings.Split(string(contents), "\n", -1)
 	for _, line := range lines {
 		b.lines.Push(line)
 	}
-	return &Buffer{}, nil
+	return b, nil
 }
 
 // NewBufferDefault creates a default buffer
 func NewBufferDefault() (*Buffer, os.Error) {
 	b, err := NewBufferBlank()
 	if err != nil {
-		return &Buffer{}, err
+		return nil, err
 	}
 	return b, nil
 }
