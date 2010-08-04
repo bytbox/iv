@@ -40,6 +40,7 @@ func (d *Display) CursorRight() {
 
 }
 
+
 //
 // Page movement (separate from the cursor)
 //
