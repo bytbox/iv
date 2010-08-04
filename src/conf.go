@@ -23,6 +23,7 @@ func String2Key(str string) Key {
 // directories.
 func ReadConfig() (*Configuration, os.Error) {
 	config := &Configuration{}
+	config.Init()
 	// read configuration from default directory
 	config.ReadConfigFrom("/etc/iv.d")
 	// read configuration from user directory
@@ -60,12 +61,15 @@ type PropertyConfig struct{}
 type Key int32
 type Keymap map[Key]actions.Action
 
+func (config *Configuration) Init() {
+	config.BaseKeymap = BlankKeymap()
+}
+
 // ReadConfigFrom() reads the configuration from the specified directory.
 func (config *Configuration) ReadConfigFrom(dirname string) os.Error {
 	// add this directory to the sources list
 	config.Sources.Push(dirname)
 	// read the keymap
-	config.BaseKeymap = BlankKeymap()
 	config.BaseKeymap.ReadFrom(path.Join(dirname, "keymap"))
 	return nil
 }

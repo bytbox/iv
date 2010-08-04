@@ -37,6 +37,7 @@ SHARE=${PREFIX}/share
 
 # programs
 GOFMT = gofmt -w
+INSTALL = /usr/bin/install -c
 
 # flags
 GCFLAGS = -Isrc
