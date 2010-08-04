@@ -17,7 +17,7 @@ const (
 )
 
 // the version of iv this is
-const VERSION = "0.0.1"
+const VERSION = "0.1.0"
 
 var displayVersion = opts.Longflag("version",
 	"print version information")
