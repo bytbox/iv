@@ -14,7 +14,7 @@ type Display struct {
 	Height     int            // the available height
 	yPos       int            // the absolute Y-position of the cursor
 	xPos       int            // the absolute X-position of the cursor
-	Config map[string]interface{}
+	Config     map[string]interface{}
 }
 
 func (d *Display) Init(b *buffer.Buffer) {
@@ -34,7 +34,7 @@ func (d *Display) CursorX() int {
 // CursorY returns the zero-indexed y position, relative to the screen, at
 // which the cursor should be displayed.
 func (d *Display) CursorY() int {
-	return d.yPos-d.topLine;
+	return d.yPos - d.topLine
 }
 
 // FirstLine returns the zero-indexed line number of the first visible line.
@@ -45,9 +45,9 @@ func (d *Display) FirstLine() int {
 // LastLine returns the zero-indexed line number of the last visible line.
 func (d *Display) LastLine() int {
 	if d.topLine+d.Height < len(d.Buffer.Lines)-1 {
-		return d.topLine+d.Height
+		return d.topLine + d.Height
 	}
-	return len(d.Buffer.Lines)-1
+	return len(d.Buffer.Lines) - 1
 }
 
 //

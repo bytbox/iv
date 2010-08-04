@@ -51,7 +51,7 @@ func main() {
 	config, _ := conf.ReadConfig()
 
 	cursesview.Initstring = fmt.Sprintf(
-		"iv v%s - Copyright (C) Scott Lawrence 2010",VERSION)
+		"iv v%s - Copyright (C) Scott Lawrence 2010", VERSION)
 
 	// start up the view
 	cView.Init(config)

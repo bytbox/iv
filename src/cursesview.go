@@ -108,8 +108,8 @@ func (v *cView) Refresh() os.Error {
 // drawDisplay() draws the buffer within the specified coordinates
 func (v *cView) drawDisplay(disp *display.Display, startx, starty, maxx, maxy int) {
 	// update the view's information
-	disp.Height = maxy-starty
-	disp.Width = maxx-startx
+	disp.Height = maxy - starty
+	disp.Width = maxx - startx
 	b := disp.Buffer
 	// for each line
 	for lineno := disp.FirstLine(); lineno < disp.LastLine(); lineno++ {
@@ -118,7 +118,7 @@ func (v *cView) drawDisplay(disp *display.Display, startx, starty, maxx, maxy in
 		v.win.Addstr(0, y, line, 0)
 	}
 	// clear this section of the screen
-	for y := disp.LastLine()+starty; y < maxy; y++ {
+	for y := disp.LastLine() + starty; y < maxy; y++ {
 		v.win.Addch(0, y, '~', curses.A_BOLD)
 	}
 }
