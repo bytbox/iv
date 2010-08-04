@@ -9,8 +9,8 @@ import (
 
 // A Buffer stores a buffer of text data, along with highlighting information.
 type Buffer struct {
-	filename string
-	lines    vector.StringVector
+	Filename string
+	Lines    vector.StringVector
 }
 
 // NewBufferBlank creates a blank buffer
@@ -28,10 +28,10 @@ func NewBufferFromFile(filename string) (*Buffer, os.Error) {
 	if err != nil {
 		return nil, err
 	}
-	b.filename = filename
+	b.Filename = filename
 	lines := strings.Split(string(contents), "\n", -1)
 	for _, line := range lines {
-		b.lines.Push(line)
+		b.Lines.Push(line)
 	}
 	return b, nil
 }

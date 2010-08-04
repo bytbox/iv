@@ -107,14 +107,28 @@ func (v *cView) Refresh() os.Error {
 
 // drawDisplay() draws the buffer within the specified coordinates
 func (v *cView) drawDisplay(disp *display.Display, startx, starty, maxx, maxy int) {
+	// update the view's information
+	disp.Height = maxy-starty
+	disp.Width = maxx-startx
+	b := disp.Buffer
+	// for each line
+	for lineno := disp.FirstLine(); lineno < disp.LastLine(); lineno++ {
+		line := b.Lines[lineno]
+		y := lineno - disp.FirstLine() + starty
+		v.win.Addstr(0, y, line, 0)
+	}
 	// clear this section of the screen
-	for y := starty; y < maxy; y++ {
+	for y := disp.LastLine()+starty; y < maxy; y++ {
 		v.win.Addch(0, y, '~', curses.A_BOLD)
 	}
 }
 
 func (v *cView) ActiveDisplay() *display.Display {
 	return v.mainDisplay
+}
+
+func (v *cView) AuxDisplay() *display.Display {
+	return v.auxDisplay
 }
 
 func (v *cView) SetMessage(msg string) {
@@ -126,7 +140,11 @@ func (v *cView) Prompt(string) string {
 }
 
 func (v *cView) OpenFile(filename string) os.Error {
-	return errors.NotImplementedError()
+	b, err := buffer.NewBufferFromFile(filename)
+	if err != nil {
+		return err
+	}
+	return v.OpenBuffer(b)
 }
 
 func (v *cView) OpenBuffer(buffer *buffer.Buffer) os.Error {
